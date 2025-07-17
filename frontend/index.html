@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ÖZTÜRK OTOMOBİL OTO ELEKTRİK - Giriş</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #3a86ff, #00b4d8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .login-container h1 {
+      color: #3a86ff;
+      margin-bottom: 24px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .login-container input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .login-container button {
+      width: 100%;
+      padding: 12px;
+      background-color: #3a86ff;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .login-container button:hover {
+      background-color: #265dd9;
+    }
+
+    .login-container p {
+      margin-top: 16px;
+    }
+
+    .login-container a {
+      color: #ff006e;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    #loginMessage {
+      color: red;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</h1>
+    <form id="loginForm">
+      <input type="text" id="username" placeholder="Kullanıcı Adı" required>
+      <input type="password" id="password" placeholder="Şifre" required>
+      <button type="submit">Giriş Yap</button>
+    </form>
+    <p>Hesabın yok mu? <a href="#" onclick="register()">Kayıt Ol</a></p>
+    <div id="loginMessage"></div>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>
+
