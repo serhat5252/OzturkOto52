@@ -3,6 +3,11 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path"); // ✅ sadece bir tane tanımlı
+app.use(express.static(path.join(__dirname, "../frontend")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend", "index.html"));
+});
 
 dotenv.config();
 
