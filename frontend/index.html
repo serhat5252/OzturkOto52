@@ -317,53 +317,26 @@
         <button type="submit">Kaydet</button>
       </form>
     </aside>
-<section style="margin-bottom: 15px;">
-  <h3>📊 Satış Raporu</h3>
-  <label>Başlangıç: <input type="date" id="fromDate" /></label>
-  <label>Bitiş: <input type="date" id="toDate" /></label>
-  <button onclick="getSalesReport()">Rapor Al</button>
-</section>
-
+<section class="reports">
+      <h3>📊 Satış Raporu</h3>
+      <label>Başlangıç: <input type="date" id="fromDate"></label><br>
+      <label>Bitiş: <input type="date" id="toDate"></label><br>
+      <button onclick="getSalesReport()">Rapor Al</button>
+    </section>
     
-  <section style="padding:10px; background:#fff; border-radius:8px; margin-bottom:10px;">
-    <h3>🔍 Detaylı Arama</h3>
-
-    <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama..." />
-
-    <select id="filterCategory">
-      <option value="">Tüm Kategoriler</option>
-      <!-- Kategori seçenekleri burada -->
-    </select>
-    
-    <select id="filterBrand">
-      <option value="">Tüm Markalar</option>
-      <!-- Marka seçenekleri burada -->
-    </select>
-
-    <br/>
-    <label>Eklenme Tarihi:
-      <input type="date" id="filterAddedFrom" />
-      –
-      <input type="date" id="filterAddedTo" />
-    </label>
-
-    <label>Satış Tarihi:
-      <input type="date" id="filterSoldFrom" />
-      –
-      <input type="date" id="filterSoldTo" />
-    </label>
-
-    <label>Fiyat Aralığı:
-      ₺<input type="number" id="filterPriceMin" style="width:80px" />
-      –
-      <input type="number" id="filterPriceMax" style="width:80px" />
-    </label>
-
-    <button onclick="applySearchFilters()">Ara</button>
-    <button onclick="resetSearchFilters()">Temizle</button>
-    <div style="margin-top:5px;" id="filterMatches"></div>
-  </section>
-
+  <section class="filters">
+      <h3>🔍 Detaylı Arama</h3>
+      <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama..." />
+      <select id="filterCategory"><option value="">Tüm Kategoriler</option></select>
+      <select id="filterBrand"><option value="">Tüm Markalar</option></select>
+      <br>
+      <label>Eklenme Tarihi: <input type="date" id="filterAddedFrom"> – <input type="date" id="filterAddedTo"></label><br>
+      <label>Satış Tarihi: <input type="date" id="filterSoldFrom"> – <input type="date" id="filterSoldTo"></label><br>
+      <label>Fiyat Aralığı: ₺<input type="number" id="filterPriceMin" style="width:80px"> – <input type="number" id="filterPriceMax" style="width:80px"></label><br>
+      <button onclick="applySearchFilters()">Ara</button>
+      <button onclick="resetSearchFilters()">Temizle</button>
+      <div id="filterMatches" style="margin-top:5px;font-weight:bold;"></div>
+    </section>
   <ul id="productsUl"></ul>
 
   <!-- Sayfanın geri kalanı -->
