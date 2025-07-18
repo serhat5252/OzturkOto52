@@ -23,16 +23,16 @@
       const form = new FormData(e.target);
       const data = Object.fromEntries(form.entries());
 
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
+      const res = await fetch("https://ozturkoto52.onrender.com/api/auth/register", { ... });
+const result = await res.json();
+console.log({ status: res.status, result });
+if (!res.ok) {
+  alert(`Kayıt başarısız! (${res.status}) ${result.message || ''}`);
+} else {
+  alert("Kayıt başarılı! Şimdi giriş yapabilirsin.");
+  location.href = "index.html";
+}
 
-      const result = await res.json();
-      if (res.ok) {
-        alert("Kayıt başarılı! Şimdi giriş yapabilirsin.");
-        location.href = "index.html";
       } else {
         alert("Hata: " + result.message);
       }
