@@ -1,7 +1,4 @@
-// Sadece şu şekilde yaz:
-const API = "/api/products";
 const API = "https://ozturkoto52.onrender.com/api/products";
-const socket = io("https://my-stok-app.up.railway.app");
 const headers = () => ({
   "Content-Type": "application/json",
   Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -18,7 +15,6 @@ let products = [];
 
 // ÜRÜN EKLEME / GÜNCELLEME
 form.onsubmit = async e => {
-  req.app.get("io").emit("update");
   e.preventDefault();
   const data = Object.fromEntries(new FormData(form));
   const id = data.id; delete data.id;
@@ -51,53 +47,18 @@ async function fetchProducts(){
     const res = await fetch(API,{ headers:headers() });
     if (!res.ok) throw "";
     products = await res.json();
+    renderProducts();
   } catch(err){
     alert("Ürünler alınamadı"); console.error(err);
   }
 }
 
-// ÜRÜNLERİ FİLTRELE VE GÖSTER
-function applySearchFilters() {
-  const fKey = document.getElementById("filterKeyword").value.toLowerCase();
-  const fCat = document.getElementById("filterCategory").value;
-  const fBrand = document.getElementById("filterBrand").value;
-  const fAddFrom = document.getElementById("filterAddedFrom").value;
-  const fAddTo = document.getElementById("filterAddedTo").value;
-  const fSoldFrom = document.getElementById("filterSoldFrom").value;
-  const fSoldTo = document.getElementById("filterSoldTo").value;
-  const fPriceMin = parseFloat(document.getElementById("filterPriceMin").value) || null;
-  const fPriceMax = parseFloat(document.getElementById("filterPriceMax").value) || null;
-
-  let count = 0;
+// ÜRÜNLERİ LİSTELE
+function renderProducts(){
   productList.innerHTML = "";
-
-  products.filter(p => {
-    const keywordMatch = !fKey || [p.name, p.description, ...(p.codes || [])].some(x => x?.toLowerCase().includes(fKey));
-    const categoryMatch = !fCat || p.category === fCat;
-    const brandMatch = !fBrand || p.brand === fBrand;
-
-    const added = new Date(p.createdAt);
-    const addFromMatch = !fAddFrom || added >= new Date(fAddFrom);
-    const addToMatch = !fAddTo || added <= new Date(fAddTo);
-
-    const priceMinMatch = fPriceMin === null || p.sellPrice >= fPriceMin;
-    const priceMaxMatch = fPriceMax === null || p.sellPrice <= fPriceMax;
-
-    const soldInRangeMatch = !(fSoldFrom || fSoldTo) || (p.sales || []).some(sale => {
-      const date = new Date(sale.date);
-      if (fSoldFrom && date < new Date(fSoldFrom)) return false;
-      if (fSoldTo && date > new Date(fSoldTo)) return false;
-      return true;
-    });
-
-    return keywordMatch && categoryMatch && brandMatch &&
-           addFromMatch && addToMatch &&
-           priceMinMatch && priceMaxMatch &&
-           soldInRangeMatch;
-  }).forEach(p => {
-    count++;
-    const lastSale = p.sales?.length ? p.sales[p.sales.length - 1].price : p.sellPrice;
+  products.forEach(p => {
     const li = document.createElement("li");
+    const lastSale = p.sales?.length ? p.sales[p.sales.length - 1].price : p.sellPrice;
     li.innerHTML = `
       <h3>${p.name} <small>${p.category} | ${p.brand}</small></h3>
       <div><strong>Adet:</strong> ${p.quantity} | <strong>Raf:</strong> ${p.shelf}</div>
@@ -112,23 +73,10 @@ function applySearchFilters() {
       </div>`;
     productList.appendChild(li);
   });
-
-  document.getElementById("filterMatches").innerText = `${count} ürün bulundu.`;
-}
-
-function resetSearchFilters() {
-  ["filterKeyword", "filterCategory", "filterBrand",
-   "filterAddedFrom", "filterAddedTo", "filterSoldFrom",
-   "filterSoldTo", "filterPriceMin", "filterPriceMax"]
-   .forEach(id => document.getElementById(id).value = "");
-
-  document.getElementById("filterMatches").innerText = "";
-  productList.innerHTML = "";
 }
 
 // ÜRÜN SİL
 async function deleteProduct(id){
-  req.app.get("io").emit("update");
   if(!confirm("Silinsin mi?")) return;
   await fetch(`${API}/${id}`,{ method:"DELETE", headers:headers() });
   products = products.filter(p=>p._id!==id);
@@ -137,7 +85,6 @@ async function deleteProduct(id){
 
 // FORM DOLDUR DÜZENLEME İÇİN
 function prepareEdit(id){
-  req.app.get("io").emit("update");
   const p = products.find(x=>x._id===id);
   Object.keys(p).forEach(k => {
     if(form.elements[k]) form.elements[k].value = Array.isArray(p[k]) ? p[k].join(', ') : p[k];
@@ -148,7 +95,6 @@ function prepareEdit(id){
 
 // SATIŞ YAP
 async function sellProduct(id) {
-  req.app.get("io").emit("update");
   const product = products.find(p => p._id === id);
   const qty = parseInt(prompt("Kaç adet satıldı?", "1"));
   if (isNaN(qty) || qty < 1) return;
@@ -193,17 +139,19 @@ function viewDetails(id){
   alert(msg);
 }
 
+// ÇIKIŞ
 function logout(){
   localStorage.clear();
   location.href="index.html";
 }
 
-// Sayfa yüklendiğinde sadece veri çek ama listeleme yapma
+// SAYFA YÜKLENDİĞİNDE
 fetchProducts();
 
-// Eğer gerçek zamanlı destek varsa:
+// SOCKET.IO GÜNCELLEME
 if (window.io) {
-  const socket = io();
+  const socket = io("https://ozturkoto52.onrender.com");
   socket.on("update", () => fetchProducts());
 }
+
 
