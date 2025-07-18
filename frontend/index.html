@@ -1,11 +1,139 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>ÖZTÜRK OTOMOBİL OTO ELEKTRİK | Stok Takip</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <meta charset="UTF-8" />
+  <title>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    /* --- Temel Düzen --- */
+    body, html {
+      margin: 0; padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: #3a86ff;
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 { font-size: 20px; margin: 0; }
+    header button {
+      background: #ff006e;
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* --- Ana Container --- */
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 10px;
+      padding: 10px;
+      background: #f1f3f5;
+    }
+
+    /* --- Sol Kolon (Ürün Ekleme) --- */
+    aside {
+      background: white;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-y: auto;
+    }
+    aside h2 { margin-top: 0; }
+    aside form > .form-grid {
+      display: grid;
+      gap: 8px;
+    }
+    aside input, aside select, aside textarea {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    aside button[type="submit"] {
+      margin-top: 8px;
+      background: #06d6a0;
+      color: white;
+      border: none;
+      padding: 10px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* --- Sağ Kolon: Rapor + Filtre + Liste --- */
+    .reports, .filters {
+      background: white;
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+    .reports h3, .filters h3 { margin-top: 0; }
+    .reports label, .filters input, .filters select {
+      font-size: 14px;
+    }
+    .reports input, .filters input, .filters select {
+      padding: 6px;
+      font-size: 14px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      margin: 4px 0;
+    }
+    .reports button, .filters button {
+      margin-top: 6px;
+      background: #06d6a0;
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    /* --- Ürün Listesi --- */
+    .content #productsUl {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .content #productsUl li {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    .content .actions button {
+      margin-right: 6px;
+      margin-top: 6px;
+      background: #3a86ff;
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    /* --- Responsive --- */
+    @media(max-width:768px){
+      main { grid-template-columns: 1fr; }
+      header { flex-direction: column; align-items: flex-start; }
+      header button { margin-top: 6px; }
+    }
+  </style>
+</head><body>
 
 <div id="authWrapper">
     <div id="loginDiv" class="authBox">
