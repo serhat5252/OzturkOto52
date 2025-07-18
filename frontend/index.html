@@ -2,92 +2,70 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ÖZTÜRK OTOMOBİL OTO ELEKTRİK - Giriş</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #3a86ff, #00b4d8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .login-container {
-      background: white;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-    }
-
-    .login-container h1 {
-      color: #3a86ff;
-      margin-bottom: 24px;
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .login-container input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-
-    .login-container button {
-      width: 100%;
-      padding: 12px;
-      background-color: #3a86ff;
-      color: white;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.2s ease-in-out;
-    }
-
-    .login-container button:hover {
-      background-color: #265dd9;
-    }
-
-    .login-container p {
-      margin-top: 16px;
-    }
-
-    .login-container a {
-      color: #ff006e;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    #loginMessage {
-      color: red;
-      margin-top: 10px;
-      font-size: 14px;
-    }
-  </style>
+  <title>ÖZTÜRK OTOMOBİL OTO ELEKTRİK | Stok Takip</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="login-container">
-    <h1>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</h1>
+  <div id="loginDiv">
+    <h2>Giriş Yap</h2>
     <form id="loginForm">
-      <input type="text" id="username" placeholder="Kullanıcı Adı" required>
-      <input type="password" id="password" placeholder="Şifre" required>
-      <button type="submit">Giriş Yap</button>
+      <input type="text" name="username" placeholder="Kullanıcı adı" required>
+      <input type="password" name="password" placeholder="Şifre" required>
+      <button type="submit">Giriş</button>
     </form>
-    <p>Hesabın yok mu? <a href="#" onclick="register()">Kayıt Ol</a></p>
-    <div id="loginMessage"></div>
+    <div id="loginError" class="error"></div>
   </div>
 
-  <script src="auth.js"></script>
+  <div id="dashboard" style="display:none">
+    <button onclick="logout()">Çıkış Yap</button>
+    <h1>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</h1>
+    <div id="currentUser"></div>
+    <!-- Ürün ekleme formu buraya gelecek -->
+    <form id="productForm">
+      <!-- product.js içeriğindeki form alanları -->
+    </form>
+    <input id="searchInput" placeholder="Ara..." />
+    <ul id="productsUl"></ul>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="product.js"></script>
+  <script>
+    // login işlemi
+    const loginForm = document.getElementById("loginForm");
+    const loginError = document.getElementById("loginError");
+    const loginDiv = document.getElementById("loginDiv");
+    const dashboard = document.getElementById("dashboard");
+
+    loginForm.onsubmit = async e => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(loginForm));
+      const res = await fetch("https://ozturkoto52.onrender.com/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify(data)
+      });
+      const body = await res.json();
+      if (!res.ok) return loginError.innerText = body.message || "Giriş başarısız";
+      localStorage.setItem("token", body.token);
+      localStorage.setItem("username", body.username);
+      loginDiv.style.display = "none";
+      dashboard.style.display = "block";
+      document.getElementById("currentUser").innerText = body.username;
+      fetchProducts();
+      setupSocket();
+    };
+
+    function logout(){
+      localStorage.clear();
+      loginDiv.style.display = "block";
+      dashboard.style.display = "none";
+    }
+
+    function setupSocket(){
+      const socket = io("https://ozturkoto52.onrender.com");
+      socket.on("update", fetchProducts);
+    }
+  </script>
 </body>
 </html>
-
