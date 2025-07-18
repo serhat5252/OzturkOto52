@@ -46,9 +46,20 @@ io.on("connection", socket => {
 });
 
 app.set("io", io);
+const path = require("path");
+
+app.use(express.static(path.join(__dirname, "../frontend")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend", "index.html"));
+});
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`🚀 Sunucu açık: http://localhost:${PORT}`));
+server.listen(PORT, () =>
+  console.log(`🚀 Sunucu açık: http://localhost:${PORT}`)
+);
+
+
 
 
 
