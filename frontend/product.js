@@ -1,3 +1,6 @@
+// Sadece şu şekilde yaz:
+const API = "/api/products";
+const API = "https://ozturkoto52.onrender.com/api/products";
 const socket = io("https://my-stok-app.up.railway.app");
 const headers = () => ({
   "Content-Type": "application/json",
