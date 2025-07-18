@@ -1,133 +1,28 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <title>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <title>ÖZTÜRK OTOMOBİL OTO ELEKTRİK | Stok Takip</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    /* --- Temel Düzen --- */
-    body, html {
-      margin: 0; padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    header {
-      background: #3a86ff;
-      color: white;
-      padding: 12px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    header h1 { font-size: 20px; margin: 0; }
-    header button {
-      background: #ff006e;
-      border: none;
-      color: white;
-      padding: 8px 14px;
-      font-size: 14px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    /* --- Ana Container --- */
-    <main style="display: grid; grid-template-columns: 300px 1fr; gap: 10px; padding: 20px;">
-
-    /* --- Sol Kolon (Ürün Ekleme) --- */
-    aside {
-      background: white;
-      padding: 15px;
-      border-radius: 6px;
-      overflow-y: auto;
-    }
-    aside h2 { margin-top: 0; }
-    aside form > .form-grid {
-      display: grid;
-      gap: 8px;
-    }
-    aside input, aside select, aside textarea {
-      width: 100%;
-      padding: 8px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    aside button[type="submit"] {
-      margin-top: 8px;
-      background: #06d6a0;
-      color: white;
-      border: none;
-      padding: 10px;
-      font-weight: bold;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    /* --- Sağ Kolon: Rapor + Filtre + Liste --- */
-     <div style="display: flex; flex-direction: column; gap: 20px;">
-    .reports, .filters {
-      background: white;
-      padding: 12px;
-      border-radius: 6px;
-      margin-bottom: 10px;
-    }
-    .reports h3, .filters h3 { margin-top: 0; }
-    .reports label, .filters input, .filters select {
-      font-size: 14px;
-    }
-    .reports input, .filters input, .filters select {
-      padding: 6px;
-      font-size: 14px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      margin: 4px 0;
-    }
-    .reports button, .filters button {
-      margin-top: 6px;
-      background: #06d6a0;
-      color: white;
-      border: none;
-      padding: 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    /* --- Ürün Listesi --- */
-    .content #productsUl {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .content #productsUl li {
-      background: white;
-      border: 1px solid #ddd;
-      padding: 10px;
-      border-radius: 6px;
-      margin-bottom: 8px;
-    }
-    .content .actions button {
-      margin-right: 6px;
-      margin-top: 6px;
-      background: #3a86ff;
-      border: none;
-      color: white;
-      padding: 6px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    /* --- Responsive --- */
-    @media(max-width:768px){
-      main { grid-template-columns: 1fr; }
-      header { flex-direction: column; align-items: flex-start; }
-      header button { margin-top: 6px; }
-    }
+    body { font-family: 'Segoe UI', sans-serif; background: #f1f3f5; margin:0; }
+    header { background: #3a86ff; color: white; padding: 20px; display:flex; justify-content:space-between; align-items:center; }
+    header h1 { margin: 0; font-size: 20px; }
+    header button { background: #ff006e; border:none; color:white; padding:8px 14px; border-radius:6px; cursor:pointer; }
+    #tabs { display: flex; background:#eee; }
+    .tab { flex:1; padding:12px; text-align:center; cursor:pointer; }
+    .tab.active { background:white; font-weight:bold; border-bottom:2px solid #3a86ff; }
+    .tab-content { display:none; padding:20px; background:white; }
+    .tab-content.active { display:block; }
+    input, select, textarea, button { width:100%; margin-bottom:10px; padding:8px; font-size:14px; border-radius:4px; border:1px solid #ccc; }
+    button.primary { background:#3a86ff; color:white; border:none; cursor:pointer; }
+    button.secondary { background:#06d6a0; color:white; border:none; cursor:pointer; }
+    section { margin-bottom:20px; }
+    #productsUl li { background:#fafafa; padding:10px; border:1px solid #ddd; border-radius:6px; margin-bottom:10px; }
+    .actions button { margin-right:5px; padding:5px 8px; background:#3a86ff; color:white; border:none; border-radius:4px; cursor:pointer; }
   </style>
-</head><body>
+</head>
+<body>
 
 <div id="authWrapper">
     <div id="loginDiv" class="authBox">
@@ -141,17 +36,6 @@
     <div id="loginError" class="error"></div>
   </div>
 
-    <h2>Kayıt Ol</h2>
-    <form id="registerForm">
-      <input type="text" name="username" placeholder="Kullanıcı adı" required />
-      <input type="password" name="password" placeholder="Şifre" required />
-      <button type="submit">Kayıt Ol</button>
-    </form>
-    <p>Zaten hesabın var mı? <a href="#" id="showLogin">Giriş Yap</a></p>
-    <div id="registerError" class="error"></div>
-    <div id="registerSuccess" class="success"></div>
-  </div>
-
   <!-- ========== Dashboard (Panel) ========== -->
   <div id="dashboard" style="display:none">
     <header>
@@ -161,9 +45,16 @@
         <button onclick="logout()">Çıkış Yap</button>
       </div>
     </header>
+<div id="tabs">
+  <div class="tab active" data-tab="tab-add">Ürün Ekle</div>
+  <div class="tab" data-tab="tab-search">Ürün Arama</div>
+  <div class="tab" data-tab="tab-report">Satış Raporu</div>
+</div>
 
    <main>
     <aside>
+   <!-- 📝 Ürün Ekleme Tab -->
+<div id="tab-add" class="tab-content active">
       <h2>Ürün Ekle / Güncelle</h2>
       <form id="productForm">
         <div class="form-grid">
@@ -312,6 +203,8 @@
       </form>
     </aside>
 <section style="background:#fff;border-radius:8px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+      <!-- 📈 Satış Raporu Tab -->
+      <div id="tab-report" class="tab-content">
       <h3>📊 Satış Raporu</h3>
       <label>Başlangıç: <input type="date" id="fromDate"></label><br>
       <label>Bitiş: <input type="date" id="toDate"></label><br>
@@ -320,6 +213,7 @@
     </section>  
   
   <section style="background:#fff;border-radius:8px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+      <div id="tab-search" class="tab-content"> 
       <h3>🔍 Detaylı Arama</h3>
       <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama..." />
       <select id="filterCategory"><option value="">Tüm Kategoriler</option></select>
@@ -348,16 +242,14 @@
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="product.js"></script>
   <script>
-    document.getElementById("showRegister").onclick = e => {
-      e.preventDefault();
-      document.getElementById("loginDiv").style.display = "none";
-      document.getElementById("registerDiv").style.display = "block";
+    // 👆 Tab geçiş fonksiyonu
+  document.querySelectorAll('#tabs .tab').forEach(tab => {
+    tab.onclick = () => {
+      document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab).classList.add('active');
     };
-    document.getElementById("showLogin").onclick = e => {
-      e.preventDefault();
-      document.getElementById("registerDiv").style.display = "none";
-      document.getElementById("loginDiv").style.display = "block";
-    };
+  });
     // 🔽 Buraya bu kodları ekle!
     const regForm = document.getElementById("registerForm");
     regForm.onsubmit = async e => {
