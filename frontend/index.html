@@ -33,14 +33,7 @@
     }
 
     /* --- Ana Container --- */
-    main {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 10px;
-      padding: 10px;
-      background: #f1f3f5;
-    }
+    <main style="display: grid; grid-template-columns: 300px 1fr; gap: 10px; padding: 20px;">
 
     /* --- Sol Kolon (Ürün Ekleme) --- */
     aside {
@@ -73,6 +66,7 @@
     }
 
     /* --- Sağ Kolon: Rapor + Filtre + Liste --- */
+     <div style="display: flex; flex-direction: column; gap: 20px;">
     .reports, .filters {
       background: white;
       padding: 12px;
@@ -317,29 +311,33 @@
         <button type="submit">Kaydet</button>
       </form>
     </aside>
-<section class="reports">
+<section style="background:#fff;border-radius:8px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
       <h3>📊 Satış Raporu</h3>
       <label>Başlangıç: <input type="date" id="fromDate"></label><br>
       <label>Bitiş: <input type="date" id="toDate"></label><br>
       <button onclick="getSalesReport()">Rapor Al</button>
-    </section>
-    
-  <section class="filters">
+      <div id="reportResult" style="margin-top:10px;"></div>
+    </section>  
+  
+  <section style="background:#fff;border-radius:8px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
       <h3>🔍 Detaylı Arama</h3>
       <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama..." />
       <select id="filterCategory"><option value="">Tüm Kategoriler</option></select>
-      <select id="filterBrand"><option value="">Tüm Markalar</option></select>
-      <br>
+      <select id="filterBrand"><option value="">Tüm Markalar</option></select><br>
       <label>Eklenme Tarihi: <input type="date" id="filterAddedFrom"> – <input type="date" id="filterAddedTo"></label><br>
       <label>Satış Tarihi: <input type="date" id="filterSoldFrom"> – <input type="date" id="filterSoldTo"></label><br>
       <label>Fiyat Aralığı: ₺<input type="number" id="filterPriceMin" style="width:80px"> – <input type="number" id="filterPriceMax" style="width:80px"></label><br>
       <button onclick="applySearchFilters()">Ara</button>
       <button onclick="resetSearchFilters()">Temizle</button>
-      <div id="filterMatches" style="margin-top:5px;font-weight:bold;"></div>
+      <div id="filterMatches" style="margin-top:8px;font-weight:bold;"></div>
     </section>
   <ul id="productsUl"></ul>
 
   <!-- Sayfanın geri kalanı -->
+  <!-- 🧾 Ürün Listesi -->
+    <section style="background:#fff;border-radius:8px;flex:1;overflow:auto;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+      <ul id="productsUl"></ul>
+    </section>
 </body>
 
   <!-- JS Dosyaları -->
