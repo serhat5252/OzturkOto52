@@ -7,8 +7,8 @@
 </head>
 <body>
 
-  <!-- ========== Giriş / Login Ekranı ========== -->
-   <div id="loginDiv">
+<div id="authWrapper">
+    <div id="loginDiv" class="authBox">
     <h2>Giriş Yap</h2>
     <form id="loginForm">
       <input type="text" name="username" placeholder="Kullanıcı adı" required />
@@ -18,7 +18,7 @@
     <p>Hesabın yok mu? <a href="#" id="showRegister">Kayıt Ol</a></p>
     <div id="loginError" class="error"></div>
   </div>
-<div id="registerDiv" style="display:none">
+div id="registerDiv" class="authBox" style="display:none">
     <h2>Kayıt Ol</h2>
     <form id="registerForm">
       <input type="text" name="username" placeholder="Kullanıcı adı" required />
