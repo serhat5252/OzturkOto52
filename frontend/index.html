@@ -1,22 +1,33 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>ÖZTÜRK OTOMOBİL OTO ELEKTRİK | Stok Takip</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <!-- ========== Giriş / Login Ekranı ========== -->
-  <div id="loginDiv">
+   <div id="loginDiv">
     <h2>Giriş Yap</h2>
     <form id="loginForm">
-      <input type="text" name="username" placeholder="Kullanıcı Adı" required>
-      <input type="password" name="password" placeholder="Şifre" required>
+      <input type="text" name="username" placeholder="Kullanıcı adı" required />
+      <input type="password" name="password" placeholder="Şifre" required />
       <button type="submit">Giriş</button>
     </form>
+    <p>Hesabın yok mu? <a href="#" id="showRegister">Kayıt Ol</a></p>
     <div id="loginError" class="error"></div>
+  </div>
+<div id="registerDiv" style="display:none">
+    <h2>Kayıt Ol</h2>
+    <form id="registerForm">
+      <input type="text" name="username" placeholder="Kullanıcı adı" required />
+      <input type="password" name="password" placeholder="Şifre" required />
+      <button type="submit">Kayıt Ol</button>
+    </form>
+    <p>Zaten hesabın var mı? <a href="#" id="showLogin">Giriş Yap</a></p>
+    <div id="registerError" class="error"></div>
+    <div id="registerSuccess" class="success"></div>
   </div>
 
   <!-- ========== Dashboard (Panel) ========== -->
@@ -231,45 +242,80 @@
 </body>
 
   <!-- JS Dosyaları -->
+  <!-- ... (önceki HTML kodları) ... -->
+
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="product.js"></script>
   <script>
-    const loginForm = document.getElementById("loginForm");
-    const loginDiv = document.getElementById("loginDiv");
-    const dashboard = document.getElementById("dashboard");
-    const loginError = document.getElementById("loginError");
-    const currentUser = document.getElementById("currentUser");
+    document.getElementById("showRegister").onclick = e => {
+      e.preventDefault();
+      document.getElementById("loginDiv").style.display = "none";
+      document.getElementById("registerDiv").style.display = "block";
+    };
+    document.getElementById("showLogin").onclick = e => {
+      e.preventDefault();
+      document.getElementById("registerDiv").style.display = "none";
+      document.getElementById("loginDiv").style.display = "block";
+    };
+    // 🔽 Buraya bu kodları ekle!
+    const regForm = document.getElementById("registerForm");
+    regForm.onsubmit = async e => {
+      e.preventDefault();
+      document.getElementById("registerError").innerText = "";
+      document.getElementById("registerSuccess").innerText = "";
+      const data = Object.fromEntries(new FormData(regForm));
+      try {
+        const res = await fetch("https://ozturkoto52.onrender.com/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        const body = await res.json();
+        if (!res.ok) throw body.message || "Kayıt başarısız";
+        document.getElementById("registerSuccess").innerText = "Kayıt başarılı! Giriş yapabilirsin.";
+      } catch(err) {
+        document.getElementById("registerError").innerText = err;
+      }
+    };
+
+    const loginForm = document.getElementById("loginForm"),
+          loginError = document.getElementById("loginError"),
+          loginDiv = document.getElementById("loginDiv"),
+          dashboard = document.getElementById("dashboard");
 
     loginForm.onsubmit = async e => {
       e.preventDefault();
+      loginError.innerText = "";
       const data = Object.fromEntries(new FormData(loginForm));
-      const res = await fetch("https://ozturkoto52.onrender.com/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-      const body = await res.json();
-      if (!res.ok) return loginError.innerText = body.message || "Giriş başarısız";
-
-      localStorage.setItem("token", body.token);
-      localStorage.setItem("username", body.username);
-      loginDiv.style.display = "none";
-      dashboard.style.display = "block";
-      currentUser.innerText = body.username;
-
-      fetchProducts();  // product.js içindeki fonksiyon
-      setupSocket();    // socket.io bağlantısını kurar
-    }
-
-    function logout() {
-      localStorage.clear();
-      loginDiv.style.display = "block";
-      dashboard.style.display = "none";
-    }
+      try {
+        const res = await fetch("https://ozturkoto52.onrender.com/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type":"application/json" },
+          body: JSON.stringify(data)
+        });
+        const body = await res.json();
+        if (!res.ok) throw body.message || "Giriş başarısız";
+        localStorage.setItem("token", body.token);
+        localStorage.setItem("username", body.username);
+        document.getElementById("currentUser").innerText = body.username;
+        loginDiv.style.display = "none";
+        dashboard.style.display = "block";
+        fetchProducts();
+        setupSocket();
+      } catch(err) {
+        loginError.innerText = err;
+      }
+    };
 
     function setupSocket(){
       const socket = io("https://ozturkoto52.onrender.com");
       socket.on("update", fetchProducts);
+    }
+
+    function logout(){
+      localStorage.clear();
+      dashboard.style.display = "none";
+      loginDiv.style.display = "block";
     }
   </script>
 </body>
