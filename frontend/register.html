@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kayıt Ol - Öztürk Oto</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="login-container">
+    <h2>Yeni Hesap Oluştur</h2>
+    <form id="registerForm">
+      <input type="text" name="username" placeholder="Kullanıcı Adı" required />
+      <input type="password" name="password" placeholder="Şifre" required />
+      <button type="submit">Kayıt Ol</button>
+      <p><a href="index.html">Giriş yap</a></p>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("registerForm").onsubmit = async e => {
+      e.preventDefault();
+      const form = new FormData(e.target);
+      const data = Object.fromEntries(form.entries());
+
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      if (res.ok) {
+        alert("Kayıt başarılı! Şimdi giriş yapabilirsin.");
+        location.href = "index.html";
+      } else {
+        alert("Hata: " + result.message);
+      }
+    };
+  </script>
+</body>
+</html>
