@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const path = require("path"); // ✅ EKLENDİ
+const path = require("path"); // ✅ sadece bir tane tanımlı
 
 dotenv.config();
 
@@ -18,11 +18,10 @@ const { protect } = require("./middleware/authMiddleware");
 app.use("/api/auth", authRoutes);
 app.use("/api/products", protect, productRoutes);
 
-// ✅ FRONTEND SERVİSİ
-app.use(express.static(path.join(__dirname, "../frontend"))); // frontend dosyalarını sun
-
+// ✅ FRONTEND SERVİSİ (sadece 1 kez)
+app.use(express.static(path.join(__dirname, "../frontend")));
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend", "index.html")); // SPA olarak çalışsın
+  res.sendFile(path.join(__dirname, "../frontend", "index.html"));
 });
 
 // 🔌 MongoDB bağlantısı
@@ -46,16 +45,13 @@ io.on("connection", socket => {
 });
 
 app.set("io", io);
-const path = require("path");
 
-app.use(express.static(path.join(__dirname, "../frontend")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend", "index.html"));
-});
-
+// 🔊 Port
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`🚀 Sunucu açık: http://localhost:${PORT}`));
+server.listen(PORT, () =>
+  console.log(`🚀 Sunucu açık: http://localhost:${PORT}`)
+);
+
 
 
 
