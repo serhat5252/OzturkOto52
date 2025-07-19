@@ -109,16 +109,16 @@ function prepareEdit(id){
 
   // sekmeyi formTab yap
   document.querySelectorAll('.tab').forEach(el => {
-  el.onclick = () => {
-    // Sekme başlıkları aktiflik durumu
+  el.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     el.classList.add('active');
-
-    // İçerik bloklarını yönet
-    document.querySelectorAll('.tabContent').forEach(c => c.style.display = 'none');
-    document.getElementById(el.dataset.tab).style.display = 'block';
-  };
+    document.querySelectorAll('.tabContent').forEach(tc => tc.classList.remove('active'));
+    document.getElementById(el.dataset.tab).classList.add('active');
+    // Arama sekmesi aktifse, ürün listesi gizli; Listeler arama butonuna basınca gösterilecek
+    document.getElementById('productListContainer').style.display = el.dataset.tab === 'formTab' ? 'none' : 'block';
+  });
 });
+
 
 }
 
