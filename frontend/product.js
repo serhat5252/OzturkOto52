@@ -62,27 +62,39 @@ async function fetchProducts() {
 
 // 📋 Listeleme
 function renderProducts(list = products) {
-  productList.innerHTML = "";
+  const listContainer = document.getElementById("productsUl");
+  listContainer.innerHTML = "";
+
+  if (!list || !list.length) {
+    listContainer.style.display = "none";
+    return;
+  }
+
   list.forEach(p => {
     const lastSale = p.sales?.length
       ? p.sales[p.sales.length - 1].price
       : p.sellPrice;
+
     const li = document.createElement("li");
     li.innerHTML = `
       <h3>${p.name} <small>${p.category} | ${p.brand}</small></h3>
       <div>Adet: ${p.quantity} | Raf: ${p.shelf}</div>
       <div>Alış: ₺${p.buyPrice.toFixed(2)} | Son Satış: ₺${lastSale.toFixed(2)}</div>
-      <div>Kodlar: ${(p.codes||[]).join(", ")}</div>
+      <div>Kodlar: ${(p.codes || []).join(", ")}</div>
       <p>${p.description}</p>
       <div class="actions">
         <button onclick="prepareEdit('${p._id}')">Düzenle</button>
         <button onclick="sellProduct('${p._id}')">Sat</button>
         <button onclick="deleteProduct('${p._id}')">Sil</button>
         <button onclick="viewDetails('${p._id}')">Detay</button>
-      </div>`;
-    productList.appendChild(li);
+      </div>
+    `;
+    listContainer.appendChild(li);
   });
+
+  listContainer.style.display = "block";
 }
+
 
 // 🗑️ Sil
 async function deleteProduct(id) {
@@ -134,37 +146,46 @@ async function sellProduct(id) {
 
 // 🔍 Detaylı Arama
 function applySearchFilters() {
-  const key = document.getElementById("filterKeyword").value.toLowerCase();
-  const cat = document.getElementById("filterCategory").value;
+  const keyword = document.getElementById("filterKeyword").value.toLowerCase();
+  const category = document.getElementById("filterCategory").value;
   const brand = document.getElementById("filterBrand").value;
-  const from = document.getElementById("filterAddedFrom").value;
-  const to = document.getElementById("filterAddedTo").value;
+  const addedFrom = document.getElementById("filterAddedFrom").value;
+  const addedTo = document.getElementById("filterAddedTo").value;
   const soldFrom = document.getElementById("filterSoldFrom").value;
   const soldTo = document.getElementById("filterSoldTo").value;
-  const minP = parseFloat(document.getElementById("filterPriceMin").value) || 0;
-  const maxP = parseFloat(document.getElementById("filterPriceMax").value) || Infinity;
+  const priceMin = parseFloat(document.getElementById("filterPriceMin").value);
+  const priceMax = parseFloat(document.getElementById("filterPriceMax").value);
 
-  const filtered = products.filter(p => {
-    const kw = key ? [p.name, p.description, ...(p.codes||[])].some(x => x.toLowerCase().includes(key)) : true;
-    const ct = cat ? p.category === cat : true;
-    const br = brand ? p.brand === brand : true;
+  const matches = products.filter(p => {
+    const nameMatch = p.name.toLowerCase().includes(keyword);
+    const codeMatch = (p.codes || []).some(c => c.toLowerCase().includes(keyword));
+    const descMatch = (p.description || "").toLowerCase().includes(keyword);
+    const categoryMatch = !category || p.category === category;
+    const brandMatch = !brand || p.brand === brand;
 
-    const added = new Date(p.createdAt);
-    const adFrom = from ? added >= new Date(from) : true;
-    const adTo = to ? added <= new Date(to) : true;
+    const createdAt = new Date(p.createdAt);
+    const addedFromMatch = !addedFrom || createdAt >= new Date(addedFrom);
+    const addedToMatch = !addedTo || createdAt <= new Date(addedTo);
 
-    const prMatch = p.sellPrice >= minP && p.sellPrice <= maxP;
+    const lastSaleDate = p.sales?.length ? new Date(p.sales[p.sales.length - 1].date) : null;
+    const soldFromMatch = !soldFrom || (lastSaleDate && lastSaleDate >= new Date(soldFrom));
+    const soldToMatch = !soldTo || (lastSaleDate && lastSaleDate <= new Date(soldTo));
 
-    const soldMatch = !(soldFrom || soldTo) || (p.sales || []).some(s => {
-      const sd = new Date(s.date);
-      return (!soldFrom || sd >= new Date(soldFrom)) && (!soldTo || sd <= new Date(soldTo));
-    });
+    const priceMatch =
+      (isNaN(priceMin) || p.sellPrice >= priceMin) &&
+      (isNaN(priceMax) || p.sellPrice <= priceMax);
 
-    return kw && ct && br && adFrom && adTo && prMatch && soldMatch;
+    return (nameMatch || codeMatch || descMatch) &&
+           categoryMatch &&
+           brandMatch &&
+           addedFromMatch &&
+           addedToMatch &&
+           soldFromMatch &&
+           soldToMatch &&
+           priceMatch;
   });
 
-  renderProducts(filtered);
-  document.getElementById("filterMatches").innerText = `${filtered.length} ürün bulundu.`;
+  renderProducts(matches);
 }
 
 // 🔄 Filtre temizle
