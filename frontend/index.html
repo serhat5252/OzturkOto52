@@ -8,313 +8,76 @@
 </head>
 <body>
 
-<!-- ====== GİRİŞ / KAYIT EKRANI ====== -->
-<div class="auth-container" id="authBox">
-  <h1>ÖZTÜRK OTOMOBİL</h1>
+  <!-- AUTH: Giriş / Kayıt -->
+  <div class="auth-container" id="authBox">
+    <h1>ÖZTÜRK OTOMOBİL</h1>
+    <form id="loginForm">
+      <input name="username" placeholder="Kullanıcı Adı" required>
+      <input type="password" name="password" placeholder="Şifre" required>
+      <button type="submit">Giriş Yap</button>
+    </form>
+    <p class="switch"><a href="#" id="showRegister">Kayıt Ol</a></p>
+    <div id="loginMessage" class="error"></div>
 
-  <!-- Giriş Formu -->
-  <form id="loginForm">
-    <input type="text" name="username" placeholder="Kullanıcı Adı" required>
-    <input type="password" name="password" placeholder="Şifre" required>
-    <button type="submit">Giriş Yap</button>
-  </form>
-  <p class="switch"><a href="#" id="showRegister">Kayıt Ol</a></p>
-  <div id="loginMessage" class="error"></div>
+    <form id="registerForm" style="display:none">
+      <input name="username" placeholder="Yeni Kullanıcı" required>
+      <input type="password" name="password" placeholder="Şifre Belirle" required>
+      <button type="submit">Kayıt Ol</button>
+    </form>
+    <p class="switch" id="backToLogin" style="display:none"><a href="#" id="showLogin">Giriş Yap</a></p>
+    <div id="registerMessage" class="success"></div>
+  </div>
 
-  <!-- Kayıt Formu -->
-  <form id="registerForm" style="display:none">
-    <input type="text" name="username" placeholder="Yeni Kullanıcı Adı" required>
-    <input type="password" name="password" placeholder="Şifre Belirle" required>
-    <button type="submit">Kayıt Ol</button>
-  </form>
-  <p class="switch" id="backToLogin" style="display:none"><a href="#" id="showLogin">Giriş Yap</a></p>
-  <div id="registerMessage" class="success"></div>
-</div>
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard" style="display:none">
+    <header class="navbar">
+      <div class="brand">🚗 ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
+      <div class="user"><span id="currentUser"></span> <button onclick="logout()">Çıkış Yap</button></div>
+    </header>
 
-<!-- ====== DASHBOARD ====== -->
-<div class="dashboard" id="dashboard" style="display:none">
-  <header class="navbar">
-    <div class="brand">🚗 ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
-    <div class="user">
-      <span id="currentUser"></span>
-      <button onclick="logout()">Çıkış Yap</button>
+    <div class="main">
+      <aside class="sidebar">
+        <div class="tabs">
+          <div class="tab active" data-tab="formTab">Ürün Ekle/Güncelle</div>
+          <div class="tab" data-tab="searchTab">Detaylı Arama</div>
+          <div class="tab" data-tab="reportTab">Satış Raporu</div>
+        </div>
+      </aside>
+      <section class="content">
+        <!-- Ürün Formu -->
+        <div id="formTab" class="tabContent" style="display:block">
+          <form id="productForm" class="form-grid">
+            <!-- form alanları (name, category...) -->
+            <!-- ... -->
+            <div class="form-buttons">
+              <button type="submit">Kaydet</button>
+              <button type="button" id="clearFormBtn">Temizle</button>
+            </div>
+          </form>
+        </div>
+        <!-- Arama Sekmesi -->
+        <div id="searchTab" class="tabContent" style="display:none">
+          <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama">
+          <button onclick="applySearch()">Ara</button>
+          <button onclick="clearSearch()">Temizle</button>
+          <div id="filterMatches"></div>
+        </div>
+        <!-- Rapor Sekmesi -->
+        <div id="reportTab" class="tabContent" style="display:none">
+          <input type="date" id="fromDate"> – <input type="date" id="toDate">
+          <button onclick="getSalesReport()">Rapor Al</button>
+          <div id="reportResult"></div>
+        </div>
+
+        <!-- Ürün Listesi -->
+        <div class="list-container">
+          <ul id="productsUl" style="display:none"></ul>
+        </div>
+      </section>
     </div>
-  </header>
+  </div>
 
-  <div class="main">
-    <!-- Yan Menü -->
-    <aside class="sidebar">
- <div class="tabs">
-    <div class="tab active" data-tab="formTab">Ürün Ekle/Güncelle</div>
-    <div class="tab" data-tab="searchTab">Detaylı Arama</div>
-    <div class="tab" data-tab="reportTab">Satış Raporu</div>
- </div>
-
-<!-- Sekme İçerikleri -->
-<div id="formTab"  class="tabContent" style="display: block;">
-  <!-- Buraya ürünekleme formu gelecek -->
-</div>
-<div id="searchTab" class="tabContent" style="display: none;">     
-        <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama...">
-        <select id="filterCategory"><option value="">Tüm Kategoriler</option></select>
-        <select id="filterBrand"><option value="">Tüm Markalar</option></select>
-        <label>Eklenme: <input type="date" id="filterAddedFrom"> – <input type="date" id="filterAddedTo"></label>
-        <label>Satış: <input type="date" id="filterSoldFrom"> – <input type="date" id="filterSoldTo"></label>
-        <label>Fiyat: ₺<input type="number" id="filterPriceMin" style="width:80px"> – <input type="number" id="filterPriceMax" style="width:80px"></label>
-        <button onclick="applySearch()">Ara</button>
-        <button onclick="clearSearch()">Temizle</button>
-        <div id="filterMatches"></div>
-</div>
-<div id="reportTab" class="tabContent" style="display: none;">
-        <label>Başlangıç: <input type="date" id="fromDate"></label>
-        <label>Bitiş: <input type="date" id="toDate"></label>
-        <button onclick="getSalesReport()">Rapor Al</button>
-        <div id="reportResult"></div>
-</div>
-    </aside>
-
-    <!-- Tab İçerik -->
-    <section class="content">
-      <div id="formTab" class="tabContent" style="display:block"> <!-- Başlangıçta bu açık -->
-         <form id="productForm" class="form-grid">
-          <input name="name" placeholder="Ürün Adı" required />
-          <select name="category" required>
-  <option value="">Kategori Seçiniz</option>
-  <optgroup label="Alternatör">
-    <option value="Alternatör">Alternatör</option>
-    <option value="Alternatör Statör">Alternatör Statör</option>
-    <option value="Alternatör Rotor">Alternatör Rotor</option>
-    <option value="Alternatör Konjektör">Alternatör Konjektör</option>
-    <option value="Alternatör Kasnağı">Alternatör Kasnağı</option>
-    <option value="Alternatör Diyot Tablası">Alternatör Diyot Tablası</option>
-    <option value="Alternatör Diyot + Konjektör">Alternatör Diyot + Konjektör</option>
-    <option value="Alternatör Diyot Kapağı">Alternatör Diyot Kapağı</option>
-    <option value="Alternatör Bilye Kapağı">Alternatör Bilye Kapağı</option>
-    <option value="Alternatör Rulman Yatağı">Alternatör Rulman Yatağı</option>
-    <option value="Alternatör Bilye">Alternatör Bilye</option>
-    <option value="Alternatör Rotor Bakırı">Alternatör Rotor Bakırı</option>
-    <option value="Alternatör Kömür">Alternatör Kömür</option>
-    <option value="Alternatör Diğer">Alternatör Diğer</option>
-  </optgroup>
-  <optgroup label="Starter">
-    <option value="Starter">Starter</option>
-    <option value="Starter Pinyonu">Starter Pinyonu</option>
-    <option value="Starter Dişli">Starter Dişli</option>
-    <option value="Starter Planet Seti">Starter Planet Seti</option>
-    <option value="Starter Planet">Starter Planet</option>
-    <option value="Starter Çatal">Starter Çatal</option>
-    <option value="Starter Otomatik">Starter Otomatik</option>
-    <option value="Starter Gövdeli Otomatik">Starter Gövdeli Otomatik</option>
-    <option value="Starter Gövdeli yastık">Starter Gövdeli yastık</option>
-    <option value="Starter Yastık">Starter Yastık</option>
-    <option value="Starter Kollektörü">Starter Kollektörü</option>
-    <option value="Starter Fiber">Starter Fiber</option>
-    <option value="Starter Arka kapak">Starter Arka kapak</option>
-    <option value="Starter Fırça tutucu">Starter Fırça tutucu</option>
-    <option value="Starter Kömür seti">Starter Kömür seti</option>
-    <option value="Starter Diğer">Starter Diğer</option>
-  </optgroup>
-</select>
-    <select name="brand" required>
-  <option value="">Marka Seçiniz</option>
-  <option>Aes</option>
-  <option>Aksa</option>
-  <option>Başkurt</option>
-  <option>Baypart</option>
-  <option>Bosch</option>
-  <option>Brd</option>
-  <option>Cargo</option>
-  <option>Delco Remy</option>
-  <option>Denso</option>
-  <option>Dodo</option>
-  <option>Eurorepar</option>
-  <option>ET1</option>
-  <option>Fag</option>
-  <option>Febi</option>
-  <option>Federal Power</option>
-  <option>Flag</option>
-  <option>Formmetal</option>
-  <option>Gates</option>
-  <option>Gebe</option>
-  <option>Genon</option>
-  <option>GMP</option>
-  <option>Gova</option>
-  <option>Hella</option>
-  <option>Hellux</option>
-  <option>INA</option>
-  <option>Kale</option>
-  <option>xxx</option>
-  <option>Kobe</option>
-  <option>Kormas</option>
-  <option>Kraftwall</option>
-  <option>Kraw</option>
-  <option>Lucas</option>
-  <option>Mako</option>
-  <option>Mahle</option>
-  <option>Martek</option>
-  <option>Mega</option>
-  <option>Mitsubishi</option>
-  <option>Mobiletron</option>
-  <option>Mobis</option>
-  <option>Nsk</option>
-  <option>Ntn</option>
-  <option>Nursan/Yavuz</option>
-  <option>Osram</option>
-  <option>Ors</option>
-  <option>Pars</option>
-  <option>Philips</option>
-  <option>Poe</option>
-  <option>Remark/Vertex</option>
-  <option>Remco</option>
-  <option>Sagem</option>
-  <option>Sanel</option>
-  <option>Schunk</option>
-  <option>Seg</option>
-  <option>Seger</option>
-  <option>Seger Korsa</option>
-  <option>Sgr</option>
-  <option>Sensen</option>
-  <option>Silbak</option>
-  <option>Skf</option>
-  <option>Skt</option>
-  <option>swag</option>
-  <option>Swf</option>
-  <option>Svac</option>
-  <option>Traspo</option>
-  <option>Unipoint</option>
-  <option>Valeo</option>
-  <option>Wai</option>
-  <option>Wilson</option>
-  <option>WinWin</option>
-  <option>Wutse</option>
-  <option>Zen</option>
-  <option>Zm</option>
-</select>
-  <select name="type" required>
-  <option value="">Ürün Tipi Seçiniz</option>
-  <option>Bosch</option>
-  <option>Delco</option>
-  <option>Hıtachi</option>
-  <option>Iskra</option>
-  <option>Kore Delco/Kore Valeo/Kore Mitsubishi</option>
-  <option>Lucas</option>
-  <option>Marelli</option>
-  <option>Mako</option>
-  <option>Mitsuba</option>
-  <option>Mitsubishi</option>
-  <option>Motorcraft</option>
-  <option>Nıkko</option>
-  <option>Nİppondenso</option>
-  <option>Prestolite</option>
-  <option>Sawafuji</option>
-  <option>Valeo</option>
-  <option>Visteon</option>
-</select>
-          <input name="shelf" placeholder="Raf No" required />
-          <input name="quantity" type="number" placeholder="Adet" required />
-          <input name="buyPrice" type="number" step="0.01" placeholder="Alış Fiyatı" required />
-          <input name="sellPrice" type="number" step="0.01" placeholder="Satış Fiyatı" required />
-          <input name="codes" placeholder="Kodlar (virgülle)" required />
-          <textarea name="description" placeholder="Açıklama"></textarea>
-         <div class="form-buttons">
-      <button type="submit">Kaydet</button>
-      <button type="button" id="clearFormBtn">Temizle</button>
-    </div>
-  </form>
-
-    <ul id="productsUl" style="display: none;"></ul>
-
-
-
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-<script src="auth.js"></script>
-<script src="product.js"></script>
-<script>
-  // Kayıt/Giriş arasında geçiş
-    document.getElementById('showRegister').onclick = e => {
-      e.preventDefault();
-      document.getElementById('loginForm').style.display = 'none';
-      document.getElementById('showRegister').parentElement.style.display = 'none';
-      document.getElementById('registerForm').style.display = 'block';
-      document.getElementById('backToLogin').style.display = 'block';
-    };
-    document.getElementById('showLogin').onclick = e => {
-      e.preventDefault();
-      document.getElementById('loginForm').style.display = 'block';
-      document.getElementById('showRegister').parentElement.style.display = 'block';
-      document.getElementById('registerForm').style.display = 'none';
-      document.getElementById('backToLogin').style.display = 'none';
-    };
-
-    // Sekme tıklama
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.onclick = () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        document.querySelectorAll('.tabContent').forEach(tc => {
-          tc.style.display = tc.id === tab.getAttribute('data-tab') ? 'block' : 'none';
-        });
-      };
-    });
-
-  loginForm.onsubmit = async e => {
-    e.preventDefault();
-    loginMessage.innerText = "";
-    const data = Object.fromEntries(new FormData(loginForm));
-    try {
-      const res = await fetch("https://ozturkoto52.onrender.com/api/auth/login", {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify(data)
-      });
-      const body = await res.json();
-      if (!res.ok) throw body.message || "Giriş başarısız";
-      localStorage.setItem("token", body.token);
-      localStorage.setItem("username", body.username);
-      document.getElementById("currentUser").innerText = body.username;
-      document.getElementById("authBox").style.display = "none";
-      document.getElementById("dashboard").style.display = "block";
-      fetchProducts();
-      setupSocket();
-    } catch(err) {
-      loginMessage.innerText = err;
-    }
-  };
-
-  function logout(){
-    localStorage.clear();
-    document.getElementById("dashboard").style.display = "none";
-    document.getElementById("authBox").style.display = "block";
-  }
-
-  document.querySelectorAll('.tab').forEach(tab => {
-      tab.onclick = () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        document.querySelectorAll('.tabContent').forEach(tc => tc.style.display = tc.id === tab.dataset.tab ? 'block' : 'none');
-        // Render list only when içerik gösteriliyorsa
-        if (tab.dataset.tab !== 'formTab') renderProducts(); 
-      };
-    });
-function applySearch(){
-      const key = document.getElementById('filterKeyword').value.toLowerCase();
-      const filtered = products.filter(p =>
-        p.name.toLowerCase().includes(key) ||
-        p.codes.join(', ').toLowerCase().includes(key) ||
-        p.description.toLowerCase().includes(key)
-      );
-      renderProducts(filtered);
-    }
-
-    function clearSearch(){
-      document.getElementById('filterKeyword').value = '';
-      renderProducts();
-    }
-  // Socket ve ürünleri getir
-  function setupSocket(){
-    const socket = io("https://ozturkoto52.onrender.com");
-    socket.on("update", fetchProducts);
-  }
-</script>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="product.js"></script>
 </body>
 </html>
