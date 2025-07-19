@@ -1,4 +1,3 @@
-const API = "/api/products";
 const API = "https://ozturkoto52.onrender.com/api/products";
 const headers = () => ({
   "Content-Type": "application/json",
