@@ -108,10 +108,17 @@ function prepareEdit(id){
   form.id.value = id;
 
   // sekmeyi formTab yap
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tabContent').forEach(c => c.style.display = "none");
-  document.querySelector('[data-tab="formTab"]').classList.add('active');
-  document.getElementById("formTab").style.display = "block";
+  document.querySelectorAll('.tab').forEach(el => {
+  el.onclick = () => {
+    // aktif sekmeyi güncelle
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    // içerik alanlarını göster/gizle
+    document.querySelectorAll('.tabContent').forEach(c => c.style.display = 'none');
+    document.getElementById(el.dataset.tab).style.display = 'block';
+  };
+});
+
 
   window.scrollTo({ top:0, behavior:"smooth" });
 }
