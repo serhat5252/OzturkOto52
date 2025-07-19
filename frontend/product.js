@@ -1,18 +1,21 @@
+// 🔗 Konfigürasyon
 const API = "https://ozturkoto52.onrender.com/api/products";
 const headers = () => ({
   "Content-Type": "application/json",
   Authorization: `Bearer ${localStorage.getItem("token")}`
 });
 
+// 🎨 DOM öğelerini seçiyoruz
 const form = document.getElementById("productForm"),
       productList = document.getElementById("productsUl"),
       currentUser = document.getElementById("currentUser");
 
-if (currentUser) currentUser.innerText = localStorage.getItem("username");
+if (currentUser) currentUser.innerText = localStorage.getItem("username") || "";
 
+// 📦 Veri saklama
 let products = [];
 
-// ÜRÜN EKLEME / GÜNCELLEME
+// 📝 ÜRÜN EKLEME / GÜNCELLEME
 form.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(form));
@@ -20,200 +23,211 @@ form.onsubmit = async e => {
   ["quantity","buyPrice","sellPrice"].forEach(k =>
     data[k] = k==="quantity" ? parseInt(data[k]) : parseFloat(data[k])
   );
-  data.codes = data.codes.split(',').map(s=>s.trim());
+  data.codes = data.codes.split(",").map(s=>s.trim());
   data.createdAt = data.createdAt || new Date().toISOString();
 
-  try {
-    const res = id
-      ? await fetch(`${API}/${id}`, { method: "PUT", headers: headers(), body: JSON.stringify(data) })
-      : await fetch(API, { method: "POST", headers: headers(), body: JSON.stringify(data) });
+  const method = id ? "PUT" : "POST";
+  const url = id ? `${API}/${id}` : API;
 
+  try {
+    const res = await fetch(url, { method, headers: headers(), body: JSON.stringify(data) });
     if (!res.ok) {
       const err = await res.json();
-      alert("Hata: " + err.message); return;
+      return alert("Hata: " + err.message);
     }
-
     const saved = await res.json();
     if (id) products = products.map(p => p._id === id ? saved : p);
     else products.push(saved);
 
-    renderProducts();
     form.reset();
-    form.id.value = "";
-  } catch(error) {
-    console.error(error);
-    alert("Sunucu hatası!");
+    renderProducts();
+    emitUpdate();
+  } catch(err) {
+    console.error(err);
+    alert("Sunucu hatası");
   }
 };
 
-// ÜRÜNLERİ GETİR
-async function fetchProducts(){
+// 📥 Ürünleri getir
+async function fetchProducts() {
   try {
     const res = await fetch(API, { headers: headers() });
     if (!res.ok) throw "";
     products = await res.json();
     renderProducts();
-  } catch(err){
-    console.error(err);
-    alert("Ürünler alınamadı!");
+  } catch {
+    alert("Ürünler alınamadı");
   }
 }
 
-// ÜRÜNLERİ LİSTELE
-function renderProducts(){
+// 📋 Listeleme
+function renderProducts(list = products) {
   productList.innerHTML = "";
-  products.forEach(p => {
-    const lastSale = p.sales?.length ? p.sales[p.sales.length - 1].price : p.sellPrice;
+  list.forEach(p => {
+    const lastSale = p.sales?.length
+      ? p.sales[p.sales.length - 1].price
+      : p.sellPrice;
     const li = document.createElement("li");
     li.innerHTML = `
       <h3>${p.name} <small>${p.category} | ${p.brand}</small></h3>
-      <div><strong>Adet:</strong> ${p.quantity} | <strong>Raf:</strong> ${p.shelf}</div>
-      <div><strong>Alış:</strong> ₺${p.buyPrice.toFixed(2)} | <strong>Son Satış:</strong> ₺${lastSale.toFixed(2)}</div>
-      <div><strong>Kodlar:</strong> ${(p.codes || []).join(', ')}</div>
+      <div>Adet: ${p.quantity} | Raf: ${p.shelf}</div>
+      <div>Alış: ₺${p.buyPrice.toFixed(2)} | Son Satış: ₺${lastSale.toFixed(2)}</div>
+      <div>Kodlar: ${(p.codes||[]).join(", ")}</div>
       <p>${p.description}</p>
       <div class="actions">
         <button onclick="prepareEdit('${p._id}')">Düzenle</button>
         <button onclick="sellProduct('${p._id}')">Sat</button>
         <button onclick="deleteProduct('${p._id}')">Sil</button>
         <button onclick="viewDetails('${p._id}')">Detay</button>
-      </div>
-    `;
+      </div>`;
     productList.appendChild(li);
   });
 }
 
-// ÜRÜN SİL
-async function deleteProduct(id){
+// 🗑️ Sil
+async function deleteProduct(id) {
   if (!confirm("Silinsin mi?")) return;
   await fetch(`${API}/${id}`, { method: "DELETE", headers: headers() });
   products = products.filter(p => p._id !== id);
   renderProducts();
+  emitUpdate();
 }
 
-// FORM DOLDURMA
-function prepareEdit(id){
+// ✏️ Düzenleme formu doldurma
+function prepareEdit(id) {
   const p = products.find(x => x._id === id);
   Object.keys(p).forEach(k => {
     if (form.elements[k]) {
-      form.elements[k].value = Array.isArray(p[k]) ? p[k].join(', ') : p[k];
+      form.elements[k].value = Array.isArray(p[k]) ? p[k].join(", ") : p[k];
     }
   });
   form.id.value = id;
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// SATIŞ YAP
+// 💵 Satış yap
 async function sellProduct(id) {
-  const product = products.find(p => p._id === id);
+  const p = products.find(p => p._id === id);
   const qty = parseInt(prompt("Kaç adet satıldı?", "1"));
   if (isNaN(qty) || qty < 1) return;
 
-  const price = parseFloat(prompt("Kaç ₺ den satıldı?", product.sellPrice));
+  const price = parseFloat(prompt("Kaç ₺ den satıldı?", p.sellPrice));
   if (isNaN(price) || price < 0) return;
 
   try {
     const res = await fetch(`${API}/${id}/sell`, {
-      method: "POST",
-      headers: headers(),
+      method: "POST", headers: headers(),
       body: JSON.stringify({ quantity: qty, price })
     });
-
     if (!res.ok) {
       const err = await res.json();
-      alert("Satış yapılamadı: " + err.message);
-      return;
+      return alert("Satış yapılamadı: " + err.message);
     }
-
     const updated = await res.json();
-    const index = products.findIndex(p => p._id === id);
-    if (index !== -1) products[index] = updated;
-
+    products = products.map(x => x._id === id ? updated : x);
     renderProducts();
-  } catch (err) {
-    console.error(err);
+    emitUpdate();
+  } catch {
     alert("Bağlantı hatası");
   }
 }
 
-// DETAY GÖSTER
-function viewDetails(id) {
-  const p = products.find(x => x._id === id);
-  let msg = `${p.name}\nAdet: ${p.quantity}\nAlış: ₺${p.buyPrice}\nSatış: ₺${p.sellPrice}\nKodlar: ${(p.codes || []).join(', ')}\nAçıklama: ${p.description}\nEklenme: ${new Date(p.createdAt).toLocaleString()}`;
-  if (p.sales?.length) {
-    msg += `\n\n🛒 Satış Geçmişi:`;
-    p.sales.forEach((s, i) => {
-      msg += `\n${i + 1}. ${s.quantity} adet ₺${s.price} – ${new Date(s.date).toLocaleString()}`;
-    });
-  }
-  alert(msg);
-}
-
-// DETAYLI ARAMA UYGULA
+// 🔍 Detaylı Arama
 function applySearchFilters() {
-  const keyword = document.getElementById("filterKeyword").value.toLowerCase();
-  const category = document.getElementById("filterCategory").value;
+  const key = document.getElementById("filterKeyword").value.toLowerCase();
+  const cat = document.getElementById("filterCategory").value;
   const brand = document.getElementById("filterBrand").value;
-  const addedFrom = document.getElementById("filterAddedFrom").value;
-  const addedTo = document.getElementById("filterAddedTo").value;
+  const from = document.getElementById("filterAddedFrom").value;
+  const to = document.getElementById("filterAddedTo").value;
   const soldFrom = document.getElementById("filterSoldFrom").value;
   const soldTo = document.getElementById("filterSoldTo").value;
-  const minPrice = parseFloat(document.getElementById("filterPriceMin").value);
-  const maxPrice = parseFloat(document.getElementById("filterPriceMax").value);
+  const minP = parseFloat(document.getElementById("filterPriceMin").value) || 0;
+  const maxP = parseFloat(document.getElementById("filterPriceMax").value) || Infinity;
 
-  const matches = products.filter(p => {
-    if (keyword && !(p.name.toLowerCase().includes(keyword) || p.codes?.join(",").toLowerCase().includes(keyword))) return false;
-    if (category && p.category !== category) return false;
-    if (brand && p.brand !== brand) return false;
-    if (addedFrom && new Date(p.createdAt) < new Date(addedFrom)) return false;
-    if (addedTo && new Date(p.createdAt) > new Date(addedTo)) return false;
-    if (!isNaN(minPrice) && p.sellPrice < minPrice) return false;
-    if (!isNaN(maxPrice) && p.sellPrice > maxPrice) return false;
+  const filtered = products.filter(p => {
+    const kw = key ? [p.name, p.description, ...(p.codes||[])].some(x => x.toLowerCase().includes(key)) : true;
+    const ct = cat ? p.category === cat : true;
+    const br = brand ? p.brand === brand : true;
 
-    if (soldFrom || soldTo) {
-      if (!p.sales?.length) return false;
-      const lastSale = new Date(p.sales[p.sales.length - 1].date);
-      if (soldFrom && lastSale < new Date(soldFrom)) return false;
-      if (soldTo && lastSale > new Date(soldTo)) return false;
-    }
+    const added = new Date(p.createdAt);
+    const adFrom = from ? added >= new Date(from) : true;
+    const adTo = to ? added <= new Date(to) : true;
 
-    return true;
+    const prMatch = p.sellPrice >= minP && p.sellPrice <= maxP;
+
+    const soldMatch = !(soldFrom || soldTo) || (p.sales || []).some(s => {
+      const sd = new Date(s.date);
+      return (!soldFrom || sd >= new Date(soldFrom)) && (!soldTo || sd <= new Date(soldTo));
+    });
+
+    return kw && ct && br && adFrom && adTo && prMatch && soldMatch;
   });
 
-  productList.innerHTML = "";
-  matches.forEach(p => {
-    const li = document.createElement("li");
-    li.innerHTML = `<strong>${p.name}</strong> - ${p.category} - ${p.brand} - ₺${p.sellPrice}`;
-    productList.appendChild(li);
-  });
+  renderProducts(filtered);
+  document.getElementById("filterMatches").innerText = `${filtered.length} ürün bulundu.`;
+}
 
-  const resultCount = document.getElementById("filterMatches");
-  if (resultCount) {
-    resultCount.textContent = `${matches.length} sonuç bulundu.`;
+// 🔄 Filtre temizle
+function resetSearchFilters() {
+  [
+    "filterKeyword","filterCategory","filterBrand",
+    "filterAddedFrom","filterAddedTo",
+    "filterSoldFrom","filterSoldTo",
+    "filterPriceMin","filterPriceMax"
+  ].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("filterMatches").innerText = "";
+  renderProducts();
+}
+
+// 📈 Satış raporu
+async function getSalesReport() {
+  const from = document.getElementById("fromDate").value;
+  const to = document.getElementById("toDate").value;
+  try {
+    const res = await fetch(`${API}/sales-report?from=${from}&to=${to}`, {
+      headers: headers()
+    });
+    if (!res.ok) throw "";
+    const { totalQuantity, totalRevenue, totalProfit } = await res.json();
+    document.getElementById("reportResult").innerHTML = `
+      <p>Toplam Satılan Adet: <strong>${totalQuantity}</strong></p>
+      <p>Toplam Gelir: <strong>₺${totalRevenue.toFixed(2)}</strong></p>
+      <p>Toplam Kar: <strong>₺${totalProfit.toFixed(2)}</strong></p>
+    `;
+  } catch {
+    alert("Rapor alınamadı");
   }
 }
 
-// TEMİZLE
-function resetSearchFilters() {
-  document.getElementById("filterKeyword").value = "";
-  document.getElementById("filterCategory").value = "";
-  document.getElementById("filterBrand").value = "";
-  document.getElementById("filterAddedFrom").value = "";
-  document.getElementById("filterAddedTo").value = "";
-  document.getElementById("filterSoldFrom").value = "";
-  document.getElementById("filterSoldTo").value = "";
-  document.getElementById("filterPriceMin").value = "";
-  document.getElementById("filterPriceMax").value = "";
-  applySearchFilters();
+// 🔌 Gerçek zamanlı: Emit + Socket.io
+function emitUpdate() {
+  if (window.io && window.socket) window.socket.emit("update");
 }
 
-// SAYFA YÜKLENDİĞİNDE
+// 🔧 Sayfa yüklendiğinde
 fetchProducts();
 
-// SOCKET.IO
+// 🧩 Socket bağlantısı
 if (window.io) {
-  const socket = io("https://ozturkoto52.onrender.com");
-  socket.on("update", fetchProducts);
+  window.socket = io("https://ozturkoto52.onrender.com");
+  window.socket.on("update", fetchProducts);
 }
+
+// 📑 Sekme geçişi ve buton event’leri
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    t.classList.add("active");
+    document.querySelectorAll(".tabContent").forEach(c => c.style.display = "none");
+    document.getElementById(t.dataset.tab).style.display = "block";
+  });
+});
+
+// 🔘 Ara, Temizle, Rapor al butonlarına bağlanıyor
+document.getElementById("searchBtn").addEventListener("click", applySearchFilters);
+document.getElementById("clearBtn").addEventListener("click", resetSearchFilters);
+document.getElementById("reportBtn").addEventListener("click", getSalesReport);
+
 
 
 
