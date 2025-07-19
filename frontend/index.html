@@ -285,14 +285,20 @@
   }
 
   // Tab geçiş
-  document.querySelectorAll('.tab').forEach(el=>{
-    el.onclick = () => {
-      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-      el.classList.add('active');
-      document.querySelectorAll('.tab-content').forEach(tc=>tc.style.display = 'none');
-      document.getElementById(el.dataset.tab).style.display = 'block';
-    };
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.tabContent').forEach(c => c.style.display = 'none');
+    document.getElementById(tab.dataset.tab).style.display = 'block';
   });
+});
+
+// Buton event bağlantıları
+document.getElementById('searchBtn').addEventListener('click', applySearchFilters);
+document.getElementById('clearBtn').addEventListener('click', resetSearchFilters);
+document.getElementById('reportBtn').addEventListener('click', getSalesReport);
+
 
   // Socket ve ürünleri getir
   function setupSocket(){
