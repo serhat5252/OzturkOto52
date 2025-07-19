@@ -140,6 +140,23 @@ function getSalesReport() {
   });
   document.getElementById('reportResult').innerText = `Satılan Adet: ${total}, Gelir: ₺${income.toFixed(2)}`;
 }
+window.onload = function() {
+  // Yukarıdaki tab kodu buraya
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    const selectedTab = tab.getAttribute('data-tab');
+
+    document.querySelectorAll('.tabContent').forEach(tc => {
+      tc.style.display = (tc.id === selectedTab) ? 'block' : 'none';
+    });
+  });
+});
+
+};
+
 
 // Başlangıç verileri
 fetchProducts();
