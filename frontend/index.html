@@ -284,22 +284,14 @@
     document.getElementById("authBox").style.display = "block";
   }
 
-  // Tab geçiş
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    document.querySelectorAll('.tabContent').forEach(c => c.style.display = 'none');
-    document.getElementById(tab.dataset.tab).style.display = 'block';
+  document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    t.classList.add("active");
+    document.querySelectorAll(".tabContent").forEach(c => c.style.display = "none");
+    document.getElementById(t.dataset.tab).style.display = "block";
   });
 });
-
-// Buton event bağlantıları
-document.getElementById('searchBtn').addEventListener('click', applySearchFilters);
-document.getElementById('clearBtn').addEventListener('click', resetSearchFilters);
-document.getElementById('reportBtn').addEventListener('click', getSalesReport);
-
-
   // Socket ve ürünleri getir
   function setupSocket(){
     const socket = io("https://ozturkoto52.onrender.com");
