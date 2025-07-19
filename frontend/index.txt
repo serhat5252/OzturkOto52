@@ -220,7 +220,7 @@
         <button onclick="clearSearch()">Temizle</button>
         <div id="filterMatches"></div>
       
-
+       </div>
       <div id="reportTab" class="tabContent" style="display:none">
         <h3>📊 Satış Raporu</h3>
         <label>Başlangıç: <input type="date" id="fromDate"></label>
@@ -228,7 +228,7 @@
         <button onclick="getSalesReport()">Rapor Al</button>
         <div id="reportResult"></div>
       </div>
-
+       
       <div class="content">
         <ul id="productsUl" style="display: none;"></ul>
       </div>
