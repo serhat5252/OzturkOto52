@@ -61,19 +61,22 @@ async function fetchProducts() {
 }
 
 // 📋 Listeleme
-function renderProducts(list = products) {
+function renderProducts(list = []) {
   const ul = document.getElementById("productsUl");
   ul.innerHTML = "";
-  if (list.length === 0) {
-    ul.style.display = "none"; // Hiç ürün yoksa gizle
+
+  if (!list.length) {
+    ul.style.display = "none";
     return;
   }
-  ul.style.display = "block"; // Ürün varsa göster
+
+  ul.style.display = "block"; // arama sonrası ürün varsa görünür
+
   list.forEach(p => {
+    const li = document.createElement("li");
     const lastSale = p.sales?.length
       ? p.sales[p.sales.length - 1].price
       : p.sellPrice;
-    const li = document.createElement("li");
     li.innerHTML = `
       <h3>${p.name} <small>${p.category} | ${p.brand}</small></h3>
       <div>Adet: ${p.quantity} | Raf: ${p.shelf}</div>
@@ -89,8 +92,6 @@ function renderProducts(list = products) {
     ul.appendChild(li);
   });
 }
-
-
 
 // 🗑️ Sil
 async function deleteProduct(id) {
@@ -143,6 +144,7 @@ async function sellProduct(id) {
 // 🔍 Detaylı Arama
 function applySearchFilters() {
   const keyword = document.getElementById("filterKeyword").value.toLowerCase();
+  const filtered = products.filter(p => p.name.toLowerCase().includes(keyword));
   const category = document.getElementById("filterCategory").value;
   const brand = document.getElementById("filterBrand").value;
   const addedFrom = document.getElementById("filterAddedFrom").value;
@@ -181,7 +183,7 @@ function applySearchFilters() {
            priceMatch;
   });
 
-  renderProducts(matches);
+  renderProducts(filtered);
 }
 
 // 🔄 Filtre temizle
