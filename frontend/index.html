@@ -1,56 +1,62 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body class="auth">
+<body>
 
-  <!-- 👤 Giriş / Kayıt -->
-  <div class="auth-container" id="authBox">
-    <h1>ÖZTÜRK OTOMOBİL</h1>
+<!-- ====== GİRİŞ / KAYIT EKRANI ====== -->
+<div class="auth-container" id="authBox">
+  <h1>ÖZTÜRK OTOMOBİL</h1>
 
-    <form id="loginForm">
-      <input type="text" name="username" placeholder="Kullanıcı Adı" required />
-      <input type="password" name="password" placeholder="Şifre" required />
-      <button type="submit">Giriş Yap</button>
-    </form>
-    <p>Hesabın yok mu? <a href="#" id="showRegister">Kayıt Ol</a></p>
-    <div id="loginMessage" class="error"></div>
+  <!-- Giriş Formu -->
+  <form id="loginForm">
+    <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+    <input type="password" name="password" placeholder="Şifre" required>
+    <button type="submit">Giriş Yap</button>
+  </form>
+  <p class="switch"><a href="#" id="showRegister">Kayıt Ol</a></p>
+  <div id="loginMessage" class="error"></div>
 
-    <form id="registerForm" style="display:none">
-      <input type="text" name="username" placeholder="Yeni Kullanıcı Adı" required />
-      <input type="password" name="password" placeholder="Şifre Belirle" required />
-      <button type="submit">Kayıt Ol</button>
-    </form>
-    <p id="backToLogin" style="display:none">
-      Zaten hesabın var mı? <a href="#" id="showLogin">Giriş Yap</a>
-    </p>
-    <div id="registerMessage"></div>
-  </div>
+  <!-- Kayıt Formu -->
+  <form id="registerForm" style="display:none">
+    <input type="text" name="username" placeholder="Yeni Kullanıcı Adı" required>
+    <input type="password" name="password" placeholder="Şifre Belirle" required>
+    <button type="submit">Kayıt Ol</button>
+  </form>
+  <p class="switch" id="backToLogin" style="display:none"><a href="#" id="showLogin">Giriş Yap</a></p>
+  <div id="registerMessage" class="success"></div>
+</div>
 
-  <!-- 🏠 DASHBOARD -->
-  <div class="dashboard" id="dashboard" style="display:none">
-    <header class="navbar">
-      <div class="brand">🚗 ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
-      <div class="user">
-        <span id="currentUser"></span>
-        <button onclick="logout()">Çıkış Yap</button>
+<!-- ====== DASHBOARD ====== -->
+<div class="dashboard" id="dashboard" style="display:none">
+  <header class="navbar">
+    <div class="brand">🚗 ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
+    <div class="user">
+      <span id="currentUser"></span>
+      <button onclick="logout()">Çıkış Yap</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <!-- Yan Menü -->
+    <aside class="sidebar">
+      <div class="tabs">
+        <div class="tab active" data-tab="formTab">Ürün Ekle/Güncelle</div>
+        <div class="tab" data-tab="searchTab">Detaylı Arama</div>
+        <div class="tab" data-tab="reportTab">Satış Raporu</div>
       </div>
-    </header>
-    <div class="main">
-      <div class="sidebar">
-        <div class="tabs">
-          <div class="tab active" data-tab="formTab">Ürün Ekle/Güncelle</div>
-          <div class="tab" data-tab="searchTab">Detaylı Arama</div>
-          <div class="tab" data-tab="reportTab">Satış Raporu</div>
-        </div>
-        <div class="tab-content">
-          <div id="formTab"><h2>Ürün Ekle / Güncelle</h2>
-      <form id="productForm">…</form>
-        <div class="form-grid">
+    </aside>
+
+    <!-- Tab İçerik -->
+    <section class="content">
+      <div id="formTab" class="tab-content">
+        <!-- product.js form yapısını buraya ekle -->
+         <form id="productForm" class="form-grid">
+          <!-- ... input ve select alanları ... -->
           <input name="name" placeholder="Ürün Adı" required />
           <select name="category" required>
   <option value="">Kategori Seçiniz</option>
@@ -194,133 +200,105 @@
         <input type="hidden" name="id" />
         <button type="submit">Kaydet</button>
       </form>
-    </aside>
-     <section style="background:#fff;border-radius:8px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
-          <div id="searchTab" style="display:none"><h3>🔍 Detaylı Arama</h3>
-      <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama..." />
-      <select id="filterCategory"><option value="">Tüm Kategoriler</option></select>
-      <select id="filterBrand"><option value="">Tüm Markalar</option></select><br>
-      <label>Eklenme Tarihi: <input type="date" id="filterAddedFrom"> – <input type="date" id="filterAddedTo"></label><br>
-      <label>Satış Tarihi: <input type="date" id="filterSoldFrom"> – <input type="date" id="filterSoldTo"></label><br>
-      <label>Fiyat Aralığı: ₺<input type="number" id="filterPriceMin" style="width:80px"> – <input type="number" id="filterPriceMax" style="width:80px"></label><br>
-      <button onclick="applySearchFilters()">Ara</button>
-      <button onclick="resetSearchFilters()">Temizle</button>
-      <div id="filterMatches"></div>
-        </div>
-    </section>
-</div></div>
           
-      <!-- 📈 Satış Raporu Tab -->
-      <div id="reportTab" style="display:none">
-      <h3>📊 Satış Raporu</h3>
-      <h3>Satış Raporu</h3>
-          <label>Başlangıç: <input type="date" id="fromDate"></label>
-          <label>Bitiş: <input type="date" id="toDate"></label>
-          <button onclick="getSalesReport()">Rapor Al</button>
-        </div>
       </div>
-    </section>  
-</div>
-        </div>
+
+      <div id="searchTab" class="tab-content" style="display:none">
+        <h3>🔍 Detaylı Arama</h3>
+        <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama...">
+        <select id="filterCategory"><option value="">Tüm Kategoriler</option></select>
+        <select id="filterBrand"><option value="">Tüm Markalar</option></select>
+        <label>Eklenme: <input type="date" id="filterAddedFrom"> – <input type="date" id="filterAddedTo"></label>
+        <label>Satış: <input type="date" id="filterSoldFrom"> – <input type="date" id="filterSoldTo"></label>
+        <label>Fiyat: ₺<input type="number" id="filterPriceMin" style="width:80px"> – <input type="number" id="filterPriceMax" style="width:80px"></label>
+        <button onclick="applySearchFilters()">Ara</button>
+        <button onclick="resetSearchFilters()">Temizle</button>
+        <div id="filterMatches"></div>
       </div>
-      <div class="content">
+
+      <div id="reportTab" class="tab-content" style="display:none">
+        <h3>📊 Satış Raporu</h3>
+        <label>Başlangıç: <input type="date" id="fromDate"></label>
+        <label>Bitiş: <input type="date" id="toDate"></label>
+        <button onclick="getSalesReport()">Rapor Al</button>
+      </div>
+
+      <div class="list-container">
         <ul id="productsUl"></ul>
       </div>
-    </div>
+    </section>
   </div>
+</div>
 
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-  <script src="product.js"></script>
-  <script>
-    // Tab geçişleri
-    document.querySelectorAll('.tab').forEach(el => {
-      el.onclick = () => {
-        document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-        el.classList.add('active');
-        document.getElementById('formTab').style.display = el.dataset.tab === 'formTab' ? 'block' : 'none';
-        document.getElementById('searchTab').style.display = el.dataset.tab === 'searchTab' ? 'block' : 'none';
-        document.getElementById('reportTab').style.display = el.dataset.tab === 'reportTab' ? 'block' : 'none';
-      };
-    });
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="auth.js"></script>
+<script src="product.js"></script>
+<script>
+  // Giriş/Kayıt toggle
+  document.getElementById("showRegister").onclick = e => {
+    e.preventDefault();
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("showRegister").parentElement.style.display = "none";
+    document.getElementById("registerForm").style.display = "block";
+    document.getElementById("backToLogin").style.display = "block";
+  };
+  document.getElementById("showLogin").onclick = e => {
+    e.preventDefault();
+    document.getElementById("loginForm").style.display = "block";
+    document.getElementById("showRegister").parentElement.style.display = "";
+    document.getElementById("registerForm").style.display = "none";
+    document.getElementById("backToLogin").style.display = "none";
+  };
 
-    // Giriş/Kayıt geçişi
-    const loginForm = document.getElementById("loginForm"),
-          registerForm = document.getElementById("registerForm"),
-          showRegister = document.getElementById("showRegister"),
-          showLogin = document.getElementById("showLogin"),
-          loginMessage = document.getElementById("loginMessage"),
-          registerMessage = document.getElementById("registerMessage");
+  // LOGIN işlemleri
+  const loginForm = document.getElementById("loginForm"),
+        loginMessage = document.getElementById("loginMessage");
 
-    showRegister.onclick = e => {
-      e.preventDefault();
-      loginForm.style.display = "none";
-      showRegister.parentElement.style.display = "none";
-      registerForm.style.display = "block";
-      document.getElementById("backToLogin").style.display = "block";
-      loginMessage.innerText = "";
-    };
-
-    showLogin.onclick = e => {
-      e.preventDefault();
-      loginForm.style.display = "block";
-      showRegister.parentElement.style.display = "block";
-      registerForm.style.display = "none";
-      document.getElementById("backToLogin").style.display = "none";
-      registerMessage.innerText = "";
-    };
-
-    // Register işlemi
-    registerForm.onsubmit = async e => {
-      e.preventDefault();
-      registerMessage.innerText = "";
-      const data = Object.fromEntries(new FormData(registerForm));
-      try {
-        const res = await fetch("/api/auth/register", {
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body:JSON.stringify(data)
-        });
-        const body = await res.json();
-        if (!res.ok) throw body.message;
-        registerMessage.style.color = "green";
-        registerMessage.innerText = "Kayıt başarılı! Giriş yapabilirsiniz.";
-      } catch(err) {
-        registerMessage.style.color = "red";
-        registerMessage.innerText = err;
-      }
-    };
-
-    // Login işlemi
-    loginForm.onsubmit = async e => {
-      e.preventDefault();
-      loginMessage.innerText = "";
-      const data = Object.fromEntries(new FormData(loginForm));
-      try {
-        const res = await fetch("/api/auth/login", {
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body:JSON.stringify(data)
-        });
-        const body = await res.json();
-        if (!res.ok) throw body.message;
-        localStorage.setItem("token", body.token);
-        localStorage.setItem("username", body.username);
-        document.body.className = "dashboard";
-        document.getElementById("authBox").style.display = "none";
-        document.getElementById("dashboard").style.display = "flex";
-        document.getElementById("currentUser").innerText = body.username;
-        fetchProducts();
-        const socket = io();
-        socket.on("update", fetchProducts);
-      } catch(err) {
-        loginMessage.innerText = err;
-      }
-    };
-
-    function logout(){
-      localStorage.clear();
-      location.reload();
+  loginForm.onsubmit = async e => {
+    e.preventDefault();
+    loginMessage.innerText = "";
+    const data = Object.fromEntries(new FormData(loginForm));
+    try {
+      const res = await fetch("https://ozturkoto52.onrender.com/api/auth/login", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify(data)
+      });
+      const body = await res.json();
+      if (!res.ok) throw body.message || "Giriş başarısız";
+      localStorage.setItem("token", body.token);
+      localStorage.setItem("username", body.username);
+      document.getElementById("currentUser").innerText = body.username;
+      document.getElementById("authBox").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
+      fetchProducts();
+      setupSocket();
+    } catch(err) {
+      loginMessage.innerText = err;
     }
-  </script>
+  };
+
+  function logout(){
+    localStorage.clear();
+    document.getElementById("dashboard").style.display = "none";
+    document.getElementById("authBox").style.display = "block";
+  }
+
+  // Tab geçiş
+  document.querySelectorAll('.tab').forEach(el=>{
+    el.onclick = () => {
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      el.classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(tc=>tc.style.display = 'none');
+      document.getElementById(el.dataset.tab).style.display = 'block';
+    };
+  });
+
+  // Socket ve ürünleri getir
+  function setupSocket(){
+    const socket = io("https://ozturkoto52.onrender.com");
+    socket.on("update", fetchProducts);
+  }
+</script>
 </body>
 </html>
