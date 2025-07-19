@@ -97,3 +97,35 @@ ul#productsUl li {
   border:none; padding:6px 10px; border-radius:4px;
   cursor:pointer;
 }
+body, html {
+  margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif;
+}
+.auth-container {
+  /* Giriş kutusu ortada */
+  position: absolute; top:50%; left:50%;
+  transform: translate(-50%, -50%);
+  width:350px; background:#fff; padding:30px;
+  border-radius:10px; box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+.navbar { /* sayfa üstü çubuk */
+  background: #3a86ff; color:#fff;
+  display:flex; justify-content:space-between;
+  align-items:center; padding:10px 20px;
+}
+.navbar .user button {
+  background:#ff006e; border:none; padding:8px 12px;
+  border-radius:5px; cursor:pointer;
+}
+.main { display:flex; height:calc(100vh - 60px); }
+.sidebar { width:300px; background:#f5f5f5; padding:10px; overflow-y:auto; }
+.tabs { display:flex; gap:5px; margin-bottom:10px; }
+.tab { padding:8px; cursor:pointer; background:#ddd; border-radius:4px; flex:1; text-align:center; }
+.tab.active { background:#3a86ff; color:#fff; }
+.content { flex:1; padding:10px; overflow-y:auto; background:#fafafa; }
+.form-grid input, .form-grid select, .form-grid textarea {
+  width:100%; margin-bottom:10px; padding:8px;
+  border:1px solid #ccc; border-radius:5px;
+}
+.error { color:red; margin:10px 0; font-size:14px; }
+.success { color:green; margin:10px 0; font-size:14px; }
+
