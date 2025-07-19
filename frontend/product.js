@@ -70,13 +70,13 @@ function renderProducts(list = []) {
     return;
   }
 
-  ul.style.display = "block"; // arama sonrası ürün varsa görünür
+  ul.style.display = "block";
 
   list.forEach(p => {
-    const li = document.createElement("li");
     const lastSale = p.sales?.length
       ? p.sales[p.sales.length - 1].price
       : p.sellPrice;
+    const li = document.createElement("li");
     li.innerHTML = `
       <h3>${p.name} <small>${p.category} | ${p.brand}</small></h3>
       <div>Adet: ${p.quantity} | Raf: ${p.shelf}</div>
@@ -92,7 +92,6 @@ function renderProducts(list = []) {
     ul.appendChild(li);
   });
 }
-
 // 🗑️ Sil
 async function deleteProduct(id) {
   if (!confirm("Silinsin mi?")) return;
@@ -143,8 +142,12 @@ async function sellProduct(id) {
 
 // 🔍 Detaylı Arama
 function applySearchFilters() {
-  const keyword = document.getElementById("filterKeyword").value.toLowerCase();
-  const filtered = products.filter(p => p.name.toLowerCase().includes(keyword));
+  const key = document.getElementById("filterKeyword").value.toLowerCase();
+  const filtered = products.filter(p => 
+    p.name.toLowerCase().includes(key) ||
+    (p.codes || []).some(c => c.toLowerCase().includes(key)) ||
+    (p.description || "").toLowerCase().includes(key)
+  );
   const category = document.getElementById("filterCategory").value;
   const brand = document.getElementById("filterBrand").value;
   const addedFrom = document.getElementById("filterAddedFrom").value;
