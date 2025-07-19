@@ -270,17 +270,7 @@
         <button type="submit">Kaydet</button>
       </form>
     </aside>
-<section style="background:#fff;border-radius:8px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
-      <!-- 📈 Satış Raporu Tab -->
-      <div id="tab-report" class="tab-content">
-      <h3>📊 Satış Raporu</h3>
-      <label>Başlangıç: <input type="date" id="fromDate"></label><br>
-      <label>Bitiş: <input type="date" id="toDate"></label><br>
-      <button onclick="getSalesReport()">Rapor Al</button>
-      <div id="reportResult" style="margin-top:10px;"></div>
-    </section>  
-  
-  <section style="background:#fff;border-radius:8px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+     <section style="background:#fff;border-radius:8px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
       <div id="tab-search" class="tab-content"> 
       <h3>🔍 Detaylı Arama</h3>
       <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama..." />
@@ -293,6 +283,17 @@
       <button onclick="resetSearchFilters()">Temizle</button>
       <div id="filterMatches" style="margin-top:8px;font-weight:bold;"></div>
     </section>
+<section style="background:#fff;border-radius:8px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+      <!-- 📈 Satış Raporu Tab -->
+      <div id="tab-report" class="tab-content">
+      <h3>📊 Satış Raporu</h3>
+      <label>Başlangıç: <input type="date" id="fromDate"></label><br>
+      <label>Bitiş: <input type="date" id="toDate"></label><br>
+      <button onclick="getSalesReport()">Rapor Al</button>
+      <div id="reportResult" style="margin-top:10px;"></div>
+    </section>  
+  
+ 
   <ul id="productsUl"></ul>
 
   <!-- Sayfanın geri kalanı -->
