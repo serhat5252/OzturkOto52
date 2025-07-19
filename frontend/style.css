@@ -23,24 +23,24 @@
 
 /* Dashboard */
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #3a86ff;
-  color: white;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  z-index: 10;
+  display:flex; justify-content:space-between;
+  align-items:center; padding:10px 20px;
+  background:#3a86ff; color:#fff; box-shadow:0 2px 4px rgba(0,0,0,0.1);
 }
-.main {
-  display: flex;
-  margin-top: 60px; /* header kadar boşluk */
+.navbar .user button {
+  background:#ff006e; border:none; color:#fff;
+  padding:8px 12px; border-radius:6px;
+  cursor:pointer;
 }
-.sidebar { width: 300px; }
-.content { flex: 1; padding: 20px; }
 
+.main {
+  display:flex; height:calc(100vh - 60px);
+}
+
+/* Sidebar tablar */
+.sidebar {
+  width:240px; background:#f7f9fc;
+}
 .tabs .tab {
   padding:14px; cursor:pointer; border-bottom:1px solid #ddd;
 }
@@ -48,29 +48,7 @@
   background:#e3fcef;
   font-weight:bold;
 }
-/* Sekme görünümü */
-.tab {
-  padding: 10px 20px;
-  cursor: pointer;
-  display: inline-block;
-  background: #eee;
-  margin-right: 5px;
-  border-radius: 4px 4px 0 0;
-}
 
-.tab.active {
-  background: #3a86ff;
-  color: white;
-}
-
-.tabContent {
-  display: none;
-  padding: 20px;
-  background: white;
-  border: 1px solid #ccc;
-  border-top: none;
-  border-radius: 0 0 4px 4px;
-}
 /* İçerik kısmı */
 .content {
   flex:1; padding:20px; overflow-y:auto;
@@ -94,7 +72,4 @@
   border-radius:8px;
   box-shadow:0 2px 6px rgba(0,0,0,0.1);
   max-height:400px; overflow-y:auto;
-}
-#productsUl li {
-  padding:10px; border-bottom:1px solid #eee;
 }
