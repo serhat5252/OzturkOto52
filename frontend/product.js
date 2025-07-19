@@ -62,38 +62,34 @@ async function fetchProducts() {
 
 // 📋 Listeleme
 function renderProducts(list = products) {
-  const listContainer = document.getElementById("productsUl");
-  listContainer.innerHTML = "";
-
-  if (!list || !list.length) {
-    listContainer.style.display = "none";
+  const ul = document.getElementById("productsUl");
+  ul.innerHTML = "";
+  if (list.length === 0) {
+    ul.style.display = "none"; // Hiç ürün yoksa gizle
     return;
   }
-
+  ul.style.display = "block"; // Ürün varsa göster
   list.forEach(p => {
     const lastSale = p.sales?.length
       ? p.sales[p.sales.length - 1].price
       : p.sellPrice;
-
     const li = document.createElement("li");
     li.innerHTML = `
       <h3>${p.name} <small>${p.category} | ${p.brand}</small></h3>
       <div>Adet: ${p.quantity} | Raf: ${p.shelf}</div>
       <div>Alış: ₺${p.buyPrice.toFixed(2)} | Son Satış: ₺${lastSale.toFixed(2)}</div>
-      <div>Kodlar: ${(p.codes || []).join(", ")}</div>
+      <div>Kodlar: ${(p.codes||[]).join(", ")}</div>
       <p>${p.description}</p>
       <div class="actions">
         <button onclick="prepareEdit('${p._id}')">Düzenle</button>
         <button onclick="sellProduct('${p._id}')">Sat</button>
         <button onclick="deleteProduct('${p._id}')">Sil</button>
         <button onclick="viewDetails('${p._id}')">Detay</button>
-      </div>
-    `;
-    listContainer.appendChild(li);
+      </div>`;
+    ul.appendChild(li);
   });
-
-  listContainer.style.display = "block";
 }
+
 
 
 // 🗑️ Sil
