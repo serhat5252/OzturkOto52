@@ -83,3 +83,40 @@
 .actions button:hover {
   background-color: #265dd9;
 }
+.nav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #3a86ff;
+  color: white;
+  padding: 12px 20px;
+}
+
+.nav-header .logo {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.nav-header .user-actions {
+  display: flex;
+  align-items: center;
+}
+
+.nav-header .user-actions span {
+  margin-right: 12px;
+  font-size: 14px;
+}
+
+.nav-header .user-actions button {
+  background-color: #ff006e;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.nav-header .user-actions button:hover {
+  background-color: #e6005a;
+}
