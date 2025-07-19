@@ -78,16 +78,26 @@
 <body>
   <div class="login-container">
     <h1>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</h1>
-    <form id="loginForm">
-      <input type="text" id="username" placeholder="Kullanıcı Adı" required>
-      <input type="password" id="password" placeholder="Şifre" required>
-      <button type="submit">Giriş Yap</button>
+      <form id="loginForm">
+      <input type="text" name="username" placeholder="Kullanıcı adı" required />
+      <input type="password" name="password" placeholder="Şifre" required />
+      <button type="submit">Giriş</button>
     </form>
-    <p>Hesabın yok mu? <a href="#" onclick="register()">Kayıt Ol</a></p>
-    <div id="loginMessage"></div>
+    <p>Hesabın yok mu? <a href="#" id="showRegister">Kayıt Ol</a></p>
+    <div id="loginError" class="error"></div>
   </div>
 
-  <script src="auth.js"></script>
+  <div id="registerDiv" style="display:none">
+    <h2>Kayıt Ol</h2>
+    <form id="registerForm">
+      <input type="text" name="username" placeholder="Kullanıcı adı" required />
+      <input type="password" name="password" placeholder="Şifre" required />
+      <button type="submit">Kayıt Ol</button>
+    </form>
+    <p>Zaten hesabın var mı? <a href="#" id="showLogin">Giriş Yap</a></p>
+    <div id="registerError" class="error"></div>
+    <div id="registerSuccess" class="success"></div>
+  </div>
 </body>
 </html>
   <!-- ========== Dashboard (Panel) ========== -->
