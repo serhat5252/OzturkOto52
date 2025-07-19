@@ -65,9 +65,7 @@
     <!-- Tab İçerik -->
     <section class="content">
       <div id="formTab" class="tabContent" style="display:block"> <!-- Başlangıçta bu açık -->
-        <!-- product.js form yapısını buraya ekle -->
          <form id="productForm" class="form-grid">
-          <!-- ... input ve select alanları ... -->
           <input name="name" placeholder="Ürün Adı" required />
           <select name="category" required>
   <option value="">Kategori Seçiniz</option>
@@ -214,7 +212,7 @@
   </form>
           
       
-
+      <section class="content">
       <div id="searchTab" class="tabContent" style="display: none;">
         <h3>🔍 Detaylı Arama</h3>        
         <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama...">
@@ -226,8 +224,8 @@
         <button onclick="applySearch()">Ara</button>
         <button onclick="clearSearch()">Temizle</button>
         <div id="filterMatches"></div>
-      
-       </div>
+      </div>
+         <section class="content">
       <div id="reportTab" class="tabContent" style="display:none">
         <h3>📊 Satış Raporu</h3>
         <label>Başlangıç: <input type="date" id="fromDate"></label>
