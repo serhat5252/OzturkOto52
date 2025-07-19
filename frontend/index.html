@@ -51,10 +51,11 @@
  </div>
 
 <!-- Sekme İçerikleri -->
-<div class="content">
+<div class="tabContent" id="formTab">
 <div id="formTab"  class="tabContent" style="display: block;">
   <!-- Buraya ürünekleme formu gelecek -->
 </div>
+<div class="tabContent" id="searchTab" style="display:none;">
 <div id="searchTab" class="tabContent" style="display: none;">     
         <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama...">
         <select id="filterCategory"><option value="">Tüm Kategoriler</option></select>
@@ -66,6 +67,7 @@
         <button onclick="clearSearch()">Temizle</button>
         <div id="filterMatches"></div>
 </div>
+<div class="tabContent" id="reportTab" style="display:none;">
 <div id="reportTab" class="tabContent" style="display: none;"> 
         <label>Başlangıç: <input type="date" id="fromDate"></label>
         <label>Bitiş: <input type="date" id="toDate"></label>
@@ -223,12 +225,9 @@
     </div>
   </form>
 
-      <div class="content">
-        <ul id="productsUl" style="display: none;"></ul>
-      </div>
-    </section>
-  </div>
-</div>
+    <ul id="productsUl" style="display: none;"></ul>
+
+
 
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script src="auth.js"></script>
