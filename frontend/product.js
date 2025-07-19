@@ -110,17 +110,16 @@ function prepareEdit(id){
   // sekmeyi formTab yap
   document.querySelectorAll('.tab').forEach(el => {
   el.onclick = () => {
-    // aktif sekmeyi güncelle
+    // Sekme başlıkları aktiflik durumu
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     el.classList.add('active');
-    // içerik alanlarını göster/gizle
+
+    // İçerik bloklarını yönet
     document.querySelectorAll('.tabContent').forEach(c => c.style.display = 'none');
     document.getElementById(el.dataset.tab).style.display = 'block';
   };
 });
 
-
-  window.scrollTo({ top:0, behavior:"smooth" });
 }
 
 // SATIŞ YAP
