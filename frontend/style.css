@@ -1,69 +1,81 @@
-/* Tüm temalar için ortak fix: body başlangıcını sıfıra çekelim */
-* {
+/* Genel body stili */
+body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #3a86ff, #00b4d8);
+  min-height: 100vh;
 }
 
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #f4f6f8;
-  color: #333;
-  padding-top: env(safe-area-inset-top); /* iOS notch için */
-}
-
-/* Header sabitleyip üstte kalacak şekilde ayarlandı */
-header {
-  position: sticky;
-  top: 0;
-  background-color: #3a86ff;
-  color: white;
-  padding: 20px;
+/* Giriş alanı kutusu */
+.login-container {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  margin: 60px auto;
   text-align: center;
-  font-size: 22px;
-  z-index: 1000;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
-/* Ana içerik bloğu */
-main {
-  padding: 20px;
-  margin-top: 0; /* header altında düzgün başlasın */
+/* Başlık */
+.login-container h1 {
+  color: #3a86ff;
+  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: bold;
 }
 
-/* Buton stilleri (tema 1 örneği) */
-button {
+/* Input alanları */
+.login-container input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Buton */
+.login-container button {
+  width: 100%;
+  padding: 12px;
   background-color: #3a86ff;
   color: white;
+  font-size: 16px;
   border: none;
-  padding: 10px 16px;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
   transition: background-color 0.2s ease-in-out;
 }
-button:hover {
+
+.login-container button:hover {
   background-color: #265dd9;
 }
 
-/* Form ve liste stilleri */
-form input, form select, form textarea {
-  width: 100%;
-  margin-bottom: 12px;
-  padding: 10px;
-  font-size: 14px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+/* Alt açıklama */
+.login-container p {
+  margin-top: 16px;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
+/* Link */
+.login-container a {
+  color: #ff006e;
+  font-weight: bold;
+  text-decoration: none;
 }
-ul li {
-  background: #fff;
-  padding: 15px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+
+/* Hata mesajı */
+#loginMessage, #registerError {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* Başarı mesajı */
+#registerSuccess {
+  color: green;
+  font-size: 14px;
+  margin-top: 10px;
 }
