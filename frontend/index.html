@@ -76,28 +76,33 @@
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <h1>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</h1>
-      <form id="loginForm">
-      <input type="text" name="username" placeholder="Kullanıcı adı" required />
-      <input type="password" name="password" placeholder="Şifre" required />
+  <div id="authWrapper">
+  <!-- Giriş Formu -->
+  <h1>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</h1>
+  <div id="loginDiv" class="authBox">
+    <h2>Giriş Yap</h2>
+    <form id="loginForm">
+      <input type="text" name="username" placeholder="Kullanıcı adı" required>
+      <input type="password" name="password" placeholder="Şifre" required>
       <button type="submit">Giriş</button>
     </form>
     <p>Hesabın yok mu? <a href="#" id="showRegister">Kayıt Ol</a></p>
     <div id="loginError" class="error"></div>
   </div>
 
-  <div id="registerDiv" style="display:none">
+  <!-- Kayıt Formu -->
+  <div id="registerDiv" class="authBox" style="display:none">
     <h2>Kayıt Ol</h2>
     <form id="registerForm">
-      <input type="text" name="username" placeholder="Kullanıcı adı" required />
-      <input type="password" name="password" placeholder="Şifre" required />
+      <input type="text" name="username" placeholder="Kullanıcı adı" required>
+      <input type="password" name="password" placeholder="Şifre" required>
       <button type="submit">Kayıt Ol</button>
     </form>
     <p>Zaten hesabın var mı? <a href="#" id="showLogin">Giriş Yap</a></p>
     <div id="registerError" class="error"></div>
     <div id="registerSuccess" class="success"></div>
   </div>
+</div>
 </body>
 </html>
   <!-- ========== Dashboard (Panel) ========== -->
