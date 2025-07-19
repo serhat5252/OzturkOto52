@@ -240,21 +240,32 @@
 <script src="auth.js"></script>
 <script src="product.js"></script>
 <script>
-  // Giriş/Kayıt toggle
-  document.getElementById("showRegister").onclick = e => {
-    e.preventDefault();
-    document.getElementById("loginForm").style.display = "none";
-    document.getElementById("showRegister").parentElement.style.display = "none";
-    document.getElementById("registerForm").style.display = "block";
-    document.getElementById("backToLogin").style.display = "block";
-  };
-  document.getElementById("showLogin").onclick = e => {
-    e.preventDefault();
-    document.getElementById("loginForm").style.display = "block";
-    document.getElementById("showRegister").parentElement.style.display = "";
-    document.getElementById("registerForm").style.display = "none";
-    document.getElementById("backToLogin").style.display = "none";
-  };
+  // Kayıt/Giriş arasında geçiş
+    document.getElementById('showRegister').onclick = e => {
+      e.preventDefault();
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('showRegister').parentElement.style.display = 'none';
+      document.getElementById('registerForm').style.display = 'block';
+      document.getElementById('backToLogin').style.display = 'block';
+    };
+    document.getElementById('showLogin').onclick = e => {
+      e.preventDefault();
+      document.getElementById('loginForm').style.display = 'block';
+      document.getElementById('showRegister').parentElement.style.display = 'block';
+      document.getElementById('registerForm').style.display = 'none';
+      document.getElementById('backToLogin').style.display = 'none';
+    };
+
+    // Sekme tıklama
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.onclick = () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.tabContent').forEach(tc => {
+          tc.style.display = tc.id === tab.getAttribute('data-tab') ? 'block' : 'none';
+        });
+      };
+    });
 
   // LOGIN işlemleri
   const loginForm = document.getElementById("loginForm"),
