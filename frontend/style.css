@@ -48,6 +48,34 @@
   background:#e3fcef;
   font-weight:bold;
 }
+/* Sekme görünümü */
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  display: inline-block;
+  background: #eee;
+  margin-right: 5px;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab.active {
+  background: #3a86ff;
+  color: white;
+}
+
+.tabContent {
+  display: none;
+  padding: 20px;
+  background: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+
+/* İlk içerik görünür */
+.tabContent:first-of-type {
+  display: block;
+}
 
 /* İçerik kısmı */
 .content {

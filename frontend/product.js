@@ -214,6 +214,20 @@ function getSalesReport() {
 
   alert(`📊 ${filtered.length} satış kaydı bulundu.\nToplam: ${summary.totalQty} adet\nToplam Gelir: ₺${summary.totalPrice.toFixed(2)}`);
 }
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    // Sekmeleri güncelle
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    // Tab içeriklerini güncelle
+    const selectedId = tab.dataset.tab;
+    document.querySelectorAll('.tabContent').forEach(content => {
+      content.style.display = content.id === selectedId ? 'block' : 'none';
+    });
+  });
+});
+
 
 // FORM TEMİZLE
 document.getElementById("clearFormBtn").onclick = () => {
