@@ -2,130 +2,57 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ÖZTÜRK OTOMOBİL OTO ELEKTRİK - Giriş</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</title>
   <link rel="stylesheet" href="styles.css">
-    <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #3a86ff, #00b4d8);
-      min-height: 100vh; /* viewport kadar minimum yükseklik */
-      display: block;    /* Flex yerine block */
-      padding: 40px 0;   /* Sayfanın üstten görünmesini sağlar */
-   }
-
-
-    .login-container {
-      background: white;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-    }
-
-    .login-container h1 {
-      color: #3a86ff;
-      margin-bottom: 24px;
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .login-container input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-
-    .login-container button {
-      width: 100%;
-      padding: 12px;
-      background-color: #3a86ff;
-      color: white;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.2s ease-in-out;
-    }
-
-    .login-container button:hover {
-      background-color: #265dd9;
-    }
-
-    .login-container p {
-      margin-top: 16px;
-    }
-
-    .login-container a {
-      color: #ff006e;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    #loginMessage {
-      color: red;
-      margin-top: 10px;
-      font-size: 14px;
-    }
-  </style>
 </head>
-<body>
-  <div id="authWrapper">
-  <!-- Giriş Formu -->
-  <div id="loginDiv" class="authBox">
-    <h2>Giriş Yap</h2>
+<body class="auth">
+  <div class="auth-container" id="authBox">
+    <h1>ÖZTÜRK OTOMOBİL</h1>
+
+    <!-- GİRİŞ -->
     <form id="loginForm">
-      <input type="text" name="username" placeholder="Kullanıcı adı" required>
+      <input type="text" name="username" placeholder="Kullanıcı Adı" required>
       <input type="password" name="password" placeholder="Şifre" required>
-      <button type="submit">Giriş</button>
+      <button type="submit">Giriş Yap</button>
     </form>
     <p>Hesabın yok mu? <a href="#" id="showRegister">Kayıt Ol</a></p>
-    <div id="loginError" class="error"></div>
-  </div>
+    <div id="loginMessage" class="error"></div>
 
-  <!-- Kayıt Formu -->
-  <div id="registerDiv" class="authBox" style="display:none">
-    <h2>Kayıt Ol</h2>
-    <form id="registerForm">
-      <input type="text" name="username" placeholder="Kullanıcı adı" required>
-      <input type="password" name="password" placeholder="Şifre" required>
+    <!-- KAYIT -->
+    <form id="registerForm" style="display:none">
+      <input type="text" name="username" placeholder="Yeni Kullanıcı Adı" required>
+      <input type="password" name="password" placeholder="Şifre Belirle" required>
       <button type="submit">Kayıt Ol</button>
     </form>
-    <p>Zaten hesabın var mı? <a href="#" id="showLogin">Giriş Yap</a></p>
-    <div id="registerError" class="error"></div>
-    <div id="registerSuccess" class="success"></div>
+    <p id="backToLogin" style="display:none">Zaten hesabın var mı? <a href="#" id="showLogin">Giriş Yap</a></p>
+    <div id="registerMessage"></div>
   </div>
-</div>
-</body>
-</html>
-  <!-- ========== Dashboard (Panel) ========== -->
-  <div id="dashboard" style="display:none">
-    <header class="nav-header">
-  <div class=🚗>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
-  <div class="user-actions">
-    <span id="currentUser"></span>
-    <button onclick="logout()">Çıkış Yap</button>
-  </div>
-</header>
 
-<div id="tabs">
-  <div class="tab active" data-tab="tab-add">Ürün Ekle</div>
-  <div class="tab" data-tab="tab-search">Ürün Arama</div>
-  <div class="tab" data-tab="tab-report">Satış Raporu</div>
-</div>
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard" style="display:none">
+    <header class="navbar">
+      <div class="brand">🚗 ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
+      <div class="user">
+        <span id="currentUser"></span>
+        <button onclick="logout()">Çıkış Yap</button>
+      </div>
+    </header>
+
+<div class="main">
+      <div class="sidebar">
+        <div class="tabs">
+          <div class="tab active" data-tab="formTab">Ürün Ekle/Güncelle</div>
+          <div class="tab" data-tab="searchTab">Detaylı Arama</div>
+          <div class="tab" data-tab="reportTab">Satış Raporu</div>
+        </div>
 
    <main>
     <aside>
    <!-- 📝 Ürün Ekleme Tab -->
-<div id="tab-add" class="tab-content active">
+   <div id="formTab">
       <h2>Ürün Ekle / Güncelle</h2>
-      <form id="productForm">
+      <form id="productForm">…</form>
         <div class="form-grid">
           <input name="name" placeholder="Ürün Adı" required />
           <select name="category" required>
@@ -272,7 +199,7 @@
       </form>
     </aside>
      <section style="background:#fff;border-radius:8px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
-      <div id="tab-search" class="tab-content"> 
+      <div id="searchTab" style="display:none"> 
       <h3>🔍 Detaylı Arama</h3>
       <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama..." />
       <select id="filterCategory"><option value="">Tüm Kategoriler</option></select>
@@ -282,20 +209,27 @@
       <label>Fiyat Aralığı: ₺<input type="number" id="filterPriceMin" style="width:80px"> – <input type="number" id="filterPriceMax" style="width:80px"></label><br>
       <button onclick="applySearchFilters()">Ara</button>
       <button onclick="resetSearchFilters()">Temizle</button>
-      <div id="filterMatches" style="margin-top:8px;font-weight:bold;"></div>
+      <div id="filterMatches"></div>
+        </div>
     </section>
 <section style="background:#fff;border-radius:8px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
       <!-- 📈 Satış Raporu Tab -->
-      <div id="tab-report" class="tab-content">
+      <div id="reportTab" style="display:none">
       <h3>📊 Satış Raporu</h3>
-      <label>Başlangıç: <input type="date" id="fromDate"></label><br>
-      <label>Bitiş: <input type="date" id="toDate"></label><br>
-      <button onclick="getSalesReport()">Rapor Al</button>
-      <div id="reportResult" style="margin-top:10px;"></div>
+      <h3>Satış Raporu</h3>
+          <label>Başlangıç: <input type="date" id="fromDate"></label>
+          <label>Bitiş: <input type="date" id="toDate"></label>
+          <button onclick="getSalesReport()">Rapor Al</button>
+        </div>
+      </div>
     </section>  
   
  
-  <ul id="productsUl"></ul>
+  <div class="content">
+        <ul id="productsUl"></ul>
+      </div>
+    </div>
+  </div>
 
   <!-- Sayfanın geri kalanı -->
   <!-- 🧾 Ürün Listesi -->
@@ -311,15 +245,18 @@
 
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="product.js"></script>
+  <script src="auth.js"></script>
   <script>
     // 👆 Tab geçiş fonksiyonu
-  document.querySelectorAll('#tabs .tab').forEach(tab => {
-    tab.onclick = () => {
-      document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
-      tab.classList.add('active');
-      document.getElementById(tab.dataset.tab).classList.add('active');
-    };
-  });
+  document.querySelectorAll('.tab').forEach(el => {
+      el.onclick = () => {
+        document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+        el.classList.add('active');
+        ["formTab","searchTab","reportTab"].forEach(id=>{
+          document.getElementById(id).style.display = (id===el.dataset.tab?"block":"none");
+        });
+      };
+    });
     // 🔽 Buraya bu kodları ekle!
     const regForm = document.getElementById("registerForm");
     regForm.onsubmit = async e => {

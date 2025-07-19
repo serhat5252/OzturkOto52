@@ -1,122 +1,99 @@
-/* Genel container stili */
-.panel-section {
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
+/* Genel sıfırlama */
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Başlık stilleri */
-.panel-section h2, .panel-section h3 {
-  margin-top: 0;
-  color: #3a86ff;
-}
-
-/* Form alanları */
-.panel-section .form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-}
-
-.panel-section .form-grid input,
-.panel-section .form-grid select,
-.panel-section .form-grid textarea {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-sizing: border-box;
-}
-
-.panel-section .form-grid textarea {
-  resize: vertical;
-}
-
-/* Butonlar */
-.panel-section button {
-  background-color: #06d6a0;
-  color: white;
-  padding: 10px 16px;
-  font-size: 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.panel-section button:hover {
-  background-color: #05c591;
-}
-
-/* Filtre & rapor üst kısım */
-.filter-report-wrapper {
+/* Giriş ekrani stili */
+body.auth {
+  font-family: 'Segoe UI', sans-serif;
+  height: 100vh;
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, #3a86ff, #00b4d8);
+}
+.auth-container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 100%; max-width: 380px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.auth-container h1 { margin-bottom: 20px; color: #3a86ff; font-size: 26px; }
+.auth-container input, .auth-container button {
+  width: 100%; margin-bottom: 15px;
+  padding: 12px; font-size: 15px;
+  border-radius: 6px; border: 1px solid #ccc;
+}
+.auth-container button {
+  background: #3a86ff; color: #fff;
+  border: none; cursor: pointer;
+  transition: background-color .2s;
+}
+.auth-container button:hover { background: #265dd9; }
+.auth-container a { color: #ff006e; font-weight: bold; }
+
+/* Dashboard genel stili */
+body.dashboard {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f1f3f5;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.filter-report-wrapper .panel-section {
-  flex: 1;
-  min-width: 280px;
-}
-
-/* Ürün listesindeki kutular */
-#productsUl li {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  margin-bottom: 12px;
-  padding: 12px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-}
-
-.actions button {
-  background-color: #3a86ff;
-  font-size: 12px;
-  padding: 5px 10px;
-  margin-right: 6px;
-}
-
-.actions button:hover {
-  background-color: #265dd9;
-}
-.nav-header {
+/* Üst navbar */
+.navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #3a86ff;
-  color: white;
+  background: #3a86ff;
+  color: #fff;
   padding: 12px 20px;
 }
-
-.nav-header .logo {
-  font-size: 18px;
-  font-weight: bold;
+.navbar .brand { font-size: 22px; }
+.navbar .user { display: flex; align-items: center; }
+.navbar .user span { margin-right: 10px; }
+.navbar .user button {
+  background: #ff006e; border: none;
+  color: #fff; padding: 6px 12px;
+  border-radius: 4px; cursor: pointer;
 }
 
-.nav-header .user-actions {
-  display: flex;
-  align-items: center;
+/* Ana içerik + sekmeler */
+.main {
+  flex:1; display: flex; overflow: hidden;
 }
-
-.nav-header .user-actions span {
-  margin-right: 12px;
-  font-size: 14px;
+.sidebar {
+  width: 280px; background: #fff;
+  border-right:1px solid #ccc;
+  overflow-y:auto; padding:15px;
 }
-
-.nav-header .user-actions button {
-  background-color: #ff006e;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
+.content {
+  flex:1; padding:20px; overflow-y:auto;
 }
+.tabs {
+  display: flex; margin-bottom:20px; gap: 10px;
+}
+.tab {
+  padding: 10px 16px;
+  background: #e0e0e0;
+  border-radius: 6px; cursor: pointer;
+  transition: background .2s;
+}
+.tab.active { background: #06d6a0; color: #fff; }
 
-.nav-header .user-actions button:hover {
-  background-color: #e6005a;
+/* Form ve liste stilleri */
+form input, form select, form textarea {
+  width:100%; padding:8px; margin-bottom:12px;
+  border:1px solid #ccc; border-radius:4px;
+}
+form button { background:#06d6a0; color:#fff; padding:10px; border:none; border-radius:4px; cursor:pointer; }
+ul#productsUl li {
+  background:#fff; border:1px solid #ddd; padding:10px;
+  margin-bottom:10px; border-radius:4px;
+}
+.actions button {
+  margin-right:6px; background:#3a86ff; color:#fff;
+  border:none; padding:6px 10px; border-radius:4px;
+  cursor:pointer;
 }
