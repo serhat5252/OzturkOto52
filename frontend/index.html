@@ -57,6 +57,7 @@
         <!-- product.js form yapısını buraya ekle -->
          <form id="productForm" class="form-grid">
           <!-- ... input ve select alanları ... -->
+          <div id="formTab" class="tabContent" style="display:block"> <!-- Başlangıçta bu açık -->
           <input name="name" placeholder="Ürün Adı" required />
           <select name="category" required>
   <option value="">Kategori Seçiniz</option>
@@ -205,6 +206,7 @@
 
       <div id="searchTab" class="tab-content" style="display:none">
         <h3>🔍 Detaylı Arama</h3>
+        <div id="searchTab" class="tabContent" style="display:none">
         <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama...">
         <select id="filterCategory"><option value="">Tüm Kategoriler</option></select>
         <select id="filterBrand"><option value="">Tüm Markalar</option></select>
@@ -218,6 +220,7 @@
 
       <div id="reportTab" class="tab-content" style="display:none">
         <h3>📊 Satış Raporu</h3>
+        <div id="reportTab" class="tabContent" style="display:none">
         <label>Başlangıç: <input type="date" id="fromDate"></label>
         <label>Bitiş: <input type="date" id="toDate"></label>
         <button onclick="getSalesReport()">Rapor Al</button>
