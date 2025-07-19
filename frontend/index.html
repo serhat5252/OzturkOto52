@@ -211,8 +211,8 @@
         <label>Eklenme: <input type="date" id="filterAddedFrom"> – <input type="date" id="filterAddedTo"></label>
         <label>Satış: <input type="date" id="filterSoldFrom"> – <input type="date" id="filterSoldTo"></label>
         <label>Fiyat: ₺<input type="number" id="filterPriceMin" style="width:80px"> – <input type="number" id="filterPriceMax" style="width:80px"></label>
-        <button onclick="applySearchFilters()">Ara</button>
-        <button onclick="resetSearchFilters()">Temizle</button>
+        <button onclick="applySearch()">Ara</button>
+        <button onclick="clearSearch()">Temizle</button>
         <div id="filterMatches"></div>
       </div>
 
@@ -221,9 +221,10 @@
         <label>Başlangıç: <input type="date" id="fromDate"></label>
         <label>Bitiş: <input type="date" id="toDate"></label>
         <button onclick="getSalesReport()">Rapor Al</button>
+        <div id="reportResult"></div>
       </div>
 
-      <div class="list-container">
+      <div class="content">
         <ul id="productsUl" style="display: none;"></ul>
       </div>
     </section>
@@ -284,14 +285,29 @@
     document.getElementById("authBox").style.display = "block";
   }
 
-  document.querySelectorAll(".tab").forEach(t => {
-  t.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
-    t.classList.add("active");
-    document.querySelectorAll(".tabContent").forEach(c => c.style.display = "none");
-    document.getElementById(t.dataset.tab).style.display = "block";
-  });
-});
+  document.querySelectorAll('.tab').forEach(tab => {
+      tab.onclick = () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.tabContent').forEach(tc => tc.style.display = tc.id === tab.dataset.tab ? 'block' : 'none');
+        // Render list only when içerik gösteriliyorsa
+        if (tab.dataset.tab !== 'formTab') renderProducts(); 
+      };
+    });
+function applySearch(){
+      const key = document.getElementById('filterKeyword').value.toLowerCase();
+      const filtered = products.filter(p =>
+        p.name.toLowerCase().includes(key) ||
+        p.codes.join(', ').toLowerCase().includes(key) ||
+        p.description.toLowerCase().includes(key)
+      );
+      renderProducts(filtered);
+    }
+
+    function clearSearch(){
+      document.getElementById('filterKeyword').value = '';
+      renderProducts();
+    }
   // Socket ve ürünleri getir
   function setupSocket(){
     const socket = io("https://ozturkoto52.onrender.com");
