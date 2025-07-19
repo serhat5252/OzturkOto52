@@ -48,9 +48,179 @@
           <div class="tab" data-tab="reportTab">Satış Raporu</div>
         </div>
         <div class="tab-content">
-          <div id="formTab">…Ürün formunu buraya yapıştır…</div>
-          <div id="searchTab" style="display:none">…Detaylı arama formu buraya…</div>
-          <div id="reportTab" style="display:none">…Satış rapor formu buraya…</div>
+          <div id="formTab"><h2>Ürün Ekle / Güncelle</h2>
+      <form id="productForm">…</form>
+        <div class="form-grid">
+          <input name="name" placeholder="Ürün Adı" required />
+          <select name="category" required>
+  <option value="">Kategori Seçiniz</option>
+  <optgroup label="Alternatör">
+    <option value="Alternatör">Alternatör</option>
+    <option value="Alternatör Statör">Alternatör Statör</option>
+    <option value="Alternatör Rotor">Alternatör Rotor</option>
+    <option value="Alternatör Konjektör">Alternatör Konjektör</option>
+    <option value="Alternatör Kasnağı">Alternatör Kasnağı</option>
+    <option value="Alternatör Diyot Tablası">Alternatör Diyot Tablası</option>
+    <option value="Alternatör Diyot + Konjektör">Alternatör Diyot + Konjektör</option>
+    <option value="Alternatör Diyot Kapağı">Alternatör Diyot Kapağı</option>
+    <option value="Alternatör Bilye Kapağı">Alternatör Bilye Kapağı</option>
+    <option value="Alternatör Rulman Yatağı">Alternatör Rulman Yatağı</option>
+    <option value="Alternatör Bilye">Alternatör Bilye</option>
+    <option value="Alternatör Rotor Bakırı">Alternatör Rotor Bakırı</option>
+    <option value="Alternatör Kömür">Alternatör Kömür</option>
+    <option value="Alternatör Diğer">Alternatör Diğer</option>
+  </optgroup>
+  <optgroup label="Starter">
+    <option value="Starter">Starter</option>
+    <option value="Starter Pinyonu">Starter Pinyonu</option>
+    <option value="Starter Dişli">Starter Dişli</option>
+    <option value="Starter Planet Seti">Starter Planet Seti</option>
+    <option value="Starter Planet">Starter Planet</option>
+    <option value="Starter Çatal">Starter Çatal</option>
+    <option value="Starter Otomatik">Starter Otomatik</option>
+    <option value="Starter Gövdeli Otomatik">Starter Gövdeli Otomatik</option>
+    <option value="Starter Gövdeli yastık">Starter Gövdeli yastık</option>
+    <option value="Starter Yastık">Starter Yastık</option>
+    <option value="Starter Kollektörü">Starter Kollektörü</option>
+    <option value="Starter Fiber">Starter Fiber</option>
+    <option value="Starter Arka kapak">Starter Arka kapak</option>
+    <option value="Starter Fırça tutucu">Starter Fırça tutucu</option>
+    <option value="Starter Kömür seti">Starter Kömür seti</option>
+    <option value="Starter Diğer">Starter Diğer</option>
+  </optgroup>
+</select>
+    <select name="brand" required>
+  <option value="">Marka Seçiniz</option>
+  <option>Aes</option>
+  <option>Aksa</option>
+  <option>Başkurt</option>
+  <option>Baypart</option>
+  <option>Bosch</option>
+  <option>Brd</option>
+  <option>Cargo</option>
+  <option>Delco Remy</option>
+  <option>Denso</option>
+  <option>Dodo</option>
+  <option>Eurorepar</option>
+  <option>ET1</option>
+  <option>Fag</option>
+  <option>Febi</option>
+  <option>Federal Power</option>
+  <option>Flag</option>
+  <option>Formmetal</option>
+  <option>Gates</option>
+  <option>Gebe</option>
+  <option>Genon</option>
+  <option>GMP</option>
+  <option>Gova</option>
+  <option>Hella</option>
+  <option>Hellux</option>
+  <option>INA</option>
+  <option>Kale</option>
+  <option>xxx</option>
+  <option>Kobe</option>
+  <option>Kormas</option>
+  <option>Kraftwall</option>
+  <option>Kraw</option>
+  <option>Lucas</option>
+  <option>Mako</option>
+  <option>Mahle</option>
+  <option>Martek</option>
+  <option>Mega</option>
+  <option>Mitsubishi</option>
+  <option>Mobiletron</option>
+  <option>Mobis</option>
+  <option>Nsk</option>
+  <option>Ntn</option>
+  <option>Nursan/Yavuz</option>
+  <option>Osram</option>
+  <option>Ors</option>
+  <option>Pars</option>
+  <option>Philips</option>
+  <option>Poe</option>
+  <option>Remark/Vertex</option>
+  <option>Remco</option>
+  <option>Sagem</option>
+  <option>Sanel</option>
+  <option>Schunk</option>
+  <option>Seg</option>
+  <option>Seger</option>
+  <option>Seger Korsa</option>
+  <option>Sgr</option>
+  <option>Sensen</option>
+  <option>Silbak</option>
+  <option>Skf</option>
+  <option>Skt</option>
+  <option>swag</option>
+  <option>Swf</option>
+  <option>Svac</option>
+  <option>Traspo</option>
+  <option>Unipoint</option>
+  <option>Valeo</option>
+  <option>Wai</option>
+  <option>Wilson</option>
+  <option>WinWin</option>
+  <option>Wutse</option>
+  <option>Zen</option>
+  <option>Zm</option>
+</select>
+  <select name="type" required>
+  <option value="">Ürün Tipi Seçiniz</option>
+  <option>Bosch</option>
+  <option>Delco</option>
+  <option>Hıtachi</option>
+  <option>Iskra</option>
+  <option>Kore Delco/Kore Valeo/Kore Mitsubishi</option>
+  <option>Lucas</option>
+  <option>Marelli</option>
+  <option>Mako</option>
+  <option>Mitsuba</option>
+  <option>Mitsubishi</option>
+  <option>Motorcraft</option>
+  <option>Nıkko</option>
+  <option>Nİppondenso</option>
+  <option>Prestolite</option>
+  <option>Sawafuji</option>
+  <option>Valeo</option>
+  <option>Visteon</option>
+</select>
+          <input name="shelf" placeholder="Raf No" required />
+          <input name="quantity" type="number" placeholder="Adet" required />
+          <input name="buyPrice" type="number" step="0.01" placeholder="Alış Fiyatı" required />
+          <input name="sellPrice" type="number" step="0.01" placeholder="Satış Fiyatı" required />
+          <input name="codes" placeholder="Kodlar (virgülle)" required />
+          <textarea name="description" placeholder="Açıklama"></textarea>
+        </div>
+        <input type="hidden" name="id" />
+        <button type="submit">Kaydet</button>
+      </form>
+    </aside>
+     <section style="background:#fff;border-radius:8px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+          <div id="searchTab" style="display:none"><h3>🔍 Detaylı Arama</h3>
+      <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama..." />
+      <select id="filterCategory"><option value="">Tüm Kategoriler</option></select>
+      <select id="filterBrand"><option value="">Tüm Markalar</option></select><br>
+      <label>Eklenme Tarihi: <input type="date" id="filterAddedFrom"> – <input type="date" id="filterAddedTo"></label><br>
+      <label>Satış Tarihi: <input type="date" id="filterSoldFrom"> – <input type="date" id="filterSoldTo"></label><br>
+      <label>Fiyat Aralığı: ₺<input type="number" id="filterPriceMin" style="width:80px"> – <input type="number" id="filterPriceMax" style="width:80px"></label><br>
+      <button onclick="applySearchFilters()">Ara</button>
+      <button onclick="resetSearchFilters()">Temizle</button>
+      <div id="filterMatches"></div>
+        </div>
+    </section>
+</div></div>
+          
+      <!-- 📈 Satış Raporu Tab -->
+      <div id="reportTab" style="display:none">
+      <h3>📊 Satış Raporu</h3>
+      <h3>Satış Raporu</h3>
+          <label>Başlangıç: <input type="date" id="fromDate"></label>
+          <label>Bitiş: <input type="date" id="toDate"></label>
+          <button onclick="getSalesReport()">Rapor Al</button>
+        </div>
+      </div>
+    </section>  
+</div>
         </div>
       </div>
       <div class="content">
