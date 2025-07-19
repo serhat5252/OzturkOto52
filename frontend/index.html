@@ -55,10 +55,23 @@
   <!-- Buraya ürünekleme formu gelecek -->
 </div>
 <div id="searchTab" class="tabContent" style="display: none;">
-  <!-- Buraya detaylı arama içeriği gelecek -->
+        <h3>🔍 Detaylı Arama</h3>        
+        <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama...">
+        <select id="filterCategory"><option value="">Tüm Kategoriler</option></select>
+        <select id="filterBrand"><option value="">Tüm Markalar</option></select>
+        <label>Eklenme: <input type="date" id="filterAddedFrom"> – <input type="date" id="filterAddedTo"></label>
+        <label>Satış: <input type="date" id="filterSoldFrom"> – <input type="date" id="filterSoldTo"></label>
+        <label>Fiyat: ₺<input type="number" id="filterPriceMin" style="width:80px"> – <input type="number" id="filterPriceMax" style="width:80px"></label>
+        <button onclick="applySearch()">Ara</button>
+        <button onclick="clearSearch()">Temizle</button>
+        <div id="filterMatches"></div>
 </div>
 <div id="reportTab" class="tabContent" style="display: none;">
-  <!-- Buraya satış raporu içeriği gelecek -->
+        <h3>📊 Satış Raporu</h3>
+        <label>Başlangıç: <input type="date" id="fromDate"></label>
+        <label>Bitiş: <input type="date" id="toDate"></label>
+        <button onclick="getSalesReport()">Rapor Al</button>
+        <div id="reportResult"></div>
 </div>
     </aside>
 
@@ -210,30 +223,7 @@
       <button type="button" id="clearFormBtn">Temizle</button>
     </div>
   </form>
-          
-      
-      <section class="content">
-      <div id="searchTab" class="tabContent" style="display: none;">
-        <h3>🔍 Detaylı Arama</h3>        
-        <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama...">
-        <select id="filterCategory"><option value="">Tüm Kategoriler</option></select>
-        <select id="filterBrand"><option value="">Tüm Markalar</option></select>
-        <label>Eklenme: <input type="date" id="filterAddedFrom"> – <input type="date" id="filterAddedTo"></label>
-        <label>Satış: <input type="date" id="filterSoldFrom"> – <input type="date" id="filterSoldTo"></label>
-        <label>Fiyat: ₺<input type="number" id="filterPriceMin" style="width:80px"> – <input type="number" id="filterPriceMax" style="width:80px"></label>
-        <button onclick="applySearch()">Ara</button>
-        <button onclick="clearSearch()">Temizle</button>
-        <div id="filterMatches"></div>
-      </div>
-         <section class="content">
-      <div id="reportTab" class="tabContent" style="display:none">
-        <h3>📊 Satış Raporu</h3>
-        <label>Başlangıç: <input type="date" id="fromDate"></label>
-        <label>Bitiş: <input type="date" id="toDate"></label>
-        <button onclick="getSalesReport()">Rapor Al</button>
-        <div id="reportResult"></div>
-      </div>
-       
+
       <div class="content">
         <ul id="productsUl" style="display: none;"></ul>
       </div>
