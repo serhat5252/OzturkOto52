@@ -1,81 +1,85 @@
-/* Genel body stili */
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to right, #3a86ff, #00b4d8);
-  min-height: 100vh;
-}
-
-/* Giriş alanı kutusu */
-.login-container {
+/* Genel container stili */
+.panel-section {
   background: white;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 400px;
-  margin: 60px auto;
-  text-align: center;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Başlık */
-.login-container h1 {
+/* Başlık stilleri */
+.panel-section h2, .panel-section h3 {
+  margin-top: 0;
   color: #3a86ff;
-  margin-bottom: 24px;
-  font-size: 24px;
-  font-weight: bold;
 }
 
-/* Input alanları */
-.login-container input {
+/* Form alanları */
+.panel-section .form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.panel-section .form-grid input,
+.panel-section .form-grid select,
+.panel-section .form-grid textarea {
   width: 100%;
-  padding: 12px;
-  margin-bottom: 16px;
+  padding: 10px;
+  font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  font-size: 14px;
+  box-sizing: border-box;
 }
 
-/* Buton */
-.login-container button {
-  width: 100%;
-  padding: 12px;
-  background-color: #3a86ff;
+.panel-section .form-grid textarea {
+  resize: vertical;
+}
+
+/* Butonlar */
+.panel-section button {
+  background-color: #06d6a0;
   color: white;
-  font-size: 16px;
+  padding: 10px 16px;
+  font-size: 14px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s;
 }
 
-.login-container button:hover {
+.panel-section button:hover {
+  background-color: #05c591;
+}
+
+/* Filtre & rapor üst kısım */
+.filter-report-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.filter-report-wrapper .panel-section {
+  flex: 1;
+  min-width: 280px;
+}
+
+/* Ürün listesindeki kutular */
+#productsUl li {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  padding: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.actions button {
+  background-color: #3a86ff;
+  font-size: 12px;
+  padding: 5px 10px;
+  margin-right: 6px;
+}
+
+.actions button:hover {
   background-color: #265dd9;
-}
-
-/* Alt açıklama */
-.login-container p {
-  margin-top: 16px;
-}
-
-/* Link */
-.login-container a {
-  color: #ff006e;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-/* Hata mesajı */
-#loginMessage, #registerError {
-  color: red;
-  margin-top: 10px;
-  font-size: 14px;
-}
-
-/* Başarı mesajı */
-#registerSuccess {
-  color: green;
-  font-size: 14px;
-  margin-top: 10px;
 }
