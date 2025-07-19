@@ -1,165 +1,33 @@
-/* Sayfa genel reset */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+* { margin:0;padding:0;box-sizing:border-box }
+body, html { height:100%; font-family:Arial,sans-serif; }
+header {
+  height:60px; background:#3a86ff; color:white;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px;
 }
-body, html {
-  height: 100%;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f4f6f8;
+.sidebar button, header button { background:#ff006e; }
+main { display:flex; height:calc(100% - 60px); }
+.sidebar {
+  width:300px; background:#f8f9fa; padding:20px; overflow-y:auto;
 }
-
-/* Giriş/Kayıt kutusu ortalama */
-#authWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+.content {
+  flex:1; padding:20px; overflow-y:auto;
 }
-.authBox {
-  background: white;
-  padding: 30px;
-  border-radius: 8px;
-  width: 320px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+.form-grid { display:grid; gap:10px; grid-template-columns:1fr; }
+input, textarea, button {
+  width:100%; padding:8px; font-size:14px; border:1px solid #ccc; border-radius:4px;
 }
-.authBox h2 {
-  margin-bottom: 20px;
-  color: #333;
-}
-.authBox form input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-.authBox form button {
-  width: 100%;
-  padding: 10px;
-  background-color: #3a86ff;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.authBox .error {
-  color: #e63946;
-  font-size: 0.9em;
-  margin-top: 10px;
-}
-.authBox .success {
-  color: #2a9d8f;
-  font-size: 0.9em;
-  margin-top: 10px;
-}
-.authBox p {
-  margin-top: 10px;
-  font-size: 0.9em;
-}
-.authBox a {
-  color: #3a86ff;
-  text-decoration: none;
-}
-
-/* Dashboard düzeni */
-.dashboard {
-  display: none;
-  height: 100%;
-  background-color: #edf2f7;
-}
-.dashboard header {
-  background-color: #3a86ff;
-  color: white;
-  padding: 15px 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.dashboard header h1 {
-  font-size: 1.5em;
-}
-.dashboard header .userLogout {
-  display: flex;
-  align-items: center;
-}
-.dashboard header .userLogout span {
-  margin-right: 15px;
-}
-.dashboard header .userLogout button {
-  padding: 8px 12px;
-  background-color: #ff006e;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-/* Main içerik */
-.dashboard main {
-  display: flex;
-  height: calc(100% - 60px);
-}
-.dashboard aside {
-  width: 280px;
-  background: white;
-  padding: 20px;
-  border-right: 1px solid #ddd;
-  overflow-y: auto;
-}
-.dashboard section {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-}
-.dashboard .form-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-}
-.dashboard form input,
-.dashboard form select,
-.dashboard form textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-.dashboard form button {
-  padding: 10px;
-  width: 100%;
-  background-color: #06d6a0;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-#productsUl {
-  list-style: none;
-}
+button { margin-top:10px; background:#06d6a0; color:white; cursor:pointer; }
+#searchInput { width:100%; padding:10px; font-size:16px; margin-bottom:10px; border:1px solid #ccc; }
+#productsUl { list-style:none; }
 #productsUl li {
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 15px;
-  margin-bottom: 10px;
+  background:#fff; margin-bottom:10px; padding:12px;
+  border:1px solid #ccc; border-radius:4px;
 }
-#productsUl li h3 {
-  margin-bottom: 5px;
-  font-size: 1.1em;
-}
+#productsUl li h3 { margin-bottom:6px; }
+#productsUl li small { color:#666; }
 #productsUl li .actions button {
-  margin-right: 8px;
-  padding: 6px 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  background-color: #3a86ff;
-  color: white;
-  font-size: 0.9em;
+  margin-right:6px; margin-top:8px;
+  background:#3a86ff; color:white; padding:6px;
 }
-
 
