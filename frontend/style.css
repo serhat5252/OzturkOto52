@@ -71,12 +71,6 @@
   border-top: none;
   border-radius: 0 0 4px 4px;
 }
-
-/* İlk içerik görünür */
-.tabContent:first-of-type {
-  display: block;
-}
-
 /* İçerik kısmı */
 .content {
   flex:1; padding:20px; overflow-y:auto;
