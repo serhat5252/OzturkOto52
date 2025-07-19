@@ -1,63 +1,41 @@
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: #f4f6f8;
-  color: #333;
+  background: #1e1e2f;
+  color: #eee;
   margin: 0;
-  padding: 0;
 }
 
 header {
-  background-color: #3a86ff;
-  color: white;
+  background-color: #12121a;
+  color: #00d4ff;
   padding: 20px;
   text-align: center;
-  font-size: 22px;
-  font-weight: bold;
 }
 
 button {
-  background-color: #3a86ff;
-  color: white;
-  border: none;
+  background-color: #00d4ff;
+  color: #12121a;
   padding: 10px 16px;
+  border: none;
   border-radius: 6px;
-  cursor: pointer;
   font-weight: bold;
-}
-
-button:hover {
-  background-color: #265dd9;
+  cursor: pointer;
 }
 
 form input, form select, form textarea {
-  display: block;
   width: 100%;
-  margin-bottom: 12px;
+  background: #2a2a3d;
+  border: 1px solid #444;
+  color: #fff;
+  margin-bottom: 10px;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
+  border-radius: 4px;
 }
 
 ul li {
-  background: #fff;
-  padding: 15px;
+  background-color: #2a2a3d;
+  padding: 10px;
+  border: 1px solid #444;
+  border-radius: 6px;
   margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-}
-
-.error {
-  color: red;
-  font-weight: bold;
-}
-
-.success {
-  color: green;
-  font-weight: bold;
 }
