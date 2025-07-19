@@ -97,6 +97,62 @@ function renderProducts(list = []) {
 
 // Ürün delete ve edit fonksiyonları...
 // ...
+// ÜRÜN SİL
+async function deleteProduct(id){
+  if(!confirm("Silinsin mi?")) return;
+  await fetch(`${API}/${id}`,{ method:"DELETE", headers:headers() });
+  products = products.filter(p=>p._id!==id);
+  renderProducts();
+}
+// SATIŞ YAP
+async function sellProduct(id) {
+  const product = products.find(p => p._id === id);
+  const qty = parseInt(prompt("Kaç adet satıldı?", "1"));
+  if (isNaN(qty) || qty < 1) return;
+
+  const price = parseFloat(prompt("Kaç ₺ den satıldı?", product.sellPrice));
+  if (isNaN(price) || price < 0) return;
+
+  try {
+    const res = await fetch(`${API}/${id}/sell`, {
+      method: "POST",
+      headers: headers(),
+      body: JSON.stringify({ quantity: qty, price })
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      alert("Satış yapılamadı: " + err.message);
+      return;
+    }
+
+    const updated = await res.json();
+    const index = products.findIndex(p => p._id === id);
+    if (index !== -1) products[index] = updated;
+
+    renderProducts();
+  } catch (err) {
+    alert("Bağlantı hatası");
+    console.error(err);
+  }
+}
+// DETAY GÖSTER
+function viewDetails(id){
+  const p = products.find(x=>x._id===id);
+  let msg = `${p.name}\nAdet: ${p.quantity}\nAlış: ₺${p.buyPrice}\nSatış: ₺${p.sellPrice}\nKodlar: ${(p.codes||[]).join(', ')}\nAçıklama: ${p.description}\nEklenme: ${new Date(p.createdAt).toLocaleString()}`;
+  if(p.sales?.length){
+    msg += `\n\n🛒 Satış Geçmişi:`;
+    p.sales.forEach((s,i)=> {
+      msg += `\n${i+1}. ${s.quantity} adet ₺${s.price} – ${new Date(s.date).toLocaleString()}`;
+    });
+  }
+  alert(msg);
+}
+
+function logout(){
+  localStorage.clear();
+  location.href="index.html";
+}
 
 function prepareEdit(id){
   const p = products.find(x=>x._id===id);
