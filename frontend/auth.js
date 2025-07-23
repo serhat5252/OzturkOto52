@@ -1,56 +1,71 @@
-const API_AUTH = "/api/auth";
-
 const loginForm = document.getElementById("loginForm");
 const registerForm = document.getElementById("registerForm");
-const loginMsg = document.getElementById("loginMessage");
-const registerMsg = document.getElementById("registerMessage");
 const showRegisterBtn = document.getElementById("showRegister");
+const loginMessage = document.getElementById("loginMessage");
+const registerMessage = document.getElementById("registerMessage");
+const authBox = document.getElementById("authBox");
+const dashboard = document.getElementById("dashboard");
+const currentUser = document.getElementById("currentUser");
 
+// Giriş işlemi
 loginForm.onsubmit = async e => {
   e.preventDefault();
-  loginMsg.innerText = "";
+  loginMessage.innerText = "";
   const data = Object.fromEntries(new FormData(loginForm));
-  const res = await fetch(API_AUTH + "/login", {
-    method: "POST",
-    headers: { "Content-Type":"application/json" },
-    body: JSON.stringify(data)
-  });
-  const body = await res.json();
-  if (!res.ok) return loginMsg.innerText = body.message;
-  sessionStorage.setItem("token", body.token);
-  sessionStorage.setItem("username", body.username);
-  afterLogin();
+
+  try {
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.message || "Giriş başarısız");
+
+    sessionStorage.setItem("token", json.token);
+    currentUser.innerText = json.username;
+    authBox.style.display = "none";
+    dashboard.style.display = "block";
+  } catch (err) {
+    loginMessage.innerText = "❌ " + err.message;
+  }
 };
 
+// Kayıt formunu göster
+showRegisterBtn.style.display = "block";
 showRegisterBtn.onclick = () => {
   registerForm.style.display = "block";
-  loginForm.style.display = "none";
 };
 
+// Kayıt işlemi
 registerForm.onsubmit = async e => {
   e.preventDefault();
+  registerMessage.innerText = "";
   const data = Object.fromEntries(new FormData(registerForm));
-  const res = await fetch(API_AUTH + "/register", {
-    method: "POST",
-    headers: { "Content-Type":"application/json" },
-    body: JSON.stringify(data)
-  });
-  const body = await res.json();
-  registerMsg.innerText = body.message || "Başarılı";
-  registerMsg.style.color = res.ok ? "green" : "red";
+
+  try {
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.message || "Kayıt başarısız");
+
+    alert("✅ Kayıt başarılı! Giriş yapabilirsiniz.");
+    registerForm.reset();
+    registerForm.style.display = "none";
+  } catch (err) {
+    registerMessage.innerText = "❌ " + err.message;
+  }
 };
 
-function afterLogin(){
-  document.getElementById("authBox").style.display = "none";
-  document.getElementById("dashboard").style.display = "block";
-  document.getElementById("currentUser").innerText = sessionStorage.getItem("username");
-}
-
-function logout(){
-  sessionStorage.clear();
-  location.reload();
-}
-
-window.onload = () => {
-  if (sessionStorage.getItem("token")) afterLogin();
+// Çıkış işlemi
+window.logout = () => {
+  sessionStorage.removeItem("token");
+  dashboard.style.display = "none";
+  authBox.style.display = "block";
+  loginForm.reset();
 };
