@@ -1,0 +1,125 @@
+/* GİRİŞ EKRANI */
+.auth-container {
+  position: fixed; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  background:#fff; padding:30px;
+  border-radius:10px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.2);
+  max-width:360px; width:90%;
+  text-align:center;
+}
+.auth-container input {
+  width:100%; padding:10px; margin:10px 0;
+  border:1px solid #ccc; border-radius:6px;
+}
+.auth-container button {
+  background:#3a86ff; color:#fff; border:none;
+  padding:12px; width:100%; border-radius:6px;
+  cursor:pointer;
+}
+.auth-container .switch { margin:10px 0; }
+.error { color:red; margin-top:8px; }
+.success { color:green; margin-top:8px; }
+
+/* ÜST BÖLÜM */
+.navbar {
+  position: sticky; top: 0; z-index: 10;
+  display:flex; justify-content:space-between;
+  align-items:center; padding:10px 20px;
+  background:#3a86ff; color:#fff;
+  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+}
+.navbar .user {
+  display: flex; gap: 10px;
+  align-items: center;
+}
+.navbar .user button {
+  background:#ff006e; border:none; color:#fff;
+  padding:8px 12px; border-radius:6px;
+  cursor:pointer;
+}
+
+/* ANA YAPI */
+.main {
+  display: flex;
+  height: calc(100vh - 60px); /* navbar yüksekliğine göre */
+}
+/* SOL TAB MENÜ */
+.sidebar {
+  width: 240px;
+  background: #f7f9fc;
+  border-right: 1px solid #ddd;
+}
+.tabs .tab {
+  padding:14px; cursor:pointer;
+  border-bottom:1px solid #ddd;
+}
+.tabs .tab.active {
+  background:#e3fcef;
+  font-weight:bold;
+}
+
+/* SAĞ İÇERİK ALANI */
+.content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+#productsUl {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+#productsUl li {
+  background: #f9f9f9;
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.tabContent {
+  display: none;
+}
+.tabContent.active {
+  display: block;
+}
+.form-grid input, .form-grid select,
+.form-grid textarea, #searchTab input,
+#searchTab select, #searchTab label input {
+  margin:6px 0; padding:8px;
+  width:100%;
+  border:1px solid #ccc;
+  border-radius:6px;
+}
+.content .list-container {
+  background:#fff; padding:20px;
+  border-radius:8px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+  max-height:400px; overflow-y:auto;
+}
+
+/* BUTONLAR */
+button {
+  cursor: pointer;
+}
+#scanner-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+}
+
+#camera video,
+canvas.drawing {
+  width: 100%;
+  height: auto;
+}
+
+canvas.drawing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
