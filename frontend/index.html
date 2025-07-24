@@ -83,42 +83,48 @@
         </div>
 
         <!-- Detaylı Arama (Artık ayrı sekme) -->
-        <div class="tabContent" id="detayliArama">
-          <div class="filter-section">
-            <h3>Detaylı Arama</h3>
-            <div class="filter-row">
-              <input type="text" id="filterKeyword" placeholder="Ürün adı, açıklama, kod, barkod" />
-              <select id="filterCategory">
-                <option value="">Kategori</option>
-                <option>Elektrik</option>
-                <option>Kaporta</option>
-                <option>Motor</option>
-              </select>
-              <select id="filterBrand">
-                <option value="">Marka</option>
-                <option>Bosch</option>
-                <option>Valeo</option>
-                <option>Lucas</option>
-              </select>
-              <select id="filterType">
-                <option value="">Tip</option>
-                <option>Orijinal</option>
-                <option>Yan Sanayi</option>
-              </select>
-              <input type="date" id="fromDate" />
-              <input type="date" id="toDate" />
-            </div>
-            <div class="filter-row">
-              <div class="critical-stock-toggle">
-                <input type="checkbox" id="onlyCriticalStock" checked />
-                <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
-              </div>
-              <button id="filterBtn">Ara</button>
-              <button type="button" id="clearBtn">Temizle</button>
-            </div>
-            <div id="filterMatches"></div>
-          </div>
-        </div>
+        <!-- Detaylı Arama -->
+<div class="filter-section">
+  <h3>Detaylı Arama</h3>
+  <form id="filterForm">
+    <div class="filter-column">
+      <input type="text" id="filterKeyword" placeholder="Ürün adı, açıklama, kod, barkod" />
+      <select id="filterCategory">
+        <option value="">Kategori Seç</option>
+        <option>Elektrik</option>
+        <option>Kaporta</option>
+        <option>Motor</option>
+      </select>
+      <select id="filterBrand">
+        <option value="">Marka Seç</option>
+        <option>Bosch</option>
+        <option>Valeo</option>
+        <option>Lucas</option>
+      </select>
+      <select id="filterType">
+        <option value="">Ürün Tipi Seç</option>
+        <option>Orijinal</option>
+        <option>Yan Sanayi</option>
+      </select>
+      <label>Ürün Ekleme Tarih Aralığı:</label>
+      <input type="date" id="filterFrom" />
+      <input type="date" id="filterTo" />
+      <label>Ürün Satış Tarihi Aralığı:</label>
+      <input type="date" id="filterSaleFrom" />
+      <input type="date" id="filterSaleTo" />
+      <div class="critical-stock-toggle">
+        <input type="checkbox" id="onlyCriticalStock" checked />
+        <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
+      </div>
+      <div class="form-buttons">
+        <button id="filterBtn" type="button">Ara</button>
+        <button id="clearBtn" type="button">Temizle</button>
+      </div>
+      <div id="filterMatches"></div>
+    </div>
+  </form>
+</div>
+
 
         <!-- Satış Raporu -->
         <div class="tabContent" id="satisRaporu">

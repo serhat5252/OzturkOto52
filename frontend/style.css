@@ -298,3 +298,43 @@ body {
     gap: 0.5rem;
   }
 }
+/* Detaylı Arama Kolon */
+.filter-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.filter-column input,
+.filter-column select {
+  padding: 0.6rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.filter-column label {
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.filter-column .form-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+#filterBtn,
+#clearBtn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#clearBtn {
+  background: #888;
+}
