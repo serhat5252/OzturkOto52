@@ -16,18 +16,27 @@ loginForm.onsubmit = async e => {
       body: JSON.stringify(data)
     });
 
-    const json = await res.json(); // ← bu satır çok önemli
+    const json = await res.json();
 
     if (!res.ok) throw new Error(json.message || "Giriş başarısız");
 
-    sessionStorage.setItem("token", json.token); // ← token kaydediliyor
+    sessionStorage.setItem("token", json.token);
+    sessionStorage.setItem("currentUser", json.username); // <-- EKLENDİ
+
     document.getElementById("currentUser").innerText = json.username;
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
+
+    // Admin ise "Yeni Kullanıcı Ekle" butonunu göster
+    if (json.username === "admin") {
+      showRegisterBtn.style.display = "inline-block";
+    }
+
   } catch (err) {
-    loginMessage.innerText = err.message;
+    loginMessage.innerText = "❌ " + err.message;
   }
 };
+
 // KAYIT
 registerForm.onsubmit = async e => {
   e.preventDefault();
@@ -64,14 +73,14 @@ function logout() {
   location.reload();
 }
 
-// OTOMATİK GİRİŞ (sayfa yenilendiğinde)
+// OTOMATİK GİRİŞ
 document.addEventListener("DOMContentLoaded", () => {
   const token = sessionStorage.getItem("token");
   const currentUser = sessionStorage.getItem("currentUser");
 
   if (token) {
     document.getElementById("authBox").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
+    document.getElementById("dashboard").style.display = "flex";
     document.getElementById("currentUser").innerText = currentUser;
 
     if (currentUser === "admin") {
