@@ -3,139 +3,117 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Öztürk Otomobil Oto Elektrik</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>ÖZTÜRK OTOMOBİL</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
-  <!-- Giriş / Kayıt Kutusu -->
+  <!-- Giriş Sayfası -->
   <div id="authBox" class="auth-container">
     <h1>ÖZTÜRK</h1>
     <h2>OTOMOBİL OTO ELEKTRİK</h2>
-
     <form id="loginForm">
-      <input name="username" placeholder="Kullanıcı adı" required />
-      <input name="password" type="password" placeholder="Şifre" required />
+      <input type="text" name="username" placeholder="Kullanıcı Adı" required />
+      <input type="password" name="password" placeholder="Şifre" required />
       <button type="submit">Giriş Yap</button>
-      <p id="loginMessage" class="error"></p>
     </form>
-
-    <button id="showRegister">Yeni Kullanıcı Ekle (Yalnızca Admin)</button>
-
-    <form id="registerForm" style="display:none">
-      <input name="username" placeholder="Yeni kullanıcı adı" required />
-      <input name="password" type="password" placeholder="Yeni şifre" required />
-      <button type="submit">Kayıt Et</button>
-      <p id="registerMessage" class="error"></p>
-    </form>
+    <p id="loginMessage" class="error"></p>
   </div>
 
-  <!-- Dashboard -->
-  <div id="dashboard" class="dashboard" style="display:none">
-    <!-- Üst Bar -->
+  <!-- Yönetim Paneli -->
+  <div id="dashboard" class="dashboard" style="display: none;">
     <div class="navbar">
-      <div class="brand">ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
+      <div class="brand">ÖZTÜRK OTOMOBİL</div>
       <div class="user">
         <span id="currentUser"></span>
-        <button onclick="logout()">Çıkış Yap</button>
+        <button onclick="logout()">Çıkış</button>
       </div>
     </div>
 
-    <!-- Ana İçerik -->
     <div class="main">
       <!-- Sol Menü -->
       <div class="sidebar">
         <div class="tabs">
-          <div class="tab active" data-tab="productTab">Ürün İşlemleri</div>
+          <div class="tab active" data-tab="urunIslemleri">Ürün İşlemleri</div>
         </div>
       </div>
 
       <!-- İçerik -->
       <div class="content">
-        <div id="productTab" class="tabContent active">
-
-          <!-- Ürün Formu -->
+        <!-- Ürün İşlemleri -->
+        <div id="urunIslemleri" class="tabContent active">
           <form id="productForm">
-            <input name="id" type="hidden" />
-            <input name="name" placeholder="Ürün Adı" required />
-            <input name="category" placeholder="Kategori" list="categoryOptions" />
-            <datalist id="categoryOptions">
-              <option value="Motor">
-              <option value="Elektrik">
-              <option value="Aksesuar">
-            </datalist>
-
-            <input name="brand" placeholder="Marka" list="brandOptions" />
-            <datalist id="brandOptions">
-              <option value="Bosch">
-              <option value="Valeo">
-              <option value="Delphi">
-            </datalist>
-
-            <input name="type" placeholder="Ürün Tipi" list="typeOptions" />
-            <datalist id="typeOptions">
-              <option value="Ampul">
-              <option value="Sigorta">
-              <option value="Kablo">
-            </datalist>
-
-            <input name="shelf" placeholder="Raf" />
-            <input name="quantity" type="number" placeholder="Stok Miktarı" />
-            <input name="minQuantity" type="number" placeholder="Kritik Stok" />
-            <input name="buyPrice" type="number" step="0.01" placeholder="Alış Fiyatı" />
-            <input name="sellPrice" type="number" step="0.01" placeholder="Satış Fiyatı" />
-            <input name="codes" placeholder="Kodlar (virgülle)" />
+            <input type="hidden" name="id" />
+            <input type="text" name="name" placeholder="Ürün Adı" required />
+            <select name="category" required>
+              <option value="">Kategori Seçin</option>
+              <option>Elektrik</option>
+              <option>Motor</option>
+              <option>Kaporta</option>
+            </select>
+            <select name="brand" required>
+              <option value="">Marka Seçin</option>
+              <option>Bosch</option>
+              <option>Valeo</option>
+              <option>Delphi</option>
+            </select>
+            <select name="type" required>
+              <option value="">Tip Seçin</option>
+              <option>Orijinal</option>
+              <option>Yan Sanayi</option>
+            </select>
+            <input type="text" name="shelf" placeholder="Raf No" />
+            <input type="number" name="quantity" placeholder="Stok Miktarı" />
+            <input type="number" name="minQuantity" placeholder="Kritik Stok" />
+            <input type="number" step="0.01" name="buyPrice" placeholder="Alış Fiyatı" />
+            <input type="number" step="0.01" name="sellPrice" placeholder="Satış Fiyatı" />
+            <input type="text" name="codes" placeholder="Kodlar (virgül ile)" />
             <textarea name="description" placeholder="Açıklama"></textarea>
-
-            <div style="display:flex; gap:10px">
-              <button type="submit">Kaydet</button>
-              <button type="button" id="clearFormBtn">Temizle</button>
-            </div>
+            <button type="submit">Kaydet</button>
+            <button type="button" id="clearFormBtn">Temizle</button>
           </form>
 
           <!-- Detaylı Arama -->
           <div class="filter-section">
-            <h3>Detaylı Arama</h3>
             <div class="filter-row">
-              <input id="filterKeyword" placeholder="Arama kelimesi..." />
-              <input id="filterCategory" placeholder="Kategori" list="categoryOptions" />
-              <input id="filterBrand" placeholder="Marka" list="brandOptions" />
-              <input id="filterType" placeholder="Tip" list="typeOptions" />
-            </div>
-            <div class="filter-row">
+              <input type="text" id="filterKeyword" placeholder="Arama..." />
+              <select id="filterCategory">
+                <option value="">Kategori</option>
+                <option>Elektrik</option>
+                <option>Motor</option>
+                <option>Kaporta</option>
+              </select>
+              <select id="filterBrand">
+                <option value="">Marka</option>
+                <option>Bosch</option>
+                <option>Valeo</option>
+                <option>Delphi</option>
+              </select>
+              <select id="filterType">
+                <option value="">Tip</option>
+                <option>Orijinal</option>
+                <option>Yan Sanayi</option>
+              </select>
               <input type="date" id="filterFromDate" />
               <input type="date" id="filterToDate" />
             </div>
             <div class="filter-row">
               <div class="critical-stock-toggle">
-                <input type="checkbox" id="onlyCriticalStock" />
+                <input type="checkbox" id="onlyCriticalStock" checked />
                 <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
               </div>
               <button id="filterBtn">Ara</button>
               <button id="clearBtn">Temizle</button>
-              <span id="filterMatches"></span>
             </div>
           </div>
 
           <!-- Ürün Listesi -->
           <ul id="productsUl"></ul>
-
-          <!-- Satış Raporu -->
-          <div class="report-section">
-            <h3>Satış Raporu</h3>
-            <div class="filter-row">
-              <input type="date" id="fromDate" />
-              <input type="date" id="toDate" />
-              <button id="reportBtn">Rapor Al</button>
-            </div>
-            <pre id="reportResult"></pre>
-          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="/socket.io/socket.io.js"></script>
   <script src="auth.js"></script>
   <script src="product.js"></script>
 </body>

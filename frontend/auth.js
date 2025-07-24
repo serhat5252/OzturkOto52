@@ -1,8 +1,5 @@
 const loginForm = document.getElementById("loginForm");
-const registerForm = document.getElementById("registerForm");
 const loginMessage = document.getElementById("loginMessage");
-const registerMessage = document.getElementById("registerMessage");
-const showRegisterBtn = document.getElementById("showRegister");
 
 // GİRİŞ
 loginForm.onsubmit = async e => {
@@ -21,53 +18,19 @@ loginForm.onsubmit = async e => {
 
     sessionStorage.setItem("token", json.token);
     sessionStorage.setItem("currentUser", json.username);
-
     document.getElementById("currentUser").innerText = json.username;
+
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
-
-    if (json.username === "admin") {
-      showRegisterBtn.style.display = "inline-block";
-    }
   } catch (err) {
     loginMessage.innerText = "❌ " + err.message;
   }
 };
 
-// KAYIT
-registerForm.onsubmit = async e => {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(registerForm));
-
-  try {
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + sessionStorage.getItem("token")
-      },
-      body: JSON.stringify(data)
-    });
-
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.message || "Kayıt başarısız");
-
-    registerMessage.innerText = "✅ Kayıt başarılı!";
-    registerForm.reset();
-  } catch (err) {
-    registerMessage.innerText = "❌ " + err.message;
-  }
-};
-
-// "Yeni Kullanıcı Ekle" butonuna tıklanınca kayıt formu görünür
-showRegisterBtn.onclick = () => {
-  registerForm.style.display = "block";
-  showRegisterBtn.style.display = "none";
-};
-
 // ÇIKIŞ
 function logout() {
-  sessionStorage.clear();
+  sessionStorage.removeItem("token");
+  sessionStorage.removeItem("currentUser");
   location.reload();
 }
 
@@ -76,17 +39,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const token = sessionStorage.getItem("token");
   const currentUser = sessionStorage.getItem("currentUser");
 
-  if (token) {
+  if (token && currentUser) {
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
     document.getElementById("currentUser").innerText = currentUser;
-
-    if (currentUser === "admin") {
-      showRegisterBtn.style.display = "inline-block";
-    }
   }
 
-  // Sekme geçişleri (şu anda 1 sekme olduğu için basit)
+  // Sekme geçişleri
   const tabs = document.querySelectorAll(".tab");
   const contents = document.querySelectorAll(".tabContent");
 
