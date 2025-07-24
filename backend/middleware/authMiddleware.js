@@ -15,7 +15,8 @@ exports.protect = async (req, res, next) => {
 };
 
 exports.isAdmin = (req, res, next) => {
-  if (req.user.username !== "admin")
+  if (!req.user || req.user.username !== "admin") {
     return res.status(403).json({ message: "Admin yetkisi gerekli" });
+  }
   next();
 };

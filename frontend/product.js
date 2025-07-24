@@ -1,6 +1,5 @@
 const API = "/api/products";
 const token = () => sessionStorage.getItem("token");
-const socket = io(window.location.origin);
 
 const form = document.getElementById("productForm");
 const ul = document.getElementById("productsUl");
@@ -14,7 +13,7 @@ form.onsubmit = async e => {
 
   ["quantity", "minQuantity"].forEach(k => data[k] = parseInt(data[k]) || 0);
   ["buyPrice", "sellPrice"].forEach(k => data[k] = parseFloat(data[k]) || 0);
-  data.codes = data.codes ? data.codes.split(",").map(s => s.trim()) : [];
+  data.codes = data.codes.split(",").map(s => s.trim());
 
   try {
     const res = await fetch(API + (isUpdate ? "/" + data.id : ""), {
@@ -25,6 +24,7 @@ form.onsubmit = async e => {
       },
       body: JSON.stringify(data)
     });
+
     const body = await res.json();
     if (!res.ok) throw new Error(body.message);
 
@@ -35,32 +35,28 @@ form.onsubmit = async e => {
     }
 
     resetForm();
-    alert("✅ Başarılı!");
+    alert("✅ Başarılı");
   } catch (err) {
     alert("❌ Hata: " + err.message);
   }
 };
 
 async function fetchProducts() {
-  const authToken = token();
-  if (!authToken) return;
-
   try {
     const res = await fetch(API, {
-      headers: { "Authorization": "Bearer " + authToken }
+      headers: { "Authorization": "Bearer " + token() }
     });
-    if (!res.ok) throw new Error("Yetki veya bağlantı sorunu");
-
+    if (!res.ok) throw new Error("Yetki veya bağlantı hatası");
     products = await res.json();
     renderList(products);
   } catch (err) {
-    alert("❌ Ürün çekilemedi: " + err.message);
+    alert("Ürünler alınamadı: " + err.message);
   }
 }
 
 function renderList(list) {
   ul.innerHTML = "";
-  document.getElementById("filterMatches").innerText = list.length + " ürün.";
+  document.getElementById("filterMatches").innerText = list.length + " ürün bulundu.";
   list.forEach(p => {
     const li = document.createElement("li");
     li.innerHTML = `<strong>${p.name}</strong> (${p.quantity}) 
@@ -82,7 +78,7 @@ window.edit = id => {
 };
 
 window.del = async id => {
-  if (!confirm("Emin misin?")) return;
+  if (!confirm("Silmek istediğine emin misin?")) return;
   await fetch(API + "/" + id, {
     method: "DELETE",
     headers: { "Authorization": "Bearer " + token() }
@@ -123,7 +119,7 @@ function resetSearchFilters() {
 function resetForm() {
   form.reset();
   form.elements.id.value = "";
-  fetchProducts(); // Liste güncelle
+  fetchProducts();
 }
 
 // Sekme geçişi
@@ -138,38 +134,32 @@ document.querySelectorAll(".tab").forEach(tab => {
   });
 });
 
-// Türkçe karakter destekli küçük harf
+// Türkçe karakter uyumlu küçük harf
 function turkishLower(str) {
   return str.toLocaleLowerCase("tr-TR");
 }
 
-// Arama filtreleri
+// Event listener
 document.getElementById("filterBtn").onclick = applySearchFilters;
 document.getElementById("clearBtn").onclick = resetSearchFilters;
 document.getElementById("clearFormBtn").onclick = resetForm;
 
-// Rapor
+// Satış raporu
 document.getElementById("reportBtn").onclick = async () => {
   const from = document.getElementById("fromDate").value;
   const to = document.getElementById("toDate").value;
-  try {
-    const res = await fetch(`/api/products/sales-report?from=${from}&to=${to}`, {
-      headers: { "Authorization": "Bearer " + token() }
-    });
-    const json = await res.json();
-    document.getElementById("reportResult").innerText = JSON.stringify(json, null, 2);
-  } catch (err) {
-    alert("Rapor alınamadı: " + err.message);
-  }
+  const res = await fetch(`/api/products/sales-report?from=${from}&to=${to}`, {
+    headers: { "Authorization": "Bearer " + token() }
+  });
+  const json = await res.json();
+  document.getElementById("reportResult").innerText = JSON.stringify(json, null, 2);
 };
 
-// SOCKET
+// Socket.io
 const socket = io();
 socket.on("update", fetchProducts);
 
-// Yüklenince sadece giriş yapılmışsa çalıştır
+// Sayfa yüklenince
 document.addEventListener("DOMContentLoaded", () => {
-  if (token()) {
-    fetchProducts();
-  }
+  fetchProducts();
 });

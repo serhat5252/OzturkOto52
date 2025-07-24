@@ -12,15 +12,15 @@ exports.addProduct = async (req, res) => {
   req.app.get("io").emit("update");
 };
 
-exports.deleteProduct = async (req, res) => {
-  await Product.findByIdAndDelete(req.params.id);
-  res.json({ message: "Ürün silindi" });
-  req.app.get("io").emit("update");
-};
-
 exports.updateProduct = async (req, res) => {
   const updated = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
   res.json(updated);
+  req.app.get("io").emit("update");
+};
+
+exports.deleteProduct = async (req, res) => {
+  await Product.findByIdAndDelete(req.params.id);
+  res.json({ message: "Ürün silindi" });
   req.app.get("io").emit("update");
 };
 

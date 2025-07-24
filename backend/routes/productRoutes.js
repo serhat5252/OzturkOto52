@@ -7,6 +7,7 @@ const {
   sellProduct,
   salesReport
 } = require("../controllers/productController");
+
 const { protect } = require("../middleware/authMiddleware");
 
 const router = express.Router();

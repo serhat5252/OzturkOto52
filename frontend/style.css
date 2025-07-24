@@ -10,14 +10,13 @@ body {
   color: #333;
 }
 
-/* Giriş & Kayıt kutusu */
 .auth-container {
   max-width: 400px;
   margin: 60px auto;
   padding: 2rem;
   background: white;
   border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
 .auth-container h1 {
@@ -55,7 +54,6 @@ body {
   margin-top: 0.5rem;
 }
 
-/* Dashboard */
 .dashboard {
   display: flex;
   flex-direction: column;
@@ -107,7 +105,6 @@ body {
   display: block;
 }
 
-/* Ürün listesi */
 #productsUl {
   list-style: none;
   padding: 0;
@@ -131,7 +128,6 @@ body {
   margin-left: 5px;
 }
 
-/* Responsive */
 @media (min-width: 768px) {
   .dashboard {
     flex-direction: row;

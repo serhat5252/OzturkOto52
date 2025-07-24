@@ -4,7 +4,7 @@ const loginMessage = document.getElementById("loginMessage");
 const registerMessage = document.getElementById("registerMessage");
 const showRegisterBtn = document.getElementById("showRegister");
 
-// GİRİŞ
+// Giriş
 loginForm.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(loginForm));
@@ -17,7 +17,6 @@ loginForm.onsubmit = async e => {
     });
 
     const json = await res.json();
-
     if (!res.ok) throw new Error(json.message || "Giriş başarısız");
 
     sessionStorage.setItem("token", json.token);
@@ -31,13 +30,12 @@ loginForm.onsubmit = async e => {
       showRegisterBtn.style.display = "inline-block";
     }
 
-    fetchProducts(); // 🟢 Giriş sonrası ürünleri getir
   } catch (err) {
     loginMessage.innerText = "❌ " + err.message;
   }
 };
 
-// KAYIT
+// Kayıt
 registerForm.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(registerForm));
@@ -62,25 +60,25 @@ registerForm.onsubmit = async e => {
   }
 };
 
-// Yeni Kullanıcı Ekle butonu
+// Adminse kayıt formunu göster
 showRegisterBtn.onclick = () => {
   registerForm.style.display = "block";
   showRegisterBtn.style.display = "none";
 };
 
-// ÇIKIŞ
+// Çıkış
 function logout() {
   sessionStorage.removeItem("token");
   sessionStorage.removeItem("currentUser");
   location.reload();
 }
 
-// OTOMATİK GİRİŞ
+// Otomatik giriş (sayfa yenilendiğinde)
 document.addEventListener("DOMContentLoaded", () => {
   const token = sessionStorage.getItem("token");
   const currentUser = sessionStorage.getItem("currentUser");
 
-  if (token) {
+  if (token && currentUser) {
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
     document.getElementById("currentUser").innerText = currentUser;
@@ -88,11 +86,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (currentUser === "admin") {
       showRegisterBtn.style.display = "inline-block";
     }
-
-    fetchProducts(); // 🟢 Sayfa yenilendiğinde ürünleri getir
   }
 
-  // TAB GEÇİŞLERİ
+  // Sekme geçişleri
   const tabs = document.querySelectorAll(".tab");
   const contents = document.querySelectorAll(".tabContent");
 
