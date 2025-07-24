@@ -79,43 +79,70 @@
       </div>
 
       <!-- Detaylı Arama -->
-      <div class="tabContent" id="searchTab">
-        <div class="filter-section">
-          <h3>Detaylı Arama</h3>
-          <div class="filter-row">
-            <input type="text" id="filterKeyword" placeholder="Ürün adı / kod / açıklama / barkod" />
-            <select id="filterCategory"></select>
-            <select id="filterBrand"></select>
-            <select id="filterType"></select>
-            <input type="date" id="filterFrom" />
-            <input type="date" id="filterTo" />
-            <input type="date" id="filterSaleFrom" />
-            <input type="date" id="filterSaleTo" />
-          </div>
-          <div class="filter-row">
-            <div class="critical-stock-toggle">
-              <input type="checkbox" id="onlyCriticalStock" checked />
-              <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
-            </div>
-            <button id="filterBtn">Ara</button>
-            <button id="clearBtn" type="button">Temizle</button>
-          </div>
-          <div id="filterMatches"></div>
-        </div>
-      </div>
+<div class="tabContent" id="searchTab">
+  <form id="filterForm" class="filter-form">
+    <h3>Detaylı Arama</h3>
+
+    <input type="text" id="filterKeyword" placeholder="Ürün adı, açıklama, kod, barkod" />
+
+    <select id="filterCategory">
+      <option value="">Kategori</option>
+      <option>Elektrik</option>
+      <option>Kaporta</option>
+      <option>Motor</option>
+    </select>
+
+    <select id="filterBrand">
+      <option value="">Marka</option>
+      <option>Bosch</option>
+      <option>Valeo</option>
+      <option>Lucas</option>
+    </select>
+
+    <select id="filterType">
+      <option value="">Ürün Tipi</option>
+      <option>Orijinal</option>
+      <option>Yan Sanayi</option>
+    </select>
+
+    <label>Eklenme Tarihi Aralığı:</label>
+    <input type="date" id="filterFrom" />
+    <input type="date" id="filterTo" />
+
+    <label>Satış Tarihi Aralığı:</label>
+    <input type="date" id="filterSaleFrom" />
+    <input type="date" id="filterSaleTo" />
+
+    <label class="critical-stock-toggle">
+      <input type="checkbox" id="onlyCriticalStock" checked />
+      Kritik stokta olanları göster
+    </label>
+
+    <div class="form-buttons">
+      <button id="filterBtn" type="button">Ara</button>
+      <button id="clearBtn" type="button">Temizle</button>
+    </div>
+  </form>
+
+  <ul id="productsUl"></ul>
+</div>
+
 
       <!-- Satış Raporu -->
-      <div class="tabContent" id="satisRaporu">
-        <div class="report-section">
-          <h3>Satış Raporu</h3>
-          <div class="filter-row">
-            <input type="date" id="reportFrom" />
-            <input type="date" id="reportTo" />
-            <button id="reportBtn">Rapor Al</button>
-          </div>
-          <pre id="reportResult">Rapor henüz alınmadı.</pre>
-        </div>
-      </div>
+<div class="tabContent" id="satisRaporu">
+  <div class="report-section">
+    <h3>Satış Raporu</h3>
+
+    <label>Rapor Tarih Aralığı:</label>
+    <input type="date" id="reportFrom" />
+    <input type="date" id="reportTo" />
+
+    <button id="reportBtn">Rapor Al</button>
+
+    <pre id="reportResult">Rapor henüz alınmadı.</pre>
+  </div>
+</div>
+
     </div>
   </div>
 </div>

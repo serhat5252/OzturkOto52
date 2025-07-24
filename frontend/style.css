@@ -229,29 +229,42 @@ body {
 }
 
 /* Detaylı Arama & Rapor */
-.filter-section form,
+.filter-form {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.filter-form input,
+.filter-form select {
+  padding: 0.7rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
 .report-section {
   display: flex;
   flex-direction: column;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
   gap: 1rem;
+  max-width: 600px;
 }
 
-.filter-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: center;
-}
-
-.filter-row label {
-  min-width: 120px;
-  font-weight: bold;
-}
-
-.critical-stock-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.report-section input,
+.report-section button {
+  padding: 0.7rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
 /* Satış Raporu */
