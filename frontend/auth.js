@@ -8,10 +8,10 @@ loginForm.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(loginForm));
   try {
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
+    const res = await fetch("/api/auth/register", {
+     method: "POST",
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify(data)  // 👈 Authorization kaldırıldı
     });
     const json = await res.json();
     if (!res.ok) throw new Error(json.message || "Giriş başarısız");
