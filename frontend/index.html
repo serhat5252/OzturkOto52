@@ -87,25 +87,53 @@
         </div>
 
         <!-- Detaylı Arama -->
-        <div id="searchTab" class="tabContent">
-          <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama">
-          <select id="filterCategory">
-            <option value="">Kategori Seç</option>
-            <option>Alternatör</option>
-            <option>Starter</option>
-          </select>
-          <select id="filterBrand">
-            <option value="">Marka Seç</option>
-            <option>Bosch</option>
-            <option>Valeo</option>
-          </select>
-          <label><input type="checkbox" id="onlyCriticalStock"> Sadece kritik stok</label>
-          <div style="margin-top: 1rem;">
-            <button id="filterBtn">Ara</button>
-            <button id="clearBtn">Temizle</button>
-          </div>
-          <div id="filterMatches"></div>
-        </div>
+<div id="searchTab" class="tabContent">
+  <form id="searchForm">
+    <input id="filterKeyword" placeholder="🔍 Ürün adı, kod veya açıklama" onkeydown="if(event.key==='Enter'){event.preventDefault();applySearchFilters();}">
+    
+    <select id="filterCategory">
+      <option value="">Kategori Seçiniz</option>
+      <option>Alternatör</option>
+      <option>Starter</option>
+    </select>
+
+    <select id="filterBrand">
+      <option value="">Marka Seçiniz</option>
+      <option>Bosch</option>
+      <option>Valeo</option>
+      <option>Mitsubishi</option>
+    </select>
+
+    <select id="filterType">
+      <option value="">Tip Seçiniz</option>
+      <option>Delco</option>
+      <option>Mako</option>
+      <option>Marelli</option>
+    </select>
+
+    <label>Eklenme Tarihi:
+      <input type="date" id="filterCreatedFrom"> -
+      <input type="date" id="filterCreatedTo">
+    </label>
+
+    <label>Satış Tarihi:
+      <input type="date" id="filterSoldFrom"> -
+      <input type="date" id="filterSoldTo">
+    </label>
+
+    <label>
+      <input type="checkbox" id="onlyCriticalStock"> 🔴 Sadece kritik stokta olanlar
+    </label>
+
+    <div style="margin-top: 1rem;">
+      <button type="button" id="filterBtn">Ara</button>
+      <button type="button" id="clearBtn">Temizle</button>
+    </div>
+  </form>
+
+  <div id="filterMatches" style="margin-top: 1rem; font-weight: bold;"></div>
+</div>
+
 
         <!-- Satış Raporu -->
         <div id="reportTab" class="tabContent">

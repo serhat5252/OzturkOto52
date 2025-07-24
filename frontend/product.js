@@ -103,22 +103,58 @@ window.del = async id => {
 
 function applySearchFilters() {
   const key = turkishLower(document.getElementById("filterKeyword").value);
+  const cat = document.getElementById("filterCategory").value;
+  const brand = document.getElementById("filterBrand").value;
+  const type = document.getElementById("filterType")?.value;
   const onlyCritical = document.getElementById("onlyCriticalStock").checked;
 
+  const createdFrom = new Date(document.getElementById("filterCreatedFrom").value || "2000-01-01");
+  const createdTo = new Date(document.getElementById("filterCreatedTo").value || "2100-01-01");
+  const soldFrom = new Date(document.getElementById("filterSoldFrom").value || "2000-01-01");
+  const soldTo = new Date(document.getElementById("filterSoldTo").value || "2100-01-01");
+
   const filtered = products.filter(p => {
-    const mk = !key || p.name.toLowerCase().includes(key) ||
-      (p.codes || []).join(', ').toLowerCase().includes(key) ||
-      (p.description || '').toLowerCase().includes(key);
-    const mcrit = !onlyCritical || (p.minQuantity && p.quantity <= p.minQuantity);
-    return mk && mcrit;
+    const nameMatch = !key || turkishLower(p.name).includes(key);
+    const codeMatch = !key || (p.codes || []).join(", ").toLowerCase().includes(key);
+    const descMatch = !key || (p.description || "").toLowerCase().includes(key);
+
+    const matchCategory = !cat || p.category === cat;
+    const matchBrand = !brand || p.brand === brand;
+    const matchType = !type || p.type === type;
+
+    const createdDate = new Date(p.createdAt);
+    const inCreatedRange = createdDate >= createdFrom && createdDate <= createdTo;
+
+    const matchSalesDate = p.sales.some(s => {
+      const d = new Date(s.date);
+      return d >= soldFrom && d <= soldTo;
+    }) || (!document.getElementById("filterSoldFrom").value && !document.getElementById("filterSoldTo").value);
+
+    const matchCritical = !onlyCritical || (p.minQuantity && p.quantity <= p.minQuantity);
+
+    return (nameMatch || codeMatch || descMatch)
+        && matchCategory
+        && matchBrand
+        && matchType
+        && inCreatedRange
+        && matchSalesDate
+        && matchCritical;
   });
 
   renderList(filtered);
   document.getElementById("filterMatches").innerText = `${filtered.length} ürün bulundu.`;
 }
 
+
 function resetSearchFilters() {
   document.getElementById("filterKeyword").value = "";
+  document.getElementById("filterCategory").value = "";
+  document.getElementById("filterBrand").value = "";
+  document.getElementById("filterType").value = "";
+  document.getElementById("filterCreatedFrom").value = "";
+  document.getElementById("filterCreatedTo").value = "";
+  document.getElementById("filterSoldFrom").value = "";
+  document.getElementById("filterSoldTo").value = "";
   document.getElementById("onlyCriticalStock").checked = false;
   document.getElementById("filterMatches").innerText = "";
   renderList(products);
