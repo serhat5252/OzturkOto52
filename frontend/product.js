@@ -81,10 +81,14 @@ function renderList(list) {
         <strong>${p.name}</strong> (${p.quantity} adet)
         <br><small>${p.category || ""} | ${p.brand || ""} | ${p.type || ""}</small>
       </div>
+      <!-- renderList içinde ürün satırı -->
       <div>
-        <button onclick="edit('${p._id}')">D</button>
-        <button onclick="del('${p._id}')">S</button>
-      </div>`;
+         <button onclick="sell('${p._id}')">Sat</button>
+         <button onclick="edit('${p._id}')">Düzenle</button>
+         <button onclick="del('${p._id}')">Sil</button>
+         <button onclick="showDetails('${p._id}')">Detay</button>
+      </div>
+`;
     if (p.minQuantity > 0 && p.quantity <= p.minQuantity)
       li.classList.add("critical-stock");
     ul.appendChild(li);
@@ -117,6 +121,53 @@ window.del = async id => {
     alert("❌ " + err.message);
   }
 };
+
+// ÜRÜN DETAY
+// product.js fonksiyonları
+window.showDetails = id => {
+  const p = products.find(x => x._id === id);
+  const lastSale = p.sales?.[p.sales.length - 1];
+  alert(`
+Ürün: ${p.name}
+Kategori: ${p.category}
+Marka: ${p.brand}
+Tip: ${p.type}
+Adet: ${p.quantity}
+Raf No: ${p.shelf}
+Eklendi: ${new Date(p.createdAt).toLocaleDateString()}
+Son Satış: ${lastSale ? new Date(lastSale.date).toLocaleDateString() : "-"}
+Alış: ${p.buyPrice} TL
+Satış: ${p.sellPrice} TL
+Kodlar: ${p.codes.join(", ")}
+Açıklama: ${p.description || "-"}
+  `);
+};
+
+window.sell = async id => {
+  const adet = parseInt(prompt("Kaç adet satıldı?"));
+  if (!adet || adet <= 0) return;
+
+  const fiyat = parseFloat(prompt("Satış fiyatı?"));
+  if (!fiyat || fiyat <= 0) return;
+
+  try {
+    const res = await fetch(`${API}/${id}/sell`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token()
+      },
+      body: JSON.stringify({ quantity: adet, price: fiyat })
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.message);
+    fetchProducts();
+    alert("Satış kaydedildi");
+  } catch (err) {
+    alert("Hata: " + err.message);
+  }
+};
+
 
 // FİLTRE UYGULA
 function applyFilters() {
@@ -172,6 +223,7 @@ function resetForm() {
   form.reset();
   form.elements.id.value = "";
   fetchProducts();
+  applyFilters();
 }
 
 // FİLTRE SEÇENEKLERİNİ OTO DOLDUR

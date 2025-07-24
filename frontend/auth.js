@@ -54,6 +54,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+// User
+document.getElementById("userForm")?.addEventListener("submit", async e => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target));
+  const res = await fetch("/api/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + sessionStorage.getItem("token") },
+    body: JSON.stringify(data)
+  });
+  const json = await res.json();
+  document.getElementById("userMsg").innerText = res.ok ? "✅ Eklendi" : "❌ " + json.message;
+});
+
+
   // Sekme geçişleri
   const tabs = document.querySelectorAll(".tab");
   const contents = document.querySelectorAll(".tabContent");
