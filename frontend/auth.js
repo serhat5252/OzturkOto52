@@ -21,9 +21,11 @@ loginForm.onsubmit = async e => {
     if (!res.ok) throw new Error(json.message || "Giriş başarısız");
 
     sessionStorage.setItem("token", json.token); // ← token kaydediliyor
+    sessionStorage.setItem("currentUser", json.username);
     document.getElementById("currentUser").innerText = json.username;
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
+    fetchProducts();
   } catch (err) {
     loginMessage.innerText = err.message;
   }

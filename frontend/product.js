@@ -1,5 +1,6 @@
 const API = "/api/products";
 const token = () => sessionStorage.getItem("token");
+const socket = io(window.location.origin);
 
 const form = document.getElementById("productForm");
 const ul = document.getElementById("productsUl");
