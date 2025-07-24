@@ -38,7 +38,6 @@ loginForm.onsubmit = async e => {
 registerForm.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(registerForm));
-
   try {
     const res = await fetch("/api/auth/register", {
       method: "POST",
@@ -48,7 +47,6 @@ registerForm.onsubmit = async e => {
       },
       body: JSON.stringify(data)
     });
-
     const json = await res.json();
     if (!res.ok) throw new Error(json.message || "Kayıt başarısız");
 
@@ -59,9 +57,8 @@ registerForm.onsubmit = async e => {
   }
 };
 
-// Admin butonu
 showRegisterBtn.onclick = () => {
-  registerForm.style.display = "block";
+  registerForm.style.display = "flex";
   showRegisterBtn.style.display = "none";
 };
 
@@ -71,7 +68,7 @@ function logout() {
   location.reload();
 }
 
-// Sayfa yüklendiğinde otomatik giriş
+// Otomatik giriş (refresh sonrası)
 document.addEventListener("DOMContentLoaded", () => {
   const token = sessionStorage.getItem("token");
   const currentUser = sessionStorage.getItem("currentUser");
@@ -80,24 +77,20 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
     document.getElementById("currentUser").innerText = currentUser;
-
     if (currentUser === "admin") {
       showRegisterBtn.style.display = "inline-block";
     }
   }
 
-  // Sekmeler arası geçiş
+  // Tab geçişleri
   const tabs = document.querySelectorAll(".tab");
   const contents = document.querySelectorAll(".tabContent");
-
   tabs.forEach(tab => {
     tab.addEventListener("click", () => {
       tabs.forEach(t => t.classList.remove("active"));
       contents.forEach(c => c.classList.remove("active"));
       tab.classList.add("active");
-
-      const targetId = tab.getAttribute("data-tab");
-      document.getElementById(targetId).classList.add("active");
+      document.getElementById(tab.dataset.tab).classList.add("active");
     });
   });
 });

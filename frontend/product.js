@@ -13,7 +13,7 @@ form.onsubmit = async e => {
 
   ["quantity", "minQuantity"].forEach(k => data[k] = parseInt(data[k]) || 0);
   ["buyPrice", "sellPrice"].forEach(k => data[k] = parseFloat(data[k]) || 0);
-  data.codes = data.codes.split(",").map(s => s.trim());
+  data.codes = data.codes ? data.codes.split(",").map(s => s.trim()) : [];
 
   try {
     const res = await fetch(API + (isUpdate ? "/" + data.id : ""), {
@@ -24,7 +24,6 @@ form.onsubmit = async e => {
       },
       body: JSON.stringify(data)
     });
-
     const body = await res.json();
     if (!res.ok) throw new Error(body.message);
 
@@ -35,9 +34,9 @@ form.onsubmit = async e => {
     }
 
     resetForm();
-    alert("✅ Başarılı!");
+    alert("Başarılı!");
   } catch (err) {
-    alert("❌ Hata: " + err.message);
+    alert("Hata: " + err.message);
   }
 };
 
@@ -56,14 +55,29 @@ async function fetchProducts() {
 
 function renderList(list) {
   ul.innerHTML = "";
-  document.getElementById("filterMatches").innerText = list.length + " ürün bulundu.";
+  document.getElementById("filterMatches").innerText = list.length + " ürün.";
   list.forEach(p => {
     const li = document.createElement("li");
-    li.innerHTML = `<strong>${p.name}</strong> (${p.quantity}) 
-      <button onclick="edit('${p._id}')">D</button>
-      <button onclick="del('${p._id}')">S</button>`;
-    if (p.minQuantity > 0 && p.quantity <= p.minQuantity)
+    li.classList.add("product-card");
+    li.innerHTML = `
+      <div class="card-header">
+        <strong>${p.name}</strong>
+        <span class="stock">Stok: ${p.quantity}</span>
+      </div>
+      <div class="card-body">
+        <div>Kategori: ${p.category || "-"}</div>
+        <div>Marka: ${p.brand || "-"}</div>
+        <div>Tip: ${p.type || "-"}</div>
+        <div>Fiyat: ₺${p.sellPrice?.toFixed(2) || "0.00"}</div>
+      </div>
+      <div class="card-actions">
+        <button onclick="edit('${p._id}')">Düzenle</button>
+        <button onclick="del('${p._id}')">Sil</button>
+      </div>
+    `;
+    if (p.minQuantity > 0 && p.quantity <= p.minQuantity) {
       li.classList.add("critical-stock");
+    }
     ul.appendChild(li);
   });
 }
@@ -78,7 +92,7 @@ window.edit = id => {
 };
 
 window.del = async id => {
-  if (!confirm("Emin misiniz?")) return;
+  if (!confirm("Emin misin?")) return;
   await fetch(API + "/" + id, {
     method: "DELETE",
     headers: { "Authorization": "Bearer " + token() }
@@ -89,18 +103,14 @@ window.del = async id => {
 
 function applySearchFilters() {
   const key = turkishLower(document.getElementById("filterKeyword").value);
-  const cat = document.getElementById("filterCategory").value;
-  const brand = document.getElementById("filterBrand").value;
   const onlyCritical = document.getElementById("onlyCriticalStock").checked;
 
   const filtered = products.filter(p => {
     const mk = !key || p.name.toLowerCase().includes(key) ||
       (p.codes || []).join(', ').toLowerCase().includes(key) ||
       (p.description || '').toLowerCase().includes(key);
-    const mc = !cat || p.category === cat;
-    const mb = !brand || p.brand === brand;
     const mcrit = !onlyCritical || (p.minQuantity && p.quantity <= p.minQuantity);
-    return mk && mc && mb && mcrit;
+    return mk && mcrit;
   });
 
   renderList(filtered);
@@ -109,8 +119,6 @@ function applySearchFilters() {
 
 function resetSearchFilters() {
   document.getElementById("filterKeyword").value = "";
-  document.getElementById("filterCategory").value = "";
-  document.getElementById("filterBrand").value = "";
   document.getElementById("onlyCriticalStock").checked = false;
   document.getElementById("filterMatches").innerText = "";
   renderList(products);
@@ -122,29 +130,24 @@ function resetForm() {
   fetchProducts();
 }
 
-// Sekme geçiş fonksiyonu
 document.querySelectorAll(".tab").forEach(tab => {
   tab.addEventListener("click", () => {
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
     tab.classList.add("active");
-
     const target = tab.getAttribute("data-tab");
     document.querySelectorAll(".tabContent").forEach(c => c.classList.remove("active"));
     document.getElementById(target).classList.add("active");
   });
 });
 
-// Türkçe karakter uyumlu küçük harfe çevir
 function turkishLower(str) {
   return str.toLocaleLowerCase("tr-TR");
 }
 
-// Event bağlamaları
 document.getElementById("filterBtn").onclick = applySearchFilters;
 document.getElementById("clearBtn").onclick = resetSearchFilters;
 document.getElementById("clearFormBtn").onclick = resetForm;
 
-// Raporlama
 document.getElementById("reportBtn").onclick = async () => {
   const from = document.getElementById("fromDate").value;
   const to = document.getElementById("toDate").value;
@@ -155,11 +158,9 @@ document.getElementById("reportBtn").onclick = async () => {
   document.getElementById("reportResult").innerText = JSON.stringify(json, null, 2);
 };
 
-// Socket bağlantısı
 const socket = io();
 socket.on("update", fetchProducts);
 
-// Sayfa yüklenince ürünleri getir
 document.addEventListener("DOMContentLoaded", () => {
   fetchProducts();
 });

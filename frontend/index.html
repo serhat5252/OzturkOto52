@@ -2,97 +2,105 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <!-- Giriş Kutusu -->
+  <!-- GİRİŞ / KAYIT -->
   <div class="auth-container" id="authBox">
-    <h1>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</h1>
-    <form id="loginForm">
-      <input name="username" placeholder="Kullanıcı Adı" required />
-      <input type="password" name="password" placeholder="Şifre" required />
+    <h1>🚗 ÖZTÜRK OTOMOBİL OTO ELEKTRİK</h1>
+    <form id="loginForm" class="floating-form">
+      <div class="form-group">
+        <input name="username" required />
+        <label>Kullanıcı Adı</label>
+      </div>
+      <div class="form-group">
+        <input type="password" name="password" required />
+        <label>Şifre</label>
+      </div>
       <button type="submit">Giriş Yap</button>
+      <div id="loginMessage" class="error"></div>
     </form>
-    <div id="loginMessage" class="error"></div>
     <button id="showRegister" style="display:none">Yeni Kullanıcı Ekle</button>
-    <form id="registerForm" style="display:none">
-      <input name="username" placeholder="Yeni Kullanıcı" required />
-      <input type="password" name="password" placeholder="Şifre" required />
+    <form id="registerForm" class="floating-form" style="display:none">
+      <div class="form-group">
+        <input name="username" required />
+        <label>Yeni Kullanıcı</label>
+      </div>
+      <div class="form-group">
+        <input type="password" name="password" required />
+        <label>Şifre</label>
+      </div>
       <button type="submit">Kayıt Ol</button>
+      <div id="registerMessage"></div>
     </form>
-    <div id="registerMessage" class="error"></div>
   </div>
 
-  <!-- Dashboard -->
-  <div class="dashboard" id="dashboard" style="display:none">
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard" style="display: none">
     <header class="navbar">
-      <div class="brand">🚗 ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
+      <div class="brand">🚗 ÖZTÜRK OTOMOBİL</div>
       <div class="user">
         <span id="currentUser"></span>
         <button onclick="logout()">Çıkış Yap</button>
       </div>
     </header>
-
     <div class="main">
       <aside class="sidebar">
         <div class="tabs">
-          <div class="tab active" data-tab="productTab">Ürün İşlemleri</div>
+          <div class="tab active" data-tab="formTab">Ürün İşlemleri</div>
           <div class="tab" data-tab="searchTab">Detaylı Arama</div>
           <div class="tab" data-tab="reportTab">Satış Raporu</div>
         </div>
       </aside>
-
       <section class="content">
-        <!-- Ürün İşlemleri -->
-        <div id="productTab" class="tabContent active">
-          <h2>Ürün İşlemleri</h2>
-
-          <form id="productForm" class="box">
-            <input type="hidden" name="id" />
-            <input type="text" name="name" placeholder="Ürün Adı" required />
-            <input type="text" name="category" placeholder="Kategori" />
-            <input type="text" name="brand" placeholder="Marka" />
-            <input type="text" name="type" placeholder="Tip" />
-            <input type="text" name="shelf" placeholder="Raf" />
-            <input type="number" name="quantity" placeholder="Adet" required />
-            <input type="number" name="minQuantity" placeholder="Kritik Stok" />
-            <input type="number" name="buyPrice" placeholder="Alış Fiyatı" />
-            <input type="number" name="sellPrice" placeholder="Satış Fiyatı" />
-            <input type="text" name="codes" placeholder="Kodlar (virgülle)" />
+        <div id="formTab" class="tabContent active">
+          <form id="productForm">
+            <input name="id" type="hidden" />
+            <input name="name" placeholder="Ürün Adı" required />
+            <select name="category" required>
+              <option value="">Kategori Seçiniz</option>
+              <option value="Alternatör">Alternatör</option>
+              <option value="Starter">Starter</option>
+            </select>
+            <select name="brand" required>
+              <option value="">Marka Seçiniz</option>
+              <option>Valeo</option>
+              <option>Bosch</option>
+              <option>Delco</option>
+            </select>
+            <select name="type" required>
+              <option value="">Tip Seçiniz</option>
+              <option>Mitsubishi</option>
+              <option>Iskra</option>
+            </select>
+            <input name="shelf" placeholder="Raf No" />
+            <input name="quantity" type="number" placeholder="Adet" required />
+            <input name="minQuantity" type="number" placeholder="Minimum (kritik)" />
+            <input name="buyPrice" type="number" step="0.01" placeholder="Alış Fiyatı" required />
+            <input name="sellPrice" type="number" step="0.01" placeholder="Satış Fiyatı" required />
+            <input name="codes" placeholder="Kodlar (virgülle)" />
             <textarea name="description" placeholder="Açıklama"></textarea>
-            <div class="form-actions">
+            <div class="btn-row">
               <button type="submit">Kaydet</button>
               <button type="button" id="clearFormBtn">Temizle</button>
             </div>
           </form>
-
-          <div class="box">
-            <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama" />
-            <input id="filterCategory" placeholder="Kategori" />
-            <input id="filterBrand" placeholder="Marka" />
-            <label><input type="checkbox" id="onlyCriticalStock" /> Kritik stok</label>
-            <button id="filterBtn">Filtrele</button>
-            <button id="clearBtn">Sıfırla</button>
-            <p id="filterMatches"></p>
-          </div>
-
-          <ul id="productsUl" class="box"></ul>
         </div>
 
-        <!-- Detaylı Arama -->
         <div id="searchTab" class="tabContent">
-          <h2>Detaylı Arama</h2>
-          <p>İsteğe göre burası eklenecek</p>
+          <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama" />
+          <button id="filterBtn">Ara</button>
+          <button id="clearBtn">Temizle</button>
+          <label><input type="checkbox" id="onlyCriticalStock" /> Sadece kritik stok</label>
+          <div id="filterMatches"></div>
+          <ul id="productsUl" class="product-list"></ul>
         </div>
 
-        <!-- Satış Raporu -->
         <div id="reportTab" class="tabContent">
-          <h2>Satış Raporu</h2>
-          <label>Başlangıç Tarihi: <input type="date" id="fromDate" /></label>
-          <label>Bitiş Tarihi: <input type="date" id="toDate" /></label>
+          <label>Başlangıç: <input type="date" id="fromDate" /></label>
+          <label>Bitiş: <input type="date" id="toDate" /></label>
           <button id="reportBtn">Raporu Görüntüle</button>
           <pre id="reportResult"></pre>
         </div>
