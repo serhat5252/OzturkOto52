@@ -114,6 +114,20 @@ function resetSearchFilters() {
   document.getElementById("filterMatches").innerText = "";
   renderList(products);
 }
+// Sekmeler arası geçişi sağlayan kod
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+
+    const selected = tab.getAttribute("data-tab");
+    document.querySelectorAll(".tabContent").forEach(c => {
+      c.classList.remove("active");
+    });
+    document.getElementById(selected).classList.add("active");
+  });
+});
+
 
 function resetForm() {
   form.reset();
