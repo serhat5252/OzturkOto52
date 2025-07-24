@@ -13,7 +13,7 @@ form.onsubmit = async e => {
 
   ["quantity", "minQuantity"].forEach(k => data[k] = parseInt(data[k]) || 0);
   ["buyPrice", "sellPrice"].forEach(k => data[k] = parseFloat(data[k]) || 0);
-  data.codes = data.codes.split(",").map(s => s.trim());
+  data.codes = data.codes ? data.codes.split(",").map(s => s.trim()) : [];
 
   try {
     const res = await fetch(API + (isUpdate ? "/" + data.id : ""), {
@@ -34,22 +34,26 @@ form.onsubmit = async e => {
     }
 
     resetForm();
-    alert("Başarılı!");
+    alert("✅ Başarılı!");
   } catch (err) {
-    alert("Hata: " + err.message);
+    alert("❌ Hata: " + err.message);
   }
 };
 
 async function fetchProducts() {
+  const authToken = token();
+  if (!authToken) return;
+
   try {
     const res = await fetch(API, {
-      headers: { "Authorization": "Bearer " + token() }
+      headers: { "Authorization": "Bearer " + authToken }
     });
-    if (!res.ok) throw new Error("Yetki veya bağlantı");
+    if (!res.ok) throw new Error("Yetki veya bağlantı sorunu");
+
     products = await res.json();
     renderList(products);
   } catch (err) {
-    alert("Ürün çekilemedi: " + err.message);
+    alert("❌ Ürün çekilemedi: " + err.message);
   }
 }
 
@@ -118,10 +122,10 @@ function resetSearchFilters() {
 function resetForm() {
   form.reset();
   form.elements.id.value = "";
-  fetchProducts();
+  fetchProducts(); // Liste güncelle
 }
 
-// Sekme geçiş fonksiyonu
+// Sekme geçişi
 document.querySelectorAll(".tab").forEach(tab => {
   tab.addEventListener("click", () => {
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
@@ -133,31 +137,38 @@ document.querySelectorAll(".tab").forEach(tab => {
   });
 });
 
-// Türkçe karakter uyumlu küçük harfe çevir
+// Türkçe karakter destekli küçük harf
 function turkishLower(str) {
   return str.toLocaleLowerCase("tr-TR");
 }
 
-// Event bağlamaları
+// Arama filtreleri
 document.getElementById("filterBtn").onclick = applySearchFilters;
 document.getElementById("clearBtn").onclick = resetSearchFilters;
 document.getElementById("clearFormBtn").onclick = resetForm;
 
+// Rapor
 document.getElementById("reportBtn").onclick = async () => {
   const from = document.getElementById("fromDate").value;
   const to = document.getElementById("toDate").value;
-  const res = await fetch(`/api/products/sales-report?from=${from}&to=${to}`, {
-    headers: { "Authorization": "Bearer " + token() }
-  });
-  const json = await res.json();
-  document.getElementById("reportResult").innerText = JSON.stringify(json, null, 2);
+  try {
+    const res = await fetch(`/api/products/sales-report?from=${from}&to=${to}`, {
+      headers: { "Authorization": "Bearer " + token() }
+    });
+    const json = await res.json();
+    document.getElementById("reportResult").innerText = JSON.stringify(json, null, 2);
+  } catch (err) {
+    alert("Rapor alınamadı: " + err.message);
+  }
 };
 
-// Socket bağlantısı
+// SOCKET
 const socket = io();
 socket.on("update", fetchProducts);
 
-// Sayfa yüklendiğinde ürünleri getir
+// Yüklenince sadece giriş yapılmışsa çalıştır
 document.addEventListener("DOMContentLoaded", () => {
-  fetchProducts();
+  if (token()) {
+    fetchProducts();
+  }
 });
