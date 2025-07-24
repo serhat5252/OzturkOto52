@@ -16,24 +16,32 @@ loginForm.onsubmit = async e => {
       body: JSON.stringify(data)
     });
 
-    const json = await res.json(); // ← bu satır çok önemli
+    const json = await res.json();
 
     if (!res.ok) throw new Error(json.message || "Giriş başarısız");
 
-    sessionStorage.setItem("token", json.token); // ← token kaydediliyor
+    sessionStorage.setItem("token", json.token);
     sessionStorage.setItem("currentUser", json.username);
+
     document.getElementById("currentUser").innerText = json.username;
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
-    fetchProducts();
+
+    if (json.username === "admin") {
+      showRegisterBtn.style.display = "inline-block";
+    }
+
+    fetchProducts(); // 🟢 Giriş sonrası ürünleri getir
   } catch (err) {
-    loginMessage.innerText = err.message;
+    loginMessage.innerText = "❌ " + err.message;
   }
 };
+
 // KAYIT
 registerForm.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(registerForm));
+
   try {
     const res = await fetch("/api/auth/register", {
       method: "POST",
@@ -43,6 +51,7 @@ registerForm.onsubmit = async e => {
       },
       body: JSON.stringify(data)
     });
+
     const json = await res.json();
     if (!res.ok) throw new Error(json.message || "Kayıt başarısız");
 
@@ -53,7 +62,7 @@ registerForm.onsubmit = async e => {
   }
 };
 
-// "Yeni Kullanıcı Ekle" butonuna tıklanınca formu göster
+// Yeni Kullanıcı Ekle butonu
 showRegisterBtn.onclick = () => {
   registerForm.style.display = "block";
   showRegisterBtn.style.display = "none";
@@ -66,20 +75,21 @@ function logout() {
   location.reload();
 }
 
-// OTOMATİK GİRİŞ (sayfa yenilendiğinde)
+// OTOMATİK GİRİŞ
 document.addEventListener("DOMContentLoaded", () => {
   const token = sessionStorage.getItem("token");
   const currentUser = sessionStorage.getItem("currentUser");
 
   if (token) {
     document.getElementById("authBox").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
+    document.getElementById("dashboard").style.display = "flex";
     document.getElementById("currentUser").innerText = currentUser;
 
     if (currentUser === "admin") {
       showRegisterBtn.style.display = "inline-block";
     }
-    fetchProducts();
+
+    fetchProducts(); // 🟢 Sayfa yenilendiğinde ürünleri getir
   }
 
   // TAB GEÇİŞLERİ
