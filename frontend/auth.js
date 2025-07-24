@@ -4,7 +4,7 @@ const loginMessage = document.getElementById("loginMessage");
 const registerMessage = document.getElementById("registerMessage");
 const showRegisterBtn = document.getElementById("showRegister");
 
-// Giriş formu
+// GİRİŞ
 loginForm.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(loginForm));
@@ -19,7 +19,6 @@ loginForm.onsubmit = async e => {
 
     sessionStorage.setItem("token", json.token);
     sessionStorage.setItem("currentUser", json.username);
-
     document.getElementById("currentUser").innerText = json.username;
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "block";
@@ -32,20 +31,17 @@ loginForm.onsubmit = async e => {
   }
 };
 
-// Kayıt formu (sadece admin için çalışır)
+// KAYIT
 registerForm.onsubmit = async e => {
   e.preventDefault();
-  const currentUser = sessionStorage.getItem("currentUser");
-  if (currentUser !== "admin") {
-    registerMessage.innerText = "Sadece admin kullanıcı ekleyebilir.";
-    return;
-  }
-
   const data = Object.fromEntries(new FormData(registerForm));
   try {
     const res = await fetch("/api/auth/register", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + sessionStorage.getItem("token")
+      },
       body: JSON.stringify(data)
     });
     const json = await res.json();
@@ -58,25 +54,25 @@ registerForm.onsubmit = async e => {
   }
 };
 
-// Kayıt formunu göster
+// "Yeni Kullanıcı Ekle" butonuna tıklanınca formu göster
 showRegisterBtn.onclick = () => {
   registerForm.style.display = "block";
   showRegisterBtn.style.display = "none";
 };
 
-// Oturumu kapat
+// ÇIKIŞ
 function logout() {
   sessionStorage.removeItem("token");
   sessionStorage.removeItem("currentUser");
   location.reload();
 }
 
-// Sayfa yüklenince oturum kontrolü
+// OTOMATİK GİRİŞ (sayfa yenilendiğinde)
 document.addEventListener("DOMContentLoaded", () => {
   const token = sessionStorage.getItem("token");
   const currentUser = sessionStorage.getItem("currentUser");
 
-  if (token && currentUser) {
+  if (token) {
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "block";
     document.getElementById("currentUser").innerText = currentUser;
@@ -85,4 +81,19 @@ document.addEventListener("DOMContentLoaded", () => {
       showRegisterBtn.style.display = "inline-block";
     }
   }
+
+  // TAB GEÇİŞLERİ
+  const tabs = document.querySelectorAll(".tab");
+  const contents = document.querySelectorAll(".tabContent");
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      contents.forEach(c => c.classList.remove("active"));
+      tab.classList.add("active");
+
+      const targetId = tab.getAttribute("data-tab");
+      document.getElementById(targetId).classList.add("active");
+    });
+  });
 });
