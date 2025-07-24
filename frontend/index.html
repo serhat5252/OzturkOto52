@@ -87,52 +87,62 @@
         </div>
 
         <!-- Detaylı Arama -->
-<div id="searchTab" class="tabContent">
-  <form id="searchForm">
-    <input id="filterKeyword" placeholder="🔍 Ürün adı, kod veya açıklama" onkeydown="if(event.key==='Enter'){event.preventDefault();applySearchFilters();}">
-    
+<form id="searchForm">
+  <label>
+    Arama:
+    <input type="text" id="filterKeyword" placeholder="Ürün adı, kod, açıklama..." />
+  </label>
+
+  <label>
+    Kategori:
     <select id="filterCategory">
-      <option value="">Kategori Seçiniz</option>
-      <option>Alternatör</option>
-      <option>Starter</option>
+      <option value="">Tümü</option>
+      <option value="Elektrik">Elektrik</option>
+      <option value="Mekanik">Mekanik</option>
+      <!-- ekle -->
     </select>
+  </label>
 
+  <label>
+    Marka:
     <select id="filterBrand">
-      <option value="">Marka Seçiniz</option>
-      <option>Bosch</option>
-      <option>Valeo</option>
-      <option>Mitsubishi</option>
+      <option value="">Tümü</option>
+      <option value="Bosch">Bosch</option>
+      <option value="Valeo">Valeo</option>
+      <!-- ekle -->
     </select>
+  </label>
 
+  <label>
+    Ürün Tipi:
     <select id="filterType">
-      <option value="">Tip Seçiniz</option>
-      <option>Delco</option>
-      <option>Mako</option>
-      <option>Marelli</option>
+      <option value="">Tümü</option>
+      <option value="Ampul">Ampul</option>
+      <option value="Sigorta">Sigorta</option>
     </select>
+  </label>
 
-    <label>Eklenme Tarihi:
-      <input type="date" id="filterCreatedFrom"> -
-      <input type="date" id="filterCreatedTo">
-    </label>
+  <label>
+    Eklenme Tarihi (Başlangıç):
+    <input type="date" id="fromDate">
+  </label>
 
-    <label>Satış Tarihi:
-      <input type="date" id="filterSoldFrom"> -
-      <input type="date" id="filterSoldTo">
-    </label>
+  <label>
+    Eklenme Tarihi (Bitiş):
+    <input type="date" id="toDate">
+  </label>
 
-    <label>
-      <input type="checkbox" id="onlyCriticalStock"> 🔴 Sadece kritik stokta olanlar
-    </label>
+  <label>
+    <input type="checkbox" id="onlyCriticalStock"> Kritik stokta olanları göster
+  </label>
 
-    <div style="margin-top: 1rem;">
-      <button type="button" id="filterBtn">Ara</button>
-      <button type="button" id="clearBtn">Temizle</button>
-    </div>
-  </form>
+  <div class="filter-actions">
+    <button id="filterBtn" type="button">Ara</button>
+    <button id="clearBtn" type="button">Temizle</button>
+  </div>
 
-  <div id="filterMatches" style="margin-top: 1rem; font-weight: bold;"></div>
-</div>
+  <div id="filterMatches"></div>
+</form>
 
 
         <!-- Satış Raporu -->

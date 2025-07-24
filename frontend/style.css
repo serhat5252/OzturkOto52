@@ -85,6 +85,20 @@ body {
 .navbar .brand {
   font-size: 1.2rem;
   font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.navbar .brand span:first-child {
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.navbar .brand span:last-child {
+  font-size: 0.9rem;
+  font-weight: 300;
 }
 
 .navbar .user {
@@ -200,6 +214,7 @@ body {
 
 #productsUl li.critical-stock {
   border-left-color: red;
+  background: #fff4f4;
 }
 
 #productsUl button {
@@ -211,6 +226,58 @@ body {
 #reportResult {
   margin-top: 1rem;
   font-weight: bold;
+}
+
+/* Detaylı Arama - Dikey Liste */
+#searchForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  max-width: 500px;
+}
+
+#searchForm label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+#searchForm input,
+#searchForm select {
+  padding: 0.6rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+#searchForm button {
+  width: fit-content;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+#filterBtn {
+  background-color: #2e7d32;
+  color: white;
+}
+
+#clearBtn {
+  background-color: #888;
+  color: white;
+  margin-left: 0.5rem;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.5rem;
 }
 
 /* Responsive */
@@ -242,74 +309,3 @@ body {
     gap: 0.5rem;
   }
 }
-/* Arama ve Filtre Formları */
-#searchForm {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
-}
-
-#searchForm input[type="text"],
-#searchForm input[type="date"],
-#searchForm select {
-  padding: 0.7rem;
-  font-size: 0.95rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #fafafa;
-  width: 100%;
-}
-
-#searchForm label {
-  font-size: 0.9rem;
-  font-weight: 500;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-#searchForm button {
-  padding: 0.6rem 1rem;
-  font-size: 0.9rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-#filterBtn {
-  background-color: #2e7d32;
-  color: white;
-}
-
-#clearBtn {
-  background-color: #888;
-  color: white;
-}
-
-#searchForm input[type="checkbox"] {
-  transform: scale(1.2);
-  margin-right: 8px;
-}
-
-/* Filtre Sonuçları */
-#filterMatches {
-  margin-top: 1rem;
-  font-weight: bold;
-  font-size: 1rem;
-}
-
-/* Mobil Uyum */
-@media (max-width: 768px) {
-  #searchForm {
-    grid-template-columns: 1fr;
-  }
-}
-#productsUl li.critical-stock {
-  border-left-color: red;
-  background: #fff2f2;
-}
-
