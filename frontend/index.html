@@ -37,15 +37,16 @@
       <div class="sidebar">
         <div class="tabs">
           <div class="tab active" data-tab="urunIslemleri">Ürün İşlemleri</div>
+          <div class="tab" data-tab="detayliArama">Detaylı Arama</div>
           <div class="tab" data-tab="satisRaporu">Satış Raporu</div>
         </div>
       </div>
 
       <!-- İçerik Alanı -->
       <div class="content">
+        
         <!-- Ürün İşlemleri -->
         <div class="tabContent active" id="urunIslemleri">
-          <!-- Ürün Formu -->
           <form id="productForm">
             <input type="hidden" name="id" />
             <input type="text" name="name" placeholder="Ürün Adı" required />
@@ -78,8 +79,11 @@
               <button type="button" id="clearFormBtn">Temizle</button>
             </div>
           </form>
+          <ul id="productsUl"></ul>
+        </div>
 
-          <!-- Detaylı Arama -->
+        <!-- Detaylı Arama (Artık ayrı sekme) -->
+        <div class="tabContent" id="detayliArama">
           <div class="filter-section">
             <h3>Detaylı Arama</h3>
             <div class="filter-row">
@@ -110,13 +114,10 @@
                 <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
               </div>
               <button id="filterBtn">Ara</button>
-              <button id="clearBtn" type="button">Temizle</button>
+              <button type="button" id="clearBtn">Temizle</button>
             </div>
             <div id="filterMatches"></div>
           </div>
-
-          <!-- Ürün Listesi -->
-          <ul id="productsUl"></ul>
         </div>
 
         <!-- Satış Raporu -->

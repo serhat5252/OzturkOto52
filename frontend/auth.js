@@ -2,7 +2,7 @@ const loginForm = document.getElementById("loginForm");
 const loginMessage = document.getElementById("loginMessage");
 
 // GİRİŞ
-loginForm.onsubmit = async e => {
+loginForm.onsubmit = async (e) => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(loginForm));
 
@@ -10,7 +10,7 @@ loginForm.onsubmit = async e => {
     const res = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
 
     const json = await res.json();
@@ -34,11 +34,12 @@ function logout() {
   location.reload();
 }
 
-// OTOMATİK GİRİŞ
+// OTOMATİK GİRİŞ VE SEKME GEÇİŞLERİ
 document.addEventListener("DOMContentLoaded", () => {
   const token = sessionStorage.getItem("token");
   const currentUser = sessionStorage.getItem("currentUser");
 
+  // Otomatik giriş
   if (token && currentUser) {
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
@@ -49,12 +50,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const tabs = document.querySelectorAll(".tab");
   const contents = document.querySelectorAll(".tabContent");
 
-  tabs.forEach(tab => {
+  tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
-      tabs.forEach(t => t.classList.remove("active"));
-      contents.forEach(c => c.classList.remove("active"));
-      tab.classList.add("active");
+      tabs.forEach((t) => t.classList.remove("active"));
+      contents.forEach((c) => c.classList.remove("active"));
 
+      tab.classList.add("active");
       const targetId = tab.getAttribute("data-tab");
       document.getElementById(targetId).classList.add("active");
     });

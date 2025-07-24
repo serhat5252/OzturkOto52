@@ -184,8 +184,8 @@ body {
 }
 
 #productForm button {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -232,7 +232,7 @@ body {
 .filter-section,
 .report-section {
   background: #fff;
-  padding: 1rem;
+  padding: 1.2rem;
   border-radius: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
   margin-bottom: 1rem;
@@ -250,14 +250,14 @@ body {
 
 .filter-row > * {
   flex: 1;
-  min-width: 160px;
+  min-width: 180px;
 }
 
 .critical-stock-toggle {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 0.5rem;
+  flex-shrink: 0;
 }
 
 /* Satış Raporu */
