@@ -4,84 +4,95 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- GİRİŞ / KAYIT -->
+
+  <!-- Giriş Kutusu -->
   <div class="auth-container" id="authBox">
-    <h1>🚗 ÖZTÜRK OTOMOBİL OTO ELEKTRİK</h1>
+    <h1>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</h1>
     <form id="loginForm">
       <input name="username" placeholder="Kullanıcı Adı" required />
       <input type="password" name="password" placeholder="Şifre" required />
       <button type="submit">Giriş Yap</button>
     </form>
     <div id="loginMessage" class="error"></div>
-
-    <button id="showRegister" style="display: none">Yeni Kullanıcı Ekle</button>
-    <form id="registerForm" style="display: none">
-      <input name="username" placeholder="Yeni Kullanıcı Adı" required />
+    <button id="showRegister" style="display:none">Yeni Kullanıcı Ekle</button>
+    <form id="registerForm" style="display:none">
+      <input name="username" placeholder="Yeni Kullanıcı" required />
       <input type="password" name="password" placeholder="Şifre" required />
       <button type="submit">Kayıt Ol</button>
     </form>
     <div id="registerMessage" class="error"></div>
   </div>
 
-  <!-- DASHBOARD -->
-  <div id="dashboard" style="display: none">
+  <!-- Dashboard -->
+  <div class="dashboard" id="dashboard" style="display:none">
     <header class="navbar">
-      <div class="navbar-left">🚗 ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
-      <div class="navbar-center" id="currentUser">Kullanıcı</div>
-      <div class="navbar-right">
+      <div class="brand">🚗 ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
+      <div class="user">
+        <span id="currentUser"></span>
         <button onclick="logout()">Çıkış Yap</button>
       </div>
     </header>
 
     <div class="main">
-      <!-- SOL MENÜ -->
       <aside class="sidebar">
         <div class="tabs">
-          <div class="tab active" data-tab="formTab">Ürün İşlemleri</div>
+          <div class="tab active" data-tab="productTab">Ürün İşlemleri</div>
           <div class="tab" data-tab="searchTab">Detaylı Arama</div>
           <div class="tab" data-tab="reportTab">Satış Raporu</div>
         </div>
       </aside>
 
-      <!-- ANA İÇERİK -->
       <section class="content">
-        <!-- Ürün Formu -->
-        <div id="formTab" class="tabContent active">
-          <form id="productForm">
-            <input name="id" type="hidden" />
-            <input name="name" placeholder="Ürün Adı" required />
-            <input name="category" placeholder="Kategori" required />
-            <input name="brand" placeholder="Marka" required />
-            <input name="type" placeholder="Tip" />
-            <input name="shelf" placeholder="Raf No" />
-            <input name="quantity" type="number" placeholder="Adet" required />
-            <input name="minQuantity" type="number" placeholder="Minimum (kritik)" />
-            <input name="buyPrice" type="number" step="0.01" placeholder="Alış Fiyatı" required />
-            <input name="sellPrice" type="number" step="0.01" placeholder="Satış Fiyatı" required />
-            <input name="codes" placeholder="Kodlar (virgülle)" />
+        <!-- Ürün İşlemleri -->
+        <div id="productTab" class="tabContent active">
+          <h2>Ürün İşlemleri</h2>
+
+          <form id="productForm" class="box">
+            <input type="hidden" name="id" />
+            <input type="text" name="name" placeholder="Ürün Adı" required />
+            <input type="text" name="category" placeholder="Kategori" />
+            <input type="text" name="brand" placeholder="Marka" />
+            <input type="text" name="type" placeholder="Tip" />
+            <input type="text" name="shelf" placeholder="Raf" />
+            <input type="number" name="quantity" placeholder="Adet" required />
+            <input type="number" name="minQuantity" placeholder="Kritik Stok" />
+            <input type="number" name="buyPrice" placeholder="Alış Fiyatı" />
+            <input type="number" name="sellPrice" placeholder="Satış Fiyatı" />
+            <input type="text" name="codes" placeholder="Kodlar (virgülle)" />
             <textarea name="description" placeholder="Açıklama"></textarea>
-            <button type="submit">Kaydet</button>
-            <button type="button" id="clearFormBtn">Temizle</button>
+            <div class="form-actions">
+              <button type="submit">Kaydet</button>
+              <button type="button" id="clearFormBtn">Temizle</button>
+            </div>
           </form>
+
+          <div class="box">
+            <input id="filterKeyword" placeholder="Ara: isim, kod, açıklama" />
+            <input id="filterCategory" placeholder="Kategori" />
+            <input id="filterBrand" placeholder="Marka" />
+            <label><input type="checkbox" id="onlyCriticalStock" /> Kritik stok</label>
+            <button id="filterBtn">Filtrele</button>
+            <button id="clearBtn">Sıfırla</button>
+            <p id="filterMatches"></p>
+          </div>
+
+          <ul id="productsUl" class="box"></ul>
         </div>
 
-        <!-- Arama -->
+        <!-- Detaylı Arama -->
         <div id="searchTab" class="tabContent">
-          <input id="filterKeyword" placeholder="Ara (isim, kod, açıklama)" />
-          <label><input type="checkbox" id="onlyCriticalStock" /> Sadece kritik stok</label>
-          <button id="filterBtn">Ara</button>
-          <button id="clearBtn">Temizle</button>
-          <div id="filterMatches"></div>
-          <ul id="productsUl"></ul>
+          <h2>Detaylı Arama</h2>
+          <p>İsteğe göre burası eklenecek</p>
         </div>
 
-        <!-- Rapor -->
+        <!-- Satış Raporu -->
         <div id="reportTab" class="tabContent">
-          <label>Başlangıç: <input type="date" id="fromDate" /></label>
-          <label>Bitiş: <input type="date" id="toDate" /></label>
+          <h2>Satış Raporu</h2>
+          <label>Başlangıç Tarihi: <input type="date" id="fromDate" /></label>
+          <label>Bitiş Tarihi: <input type="date" id="toDate" /></label>
           <button id="reportBtn">Raporu Görüntüle</button>
           <pre id="reportResult"></pre>
         </div>
@@ -89,7 +100,6 @@
     </div>
   </div>
 
-  <!-- JS Dosyaları -->
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="auth.js"></script>
   <script src="product.js"></script>
