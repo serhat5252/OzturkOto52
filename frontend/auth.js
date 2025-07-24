@@ -79,6 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (currentUser === "admin") {
       showRegisterBtn.style.display = "inline-block";
     }
+    fetchProducts();
   }
 
   // TAB GEÇİŞLERİ
