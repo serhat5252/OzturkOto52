@@ -1,6 +1,7 @@
 const loginForm = document.getElementById("loginForm");
 const loginMessage = document.getElementById("loginMessage");
 
+// GİRİŞ
 loginForm.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(loginForm));
@@ -21,17 +22,24 @@ loginForm.onsubmit = async e => {
 
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
+
+    // Sadece admin'e kullanıcı yönetimi sekmesini göster
+    if (json.username === "admin") {
+      document.getElementById("kullaniciTab").style.display = "block";
+    }
   } catch (err) {
     loginMessage.innerText = "❌ " + err.message;
   }
 };
 
+// ÇIKIŞ
 function logout() {
   sessionStorage.removeItem("token");
   sessionStorage.removeItem("currentUser");
   location.reload();
 }
 
+// OTOMATİK GİRİŞ
 document.addEventListener("DOMContentLoaded", () => {
   const token = sessionStorage.getItem("token");
   const currentUser = sessionStorage.getItem("currentUser");
@@ -40,8 +48,13 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
     document.getElementById("currentUser").innerText = currentUser;
+
+    if (currentUser === "admin") {
+      document.getElementById("kullaniciTab").style.display = "block";
+    }
   }
 
+  // Sekme geçişleri
   const tabs = document.querySelectorAll(".tab");
   const contents = document.querySelectorAll(".tabContent");
 
@@ -50,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tabs.forEach(t => t.classList.remove("active"));
       contents.forEach(c => c.classList.remove("active"));
       tab.classList.add("active");
+
       const targetId = tab.getAttribute("data-tab");
       document.getElementById(targetId).classList.add("active");
     });

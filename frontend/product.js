@@ -1,25 +1,24 @@
 const API = "/api/products";
 const token = () => sessionStorage.getItem("token");
-
 const form = document.getElementById("productForm");
 const ul = document.getElementById("productsUl");
+
 let products = [];
 
-// Ürün Kaydetme
+// ÜRÜN KAYIT
 form.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(form));
+
   if (!data.name) return alert("Ürün adı zorunludur");
 
-  // Dönüştürme
   ["quantity", "minQuantity"].forEach(k => data[k] = parseInt(data[k]) || 0);
   ["buyPrice", "sellPrice"].forEach(k => data[k] = parseFloat(data[k]) || 0);
   data.codes = data.codes?.split(",").map(s => s.trim()) || [];
 
   const isUpdate = Boolean(data.id);
-  if (!isUpdate) delete data.id;
+  if (!data.id) delete data.id;
 
-  // Aynı ürün adı kontrolü (büyük küçük harf duyarsız)
   const nameExists = products.some(p =>
     p.name.toLowerCase() === data.name.toLowerCase() &&
     (!isUpdate || p._id !== data.id)
@@ -51,13 +50,14 @@ form.onsubmit = async e => {
   }
 };
 
-// Ürünleri Getir
+// ÜRÜNLERİ GETİR
 async function fetchProducts() {
   try {
     const res = await fetch(API, {
       headers: { "Authorization": "Bearer " + token() }
     });
     if (!res.ok) throw new Error("Yetki veya bağlantı hatası");
+
     products = await res.json();
     renderList(products);
     populateFilterOptions();
@@ -66,7 +66,7 @@ async function fetchProducts() {
   }
 }
 
-// Listeyi Göster
+// ÜRÜNLERİ LİSTELE
 function renderList(list) {
   ul.innerHTML = "";
   if (!list.length) {
@@ -91,7 +91,7 @@ function renderList(list) {
   });
 }
 
-// Ürün Düzenle
+// ÜRÜN DÜZENLE
 window.edit = id => {
   const p = products.find(x => x._id === id);
   Object.entries(p).forEach(([k, v]) => {
@@ -101,7 +101,7 @@ window.edit = id => {
   form.elements.id.value = p._id;
 };
 
-// Ürün Sil
+// ÜRÜN SİL
 window.del = async id => {
   if (!confirm("Silmek istediğinize emin misiniz?")) return;
   try {
@@ -110,6 +110,7 @@ window.del = async id => {
       headers: { "Authorization": "Bearer " + token() }
     });
     if (!res.ok) throw new Error("Silinemedi");
+
     products = products.filter(p => p._id !== id);
     renderList(products);
   } catch (err) {
@@ -117,7 +118,7 @@ window.del = async id => {
   }
 };
 
-// Filtreleri Uygula
+// FİLTRE UYGULA
 function applyFilters() {
   const key = document.getElementById("filterKeyword").value.trim().toLowerCase();
   const category = document.getElementById("filterCategory").value;
@@ -127,87 +128,93 @@ function applyFilters() {
   const to = new Date(document.getElementById("toDate").value || Date.now());
   const saleFrom = new Date(document.getElementById("filterSaleFrom")?.value || "2000-01-01");
   const saleTo = new Date(document.getElementById("filterSaleTo")?.value || Date.now());
-  const onlyCritical = document.getElementById("onlyCriticalStock").checked;
+  const onlyCritical = document.getElementById("onlyCriticalStock")?.checked;
 
   const filtered = products.filter(p => {
-    const nameMatch = !key || p.name.toLowerCase().includes(key) || (p.codes || []).some(c => c.toLowerCase().includes(key));
+    const nameMatch = !key || p.name.toLowerCase().includes(key) ||
+                      p.codes?.some(c => c.toLowerCase().includes(key)) ||
+                      p.description?.toLowerCase().includes(key);
+
     const categoryMatch = !category || p.category === category;
     const brandMatch = !brand || p.brand === brand;
     const typeMatch = !type || p.type === type;
-    const createMatch = new Date(p.createdAt) >= from && new Date(p.createdAt) <= to;
-    const saleMatch = !p.sales?.length || p.sales.some(s => {
+    const createDate = new Date(p.createdAt);
+    const createMatch = createDate >= from && createDate <= to;
+
+    const saleMatch = p.sales?.some(s => {
       const d = new Date(s.date);
       return d >= saleFrom && d <= saleTo;
-    });
+    }) || (!document.getElementById("filterSaleFrom")?.value && !document.getElementById("filterSaleTo")?.value);
+
     const criticalMatch = !onlyCritical || (p.minQuantity && p.quantity <= p.minQuantity);
 
     return nameMatch && categoryMatch && brandMatch && typeMatch && createMatch && saleMatch && criticalMatch;
   });
 
   renderList(filtered);
-  document.getElementById("filterMatches").innerText = `${filtered.length} ürün listelendi.`;
 }
 
-// Filtreleri Temizle
+// TEMİZLE
 function resetFilters() {
-  document.getElementById("filterForm")?.reset();
+  document.getElementById("filterKeyword").value = "";
+  document.getElementById("filterCategory").value = "";
+  document.getElementById("filterBrand").value = "";
+  document.getElementById("filterType").value = "";
+  document.getElementById("fromDate").value = "";
+  document.getElementById("toDate").value = "";
+  if (document.getElementById("filterSaleFrom")) document.getElementById("filterSaleFrom").value = "";
+  if (document.getElementById("filterSaleTo")) document.getElementById("filterSaleTo").value = "";
+  if (document.getElementById("onlyCriticalStock")) document.getElementById("onlyCriticalStock").checked = true;
   renderList(products);
 }
 
-// Formu Temizle
 function resetForm() {
   form.reset();
   form.elements.id.value = "";
   fetchProducts();
 }
 
-// Kategori / Marka / Tip seçeneklerini filtreye aktar
+// FİLTRE SEÇENEKLERİNİ OTO DOLDUR
 function populateFilterOptions() {
+  const catSel = document.getElementById("filterCategory");
+  const brandSel = document.getElementById("filterBrand");
+  const typeSel = document.getElementById("filterType");
+
   const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
   const brands = [...new Set(products.map(p => p.brand).filter(Boolean))];
   const types = [...new Set(products.map(p => p.type).filter(Boolean))];
 
-  const fillSelect = (id, items) => {
-    const sel = document.getElementById(id);
-    if (sel) {
-      sel.innerHTML = `<option value="">Tümü</option>` + items.map(i => `<option>${i}</option>`).join("");
-    }
+  const fill = (select, items) => {
+    select.innerHTML = `<option value="">Tümü</option>` + items.map(i => `<option>${i}</option>`).join("");
   };
 
-  fillSelect("filterCategory", categories);
-  fillSelect("filterBrand", brands);
-  fillSelect("filterType", types);
+  if (catSel) fill(catSel, categories);
+  if (brandSel) fill(brandSel, brands);
+  if (typeSel) fill(typeSel, types);
 }
 
-// Satış Raporu
-document.getElementById("reportBtn")?.addEventListener("click", async () => {
-  const from = document.getElementById("fromDateReport").value;
-  const to = document.getElementById("toDateReport").value;
-  try {
-    const res = await fetch(`/api/products/sales-report?from=${from}&to=${to}`, {
-      headers: { "Authorization": "Bearer " + token() }
-    });
-    const data = await res.json();
-    document.getElementById("reportResult").innerText = JSON.stringify(data, null, 2);
-  } catch (err) {
-    document.getElementById("reportResult").innerText = "Rapor alınamadı: " + err.message;
-  }
+// BARKOD ARAMA VE ENTER TUŞU
+document.getElementById("filterKeyword").addEventListener("keydown", e => {
+  if (e.key === "Enter") applyFilters();
 });
 
-// Enter tuşu ile filtreleme
-document.getElementById("filterKeyword")?.addEventListener("keydown", e => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    applyFilters();
-  }
-});
-
-// Buton Bağlamaları
 document.getElementById("filterBtn")?.addEventListener("click", applyFilters);
 document.getElementById("clearBtn")?.addEventListener("click", resetFilters);
 document.getElementById("clearFormBtn")?.addEventListener("click", resetForm);
 
-// Sayfa yüklendiğinde
+// SATIŞ RAPORU
+document.getElementById("reportBtn")?.addEventListener("click", async () => {
+  const from = document.getElementById("fromDateReport").value;
+  const to = document.getElementById("toDateReport").value;
+
+  const res = await fetch(`/api/products/sales-report?from=${from}&to=${to}`, {
+    headers: { "Authorization": "Bearer " + token() }
+  });
+  const json = await res.json();
+  document.getElementById("reportResult").innerText = JSON.stringify(json, null, 2);
+});
+
+// YÜKLENİNCE ÜRÜNLERİ GETİR
 document.addEventListener("DOMContentLoaded", () => {
   fetchProducts();
 });
