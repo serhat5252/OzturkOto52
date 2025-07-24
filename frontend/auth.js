@@ -8,29 +8,26 @@ const showRegisterBtn = document.getElementById("showRegister");
 loginForm.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(loginForm));
+
   try {
     const res = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     });
-    const json = await res.json();
+
+    const json = await res.json(); // ← bu satır çok önemli
+
     if (!res.ok) throw new Error(json.message || "Giriş başarısız");
 
-    sessionStorage.setItem("token", json.token);
-    sessionStorage.setItem("currentUser", json.username);
+    sessionStorage.setItem("token", json.token); // ← token kaydediliyor
     document.getElementById("currentUser").innerText = json.username;
     document.getElementById("authBox").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
-
-    if (json.username === "admin") {
-      showRegisterBtn.style.display = "inline-block";
-    }
+    document.getElementById("dashboard").style.display = "flex";
   } catch (err) {
     loginMessage.innerText = err.message;
   }
 };
-
 // KAYIT
 registerForm.onsubmit = async e => {
   e.preventDefault();
