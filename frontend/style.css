@@ -1,125 +1,148 @@
-/* GİRİŞ EKRANI */
-.auth-container {
-  position: fixed; top:50%; left:50%;
-  transform:translate(-50%,-50%);
-  background:#fff; padding:30px;
-  border-radius:10px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.2);
-  max-width:360px; width:90%;
-  text-align:center;
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
-.auth-container input {
-  width:100%; padding:10px; margin:10px 0;
-  border:1px solid #ccc; border-radius:6px;
-}
-.auth-container button {
-  background:#3a86ff; color:#fff; border:none;
-  padding:12px; width:100%; border-radius:6px;
-  cursor:pointer;
-}
-.auth-container .switch { margin:10px 0; }
-.error { color:red; margin-top:8px; }
-.success { color:green; margin-top:8px; }
 
-/* ÜST BÖLÜM */
-.navbar {
-  position: sticky; top: 0; z-index: 10;
-  display:flex; justify-content:space-between;
-  align-items:center; padding:10px 20px;
-  background:#3a86ff; color:#fff;
-  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+body {
+  margin: 0;
+  padding: 0;
+  background: #f4f4f4;
+  color: #333;
 }
-.navbar .user {
-  display: flex; gap: 10px;
+
+/* Giriş & Kayıt kutusu */
+.auth-container {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.auth-container h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.auth-container input,
+.auth-container button {
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.auth-container button {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.auth-container button:hover {
+  background: #1b5e20;
+}
+
+.error {
+  color: red;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* Dashboard */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  background: #2e7d32;
+  color: white;
+  padding: 1rem;
   align-items: center;
 }
-.navbar .user button {
-  background:#ff006e; border:none; color:#fff;
-  padding:8px 12px; border-radius:6px;
-  cursor:pointer;
-}
 
-/* ANA YAPI */
-.main {
-  display: flex;
-  height: calc(100vh - 60px); /* navbar yüksekliğine göre */
-}
-/* SOL TAB MENÜ */
 .sidebar {
-  width: 240px;
-  background: #f7f9fc;
-  border-right: 1px solid #ddd;
-}
-.tabs .tab {
-  padding:14px; cursor:pointer;
-  border-bottom:1px solid #ddd;
-}
-.tabs .tab.active {
-  background:#e3fcef;
-  font-weight:bold;
+  background: #e0e0e0;
+  padding: 1rem;
 }
 
-/* SAĞ İÇERİK ALANI */
+.tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tab {
+  background: #ccc;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.tab.active {
+  background: #81c784;
+  font-weight: bold;
+}
+
 .content {
+  padding: 1rem;
   flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-}
-#productsUl {
-  list-style: none;
-  padding: 0;
-  margin-top: 20px;
-}
-
-#productsUl li {
-  background: #f9f9f9;
-  margin-bottom: 10px;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
 .tabContent {
   display: none;
 }
+
 .tabContent.active {
   display: block;
 }
-.form-grid input, .form-grid select,
-.form-grid textarea, #searchTab input,
-#searchTab select, #searchTab label input {
-  margin:6px 0; padding:8px;
-  width:100%;
-  border:1px solid #ccc;
-  border-radius:6px;
-}
-.content .list-container {
-  background:#fff; padding:20px;
-  border-radius:8px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.1);
-  max-height:400px; overflow-y:auto;
+
+/* Ürün listesi */
+#productsUl {
+  list-style: none;
+  padding: 0;
 }
 
-/* BUTONLAR */
-button {
-  cursor: pointer;
-}
-#scanner-container {
-  position: relative;
-  width: 100%;
-  max-width: 600px;
-  margin: auto;
-}
-
-#camera video,
-canvas.drawing {
-  width: 100%;
-  height: auto;
+#productsUl li {
+  background: #fff;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-left: 4px solid #2e7d32;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-canvas.drawing {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
+#productsUl li.critical-stock {
+  border-left-color: red;
+}
+
+#productsUl button {
+  margin-left: 5px;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .dashboard {
+    flex-direction: row;
+  }
+
+  .sidebar {
+    width: 250px;
+    min-height: 100vh;
+  }
+
+  .content {
+    flex: 1;
+  }
 }
