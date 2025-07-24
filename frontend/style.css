@@ -23,9 +23,16 @@ body {
 
 .auth-container h1 {
   text-align: center;
-  margin-bottom: 1.5rem;
-  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.6rem;
   color: #2e7d32;
+}
+
+.auth-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  color: #555;
 }
 
 .auth-container form {
@@ -83,22 +90,13 @@ body {
 }
 
 .navbar .brand {
-  font-size: 1.2rem;
+  text-align: left;
   font-weight: bold;
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
 }
 
-.navbar .brand span:first-child {
-  font-size: 1.5rem;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-.navbar .brand span:last-child {
-  font-size: 0.9rem;
-  font-weight: 300;
+.navbar .brand span {
+  display: block;
+  line-height: 1.1;
 }
 
 .navbar .user {
@@ -214,70 +212,92 @@ body {
 
 #productsUl li.critical-stock {
   border-left-color: red;
-  background: #fff4f4;
 }
 
 #productsUl button {
   margin-left: 5px;
 }
 
-/* Satış Raporu ve Filtre */
-#filterMatches,
-#reportResult {
+/* Arama & Filtre */
+#filterForm {
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: 1fr;
+  margin-top: 2rem;
+}
+
+#filterForm input,
+#filterForm select {
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+#filterForm .row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#filterForm button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  background: #2e7d32;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+#filterForm button:hover {
+  background: #1b5e20;
+}
+
+#filterMatches {
   margin-top: 1rem;
   font-weight: bold;
 }
 
-/* Detaylı Arama - Dikey Liste */
-#searchForm {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+/* Satış Raporu */
+#reportForm {
   background: white;
   padding: 1rem;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
-  max-width: 500px;
-}
-
-#searchForm label {
   display: flex;
   flex-direction: column;
-  font-size: 0.9rem;
-  font-weight: 500;
+  gap: 0.8rem;
+  margin-top: 2rem;
 }
 
-#searchForm input,
-#searchForm select {
-  padding: 0.6rem;
-  font-size: 0.9rem;
-  border-radius: 6px;
+#reportForm input {
+  padding: 0.7rem;
   border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
 }
 
-#searchForm button {
+#reportForm button {
   width: fit-content;
   padding: 0.5rem 1rem;
-  font-size: 0.85rem;
-  border-radius: 6px;
+  background: #2e7d32;
+  color: white;
   border: none;
+  border-radius: 6px;
   cursor: pointer;
 }
 
-#filterBtn {
-  background-color: #2e7d32;
-  color: white;
-}
-
-#clearBtn {
-  background-color: #888;
-  color: white;
-  margin-left: 0.5rem;
-}
-
-.filter-actions {
-  display: flex;
-  gap: 0.5rem;
+#reportResult {
+  margin-top: 1rem;
+  white-space: pre-wrap;
+  background: #f1f1f1;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
 }
 
 /* Responsive */
@@ -295,7 +315,9 @@ body {
     padding: 1rem;
   }
 
-  #productForm {
+  #productForm,
+  #filterForm,
+  #reportForm {
     grid-template-columns: 1fr;
   }
 

@@ -2,162 +2,131 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ÖZTÜRK OTOMOBİL</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 </head>
 <body>
 
-  <!-- GİRİŞ / KAYIT -->
-  <div class="auth-container" id="authBox">
-    <h1><div>ÖZTÜRK</div><div style="font-size: 1rem; margin-top: 0.25rem;">OTOMOBİL OTO ELEKTRİK</div></h1>
+  <!-- GİRİŞ FORMU -->
+  <div id="authBox" class="auth-container">
+    <h1>ÖZTÜRK</h1>
+    <h2>OTOMOBİL OTO ELEKTRİK</h2>
     <form id="loginForm">
-      <input name="username" placeholder="Kullanıcı Adı" required>
-      <input type="password" name="password" placeholder="Şifre" required>
+      <input name="username" placeholder="Kullanıcı Adı" required />
+      <input name="password" type="password" placeholder="Şifre" required />
       <button type="submit">Giriş Yap</button>
     </form>
-    <div id="loginMessage" class="error"></div>
-
-    <button id="showRegister" style="display:none">Yeni Kullanıcı Ekle</button>
-    <form id="registerForm" style="display:none">
-      <input name="username" placeholder="Yeni Kullanıcı" required>
-      <input type="password" name="password" placeholder="Şifre" required>
-      <button type="submit">Kayıt Ol</button>
-    </form>
-    <div id="registerMessage"></div>
+    <div class="error" id="loginMessage"></div>
   </div>
 
   <!-- DASHBOARD -->
-  <div class="dashboard" id="dashboard" style="display:none">
-    <header class="navbar">
-      <div class="brand">🚗 ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
+  <div id="dashboard" class="dashboard" style="display:none">
+    <!-- ÜST BAR -->
+    <div class="navbar">
+      <div class="brand">ÖZTÜRK OTOMOBİL</div>
       <div class="user">
         <span id="currentUser"></span>
         <button onclick="logout()">Çıkış Yap</button>
+        <button id="showRegister" style="display:none">Yeni Kullanıcı Ekle</button>
       </div>
-    </header>
+    </div>
 
+    <!-- ANA KISIM -->
     <div class="main">
-      <aside class="sidebar">
+      <!-- SOL TAB MENÜ -->
+      <div class="sidebar">
         <div class="tabs">
-          <div class="tab active" data-tab="formTab">Ürün İşlemleri</div>
-          <div class="tab" data-tab="searchTab">Detaylı Arama</div>
-          <div class="tab" data-tab="reportTab">Satış Raporu</div>
+          <div class="tab active" data-tab="productTab">Ürün İşlemleri</div>
+          <div class="tab" data-tab="registerTab">Kullanıcı Ekle</div>
         </div>
-      </aside>
+      </div>
 
-      <section class="content">
-        <!-- Ürün İşlemleri -->
-        <div id="formTab" class="tabContent active">
+      <!-- SAĞ İÇERİK -->
+      <div class="content">
+        <!-- ÜRÜN İŞLEMLERİ -->
+        <div id="productTab" class="tabContent active">
           <form id="productForm">
-            <input name="id" type="hidden">
-            <input name="name" placeholder="Ürün Adı" required>
-            <select name="category" required>
-              <option value="">Kategori Seçiniz</option>
-              <option>Alternatör</option>
-              <option>Starter</option>
-            </select>
-            <select name="brand" required>
-              <option value="">Marka Seçiniz</option>
-              <option>Bosch</option>
-              <option>Valeo</option>
-              <option>Mitsubishi</option>
-            </select>
-            <select name="type" required>
-              <option value="">Tip Seçiniz</option>
-              <option>Delco</option>
-              <option>Mako</option>
-              <option>Marelli</option>
-            </select>
-            <input name="shelf" placeholder="Raf No">
-            <input name="quantity" type="number" placeholder="Adet" required>
-            <input name="minQuantity" type="number" placeholder="Minimum (kritik)">
-            <input name="buyPrice" type="number" step="0.01" placeholder="Alış Fiyatı" required>
-            <input name="sellPrice" type="number" step="0.01" placeholder="Satış Fiyatı" required>
-            <input name="codes" placeholder="Kodlar (virgülle)">
+            <input type="hidden" name="id" />
+            <input name="name" placeholder="Ürün Adı" required />
+            <input name="quantity" type="number" placeholder="Miktar" />
+            <input name="minQuantity" type="number" placeholder="Minimum Stok" />
+            <input name="buyPrice" type="number" step="0.01" placeholder="Alış Fiyatı" />
+            <input name="sellPrice" type="number" step="0.01" placeholder="Satış Fiyatı" />
+            <input name="category" placeholder="Kategori" />
+            <input name="brand" placeholder="Marka" />
+            <input name="type" placeholder="Tip" />
+            <input name="shelf" placeholder="Raf Konumu" />
+            <input name="codes" placeholder="Kodlar (virgülle)" />
             <textarea name="description" placeholder="Açıklama"></textarea>
-            <div style="display: flex; gap: 1rem;">
+            <div>
               <button type="submit">Kaydet</button>
               <button type="button" id="clearFormBtn">Temizle</button>
             </div>
           </form>
 
-          <!-- Ürün Listesi -->
+          <!-- DETAYLI ARAMA -->
+          <div class="filter-section">
+            <h3>Detaylı Arama</h3>
+            <div class="filter-row">
+              <input id="filterKeyword" placeholder="Ürün adı, açıklama veya kod" />
+              <select id="filterCategory">
+                <option value="">Kategori</option>
+              </select>
+              <select id="filterBrand">
+                <option value="">Marka</option>
+              </select>
+              <select id="filterType">
+                <option value="">Tip</option>
+              </select>
+            </div>
+            <div class="filter-row">
+              <input type="date" id="filterAddedFrom" placeholder="Eklenme Başlangıç" />
+              <input type="date" id="filterAddedTo" placeholder="Eklenme Bitiş" />
+              <input type="date" id="filterSoldFrom" placeholder="Satış Başlangıç" />
+              <input type="date" id="filterSoldTo" placeholder="Satış Bitiş" />
+            </div>
+            <div class="filter-row">
+              <label class="critical-stock-toggle">
+                <input type="checkbox" id="onlyCriticalStock" />
+                Kritik stokta olanları göster
+              </label>
+              <button id="filterBtn">Ara</button>
+              <button id="clearBtn" type="button">Temizle</button>
+            </div>
+            <div id="filterMatches" style="margin-top: 10px;"></div>
+          </div>
+
+          <!-- ÜRÜN LİSTESİ -->
           <ul id="productsUl"></ul>
+
+          <!-- RAPOR -->
+          <div class="report-section">
+            <h3>Satış Raporu</h3>
+            <div class="filter-row">
+              <input type="date" id="fromDate" />
+              <input type="date" id="toDate" />
+              <button id="reportBtn">Rapor Al</button>
+            </div>
+            <pre id="reportResult"></pre>
+          </div>
         </div>
 
-        <!-- Detaylı Arama -->
-<form id="searchForm">
-  <label>
-    Arama:
-    <input type="text" id="filterKeyword" placeholder="Ürün adı, kod, açıklama..." />
-  </label>
-
-  <label>
-    Kategori:
-    <select id="filterCategory">
-      <option value="">Tümü</option>
-      <option value="Elektrik">Elektrik</option>
-      <option value="Mekanik">Mekanik</option>
-      <!-- ekle -->
-    </select>
-  </label>
-
-  <label>
-    Marka:
-    <select id="filterBrand">
-      <option value="">Tümü</option>
-      <option value="Bosch">Bosch</option>
-      <option value="Valeo">Valeo</option>
-      <!-- ekle -->
-    </select>
-  </label>
-
-  <label>
-    Ürün Tipi:
-    <select id="filterType">
-      <option value="">Tümü</option>
-      <option value="Ampul">Ampul</option>
-      <option value="Sigorta">Sigorta</option>
-    </select>
-  </label>
-
-  <label>
-    Eklenme Tarihi (Başlangıç):
-    <input type="date" id="fromDate">
-  </label>
-
-  <label>
-    Eklenme Tarihi (Bitiş):
-    <input type="date" id="toDate">
-  </label>
-
-  <label>
-    <input type="checkbox" id="onlyCriticalStock"> Kritik stokta olanları göster
-  </label>
-
-  <div class="filter-actions">
-    <button id="filterBtn" type="button">Ara</button>
-    <button id="clearBtn" type="button">Temizle</button>
-  </div>
-
-  <div id="filterMatches"></div>
-</form>
-
-
-        <!-- Satış Raporu -->
-        <div id="reportTab" class="tabContent">
-          <label>Başlangıç: <input type="date" id="fromDate"></label>
-          <label>Bitiş: <input type="date" id="toDate"></label>
-          <button id="reportBtn">Raporu Görüntüle</button>
-          <div id="reportResult"></div>
+        <!-- YENİ KULLANICI EKLE -->
+        <div id="registerTab" class="tabContent">
+          <form id="registerForm">
+            <input name="username" placeholder="Yeni Kullanıcı Adı" required />
+            <input name="password" type="password" placeholder="Şifre" required />
+            <button type="submit">Kullanıcı Ekle</button>
+          </form>
+          <div class="error" id="registerMessage"></div>
         </div>
-      </section>
+      </div>
     </div>
   </div>
 
-  <!-- Scriptler -->
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <!-- Script -->
   <script src="auth.js"></script>
   <script src="product.js"></script>
 </body>

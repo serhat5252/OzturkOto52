@@ -6,11 +6,18 @@ exports.getProducts = async (req, res) => {
 };
 
 exports.addProduct = async (req, res) => {
+  const { name } = req.body;
+  if (!name) return res.status(400).json({ message: "Ürün adı zorunlu" });
+
+  const existing = await Product.findOne({ name: new RegExp(`^${name}$`, 'i') });
+  if (existing) return res.status(400).json({ message: "Bu ürün zaten kayıtlı" });
+
   const product = new Product(req.body);
   await product.save();
   res.status(201).json(product);
   req.app.get("io").emit("update");
 };
+
 
 exports.updateProduct = async (req, res) => {
   const updated = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
