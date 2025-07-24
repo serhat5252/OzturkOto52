@@ -114,21 +114,50 @@ function resetSearchFilters() {
   document.getElementById("filterMatches").innerText = "";
   renderList(products);
 }
-// Sekmeler arası geçişi sağlayan kod
+
+function resetForm() {
+  form.reset();
+  form.elements.id.value = "";
+  fetchProducts();
+}
+
+// Sekme geçiş fonksiyonu
 document.querySelectorAll(".tab").forEach(tab => {
   tab.addEventListener("click", () => {
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
     tab.classList.add("active");
 
-    const selected = tab.getAttribute("data-tab");
-    document.querySelectorAll(".tabContent").forEach(c => {
-      c.classList.remove("active");
-    });
-    document.getElementById(selected).classList.add("active");
+    const target = tab.getAttribute("data-tab");
+    document.querySelectorAll(".tabContent").forEach(c => c.classList.remove("active"));
+    document.getElementById(target).classList.add("active");
   });
 });
 
+// Türkçe karakter uyumlu küçük harfe çevir
+function turkishLower(str) {
+  return str.toLocaleLowerCase("tr-TR");
+}
 
-function resetForm() {
-  form.reset();
-  form.elements.id.
+// Event bağlamaları
+document.getElementById("filterBtn").onclick = applySearchFilters;
+document.getElementById("clearBtn").onclick = resetSearchFilters;
+document.getElementById("clearFormBtn").onclick = resetForm;
+
+document.getElementById("reportBtn").onclick = async () => {
+  const from = document.getElementById("fromDate").value;
+  const to = document.getElementById("toDate").value;
+  const res = await fetch(`/api/products/sales-report?from=${from}&to=${to}`, {
+    headers: { "Authorization": "Bearer " + token() }
+  });
+  const json = await res.json();
+  document.getElementById("reportResult").innerText = JSON.stringify(json, null, 2);
+};
+
+// Socket bağlantısı
+const socket = io();
+socket.on("update", fetchProducts);
+
+// Sayfa yüklendiğinde ürünleri getir
+document.addEventListener("DOMContentLoaded", () => {
+  fetchProducts();
+});
