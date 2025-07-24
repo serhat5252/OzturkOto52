@@ -38,6 +38,7 @@ loginForm.onsubmit = async e => {
 registerForm.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(registerForm));
+
   try {
     const res = await fetch("/api/auth/register", {
       method: "POST",
@@ -47,6 +48,7 @@ registerForm.onsubmit = async e => {
       },
       body: JSON.stringify(data)
     });
+
     const json = await res.json();
     if (!res.ok) throw new Error(json.message || "Kayıt başarısız");
 
@@ -57,8 +59,9 @@ registerForm.onsubmit = async e => {
   }
 };
 
+// "Yeni Kullanıcı Ekle" butonuna tıklanınca kayıt formu görünür
 showRegisterBtn.onclick = () => {
-  registerForm.style.display = "flex";
+  registerForm.style.display = "block";
   showRegisterBtn.style.display = "none";
 };
 
@@ -68,7 +71,7 @@ function logout() {
   location.reload();
 }
 
-// Otomatik giriş (refresh sonrası)
+// OTOMATİK GİRİŞ
 document.addEventListener("DOMContentLoaded", () => {
   const token = sessionStorage.getItem("token");
   const currentUser = sessionStorage.getItem("currentUser");
@@ -77,20 +80,24 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
     document.getElementById("currentUser").innerText = currentUser;
+
     if (currentUser === "admin") {
       showRegisterBtn.style.display = "inline-block";
     }
   }
 
-  // Tab geçişleri
+  // Sekme geçişleri (şu anda 1 sekme olduğu için basit)
   const tabs = document.querySelectorAll(".tab");
   const contents = document.querySelectorAll(".tabContent");
+
   tabs.forEach(tab => {
     tab.addEventListener("click", () => {
       tabs.forEach(t => t.classList.remove("active"));
       contents.forEach(c => c.classList.remove("active"));
       tab.classList.add("active");
-      document.getElementById(tab.dataset.tab).classList.add("active");
+
+      const targetId = tab.getAttribute("data-tab");
+      document.getElementById(targetId).classList.add("active");
     });
   });
 });
