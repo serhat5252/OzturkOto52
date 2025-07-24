@@ -4,42 +4,38 @@ const loginMessage = document.getElementById("loginMessage");
 const registerMessage = document.getElementById("registerMessage");
 const showRegisterBtn = document.getElementById("showRegister");
 
-// Giriş
+// GİRİŞ
 loginForm.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(loginForm));
-
   try {
     const res = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     });
-
     const json = await res.json();
     if (!res.ok) throw new Error(json.message || "Giriş başarısız");
 
     sessionStorage.setItem("token", json.token);
     sessionStorage.setItem("currentUser", json.username);
 
-    document.getElementById("currentUser").innerText = json.username;
     document.getElementById("authBox").style.display = "none";
-    document.getElementById("dashboard").style.display = "flex";
+    document.getElementById("dashboard").style.display = "block";
+    document.getElementById("currentUser").innerText = json.username;
 
     if (json.username === "admin") {
       showRegisterBtn.style.display = "inline-block";
     }
-
   } catch (err) {
     loginMessage.innerText = "❌ " + err.message;
   }
 };
 
-// Kayıt
+// KAYIT
 registerForm.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(registerForm));
-
   try {
     const res = await fetch("/api/auth/register", {
       method: "POST",
@@ -49,7 +45,6 @@ registerForm.onsubmit = async e => {
       },
       body: JSON.stringify(data)
     });
-
     const json = await res.json();
     if (!res.ok) throw new Error(json.message || "Kayıt başarısız");
 
@@ -60,46 +55,38 @@ registerForm.onsubmit = async e => {
   }
 };
 
-// Adminse kayıt formunu göster
 showRegisterBtn.onclick = () => {
   registerForm.style.display = "block";
   showRegisterBtn.style.display = "none";
 };
 
-// Çıkış
 function logout() {
-  sessionStorage.removeItem("token");
-  sessionStorage.removeItem("currentUser");
+  sessionStorage.clear();
   location.reload();
 }
 
-// Otomatik giriş (sayfa yenilendiğinde)
+// TAB GEÇİŞLERİ ve OTOMATİK GİRİŞ
 document.addEventListener("DOMContentLoaded", () => {
   const token = sessionStorage.getItem("token");
-  const currentUser = sessionStorage.getItem("currentUser");
-
-  if (token && currentUser) {
+  const user = sessionStorage.getItem("currentUser");
+  if (token && user) {
     document.getElementById("authBox").style.display = "none";
-    document.getElementById("dashboard").style.display = "flex";
-    document.getElementById("currentUser").innerText = currentUser;
+    document.getElementById("dashboard").style.display = "block";
+    document.getElementById("currentUser").innerText = user;
 
-    if (currentUser === "admin") {
+    if (user === "admin") {
       showRegisterBtn.style.display = "inline-block";
     }
   }
 
-  // Sekme geçişleri
-  const tabs = document.querySelectorAll(".tab");
-  const contents = document.querySelectorAll(".tabContent");
-
-  tabs.forEach(tab => {
+  document.querySelectorAll(".tab").forEach(tab => {
     tab.addEventListener("click", () => {
-      tabs.forEach(t => t.classList.remove("active"));
-      contents.forEach(c => c.classList.remove("active"));
-      tab.classList.add("active");
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".tabContent").forEach(c => c.classList.remove("active"));
 
-      const targetId = tab.getAttribute("data-tab");
-      document.getElementById(targetId).classList.add("active");
+      tab.classList.add("active");
+      const target = tab.getAttribute("data-tab");
+      document.getElementById(target).classList.add("active");
     });
   });
 });

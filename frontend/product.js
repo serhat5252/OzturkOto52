@@ -24,7 +24,6 @@ form.onsubmit = async e => {
       },
       body: JSON.stringify(data)
     });
-
     const body = await res.json();
     if (!res.ok) throw new Error(body.message);
 
@@ -35,9 +34,9 @@ form.onsubmit = async e => {
     }
 
     resetForm();
-    alert("✅ Başarılı");
+    alert("Başarılı!");
   } catch (err) {
-    alert("❌ Hata: " + err.message);
+    alert("Hata: " + err.message);
   }
 };
 
@@ -46,24 +45,25 @@ async function fetchProducts() {
     const res = await fetch(API, {
       headers: { "Authorization": "Bearer " + token() }
     });
-    if (!res.ok) throw new Error("Yetki veya bağlantı hatası");
+    if (!res.ok) throw new Error("Yetki yok");
     products = await res.json();
     renderList(products);
   } catch (err) {
-    alert("Ürünler alınamadı: " + err.message);
+    alert("Ürünler yüklenemedi: " + err.message);
   }
 }
 
 function renderList(list) {
   ul.innerHTML = "";
-  document.getElementById("filterMatches").innerText = list.length + " ürün bulundu.";
+  document.getElementById("filterMatches").innerText = `${list.length} ürün.`;
   list.forEach(p => {
     const li = document.createElement("li");
-    li.innerHTML = `<strong>${p.name}</strong> (${p.quantity}) 
+    li.innerHTML = `<strong>${p.name}</strong> (${p.quantity})
       <button onclick="edit('${p._id}')">D</button>
       <button onclick="del('${p._id}')">S</button>`;
-    if (p.minQuantity > 0 && p.quantity <= p.minQuantity)
+    if (p.minQuantity > 0 && p.quantity <= p.minQuantity) {
       li.classList.add("critical-stock");
+    }
     ul.appendChild(li);
   });
 }
@@ -78,7 +78,7 @@ window.edit = id => {
 };
 
 window.del = async id => {
-  if (!confirm("Silmek istediğine emin misin?")) return;
+  if (!confirm("Emin misin?")) return;
   await fetch(API + "/" + id, {
     method: "DELETE",
     headers: { "Authorization": "Bearer " + token() }
@@ -122,29 +122,14 @@ function resetForm() {
   fetchProducts();
 }
 
-// Sekme geçişi
-document.querySelectorAll(".tab").forEach(tab => {
-  tab.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    tab.classList.add("active");
-
-    const target = tab.getAttribute("data-tab");
-    document.querySelectorAll(".tabContent").forEach(c => c.classList.remove("active"));
-    document.getElementById(target).classList.add("active");
-  });
-});
-
-// Türkçe karakter uyumlu küçük harf
 function turkishLower(str) {
   return str.toLocaleLowerCase("tr-TR");
 }
 
-// Event listener
 document.getElementById("filterBtn").onclick = applySearchFilters;
 document.getElementById("clearBtn").onclick = resetSearchFilters;
 document.getElementById("clearFormBtn").onclick = resetForm;
 
-// Satış raporu
 document.getElementById("reportBtn").onclick = async () => {
   const from = document.getElementById("fromDate").value;
   const to = document.getElementById("toDate").value;
@@ -155,11 +140,11 @@ document.getElementById("reportBtn").onclick = async () => {
   document.getElementById("reportResult").innerText = JSON.stringify(json, null, 2);
 };
 
-// Socket.io
+// socket bağlantısı
 const socket = io();
 socket.on("update", fetchProducts);
 
-// Sayfa yüklenince
+// ilk açılışta
 document.addEventListener("DOMContentLoaded", () => {
   fetchProducts();
 });

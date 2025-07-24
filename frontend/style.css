@@ -10,13 +10,46 @@ body {
   color: #333;
 }
 
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2e7d32;
+  color: white;
+  padding: 1rem;
+}
+
+.navbar-left {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.navbar-center {
+  font-size: 1rem;
+}
+
+.navbar-right button {
+  background: #ffffff;
+  color: #2e7d32;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.navbar-right button:hover {
+  background-color: #d4d4d4;
+}
+
+/* Login/Kayıt Kutusu */
 .auth-container {
   max-width: 400px;
   margin: 60px auto;
   padding: 2rem;
   background: white;
   border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
 
 .auth-container h1 {
@@ -54,47 +87,43 @@ body {
   margin-top: 0.5rem;
 }
 
-.dashboard {
+/* Ana yapı */
+.main {
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  height: calc(100vh - 70px);
 }
 
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  background: #2e7d32;
-  color: white;
-  padding: 1rem;
-  align-items: center;
-}
-
+/* Sidebar */
 .sidebar {
-  background: #e0e0e0;
+  width: 220px;
+  background-color: #eeeeee;
   padding: 1rem;
 }
 
 .tabs {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 10px;
 }
 
 .tab {
-  background: #ccc;
   padding: 10px;
-  cursor: pointer;
+  background-color: #cccccc;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .tab.active {
-  background: #81c784;
+  background-color: #81c784;
   font-weight: bold;
 }
 
+/* İçerik */
 .content {
-  padding: 1rem;
   flex: 1;
+  padding: 1rem;
+  background: white;
+  overflow-y: auto;
 }
 
 .tabContent {
@@ -105,6 +134,7 @@ body {
   display: block;
 }
 
+/* Ürün Listesi */
 #productsUl {
   list-style: none;
   padding: 0;
@@ -126,19 +156,4 @@ body {
 
 #productsUl button {
   margin-left: 5px;
-}
-
-@media (min-width: 768px) {
-  .dashboard {
-    flex-direction: row;
-  }
-
-  .sidebar {
-    width: 250px;
-    min-height: 100vh;
-  }
-
-  .content {
-    flex: 1;
-  }
 }
