@@ -1,62 +1,46 @@
-const loginForm = document.getElementById("loginForm");
-const loginMessage = document.getElementById("loginMessage");
+const User = require("../models/User");
+const jwt = require("jsonwebtoken");
 
-// GİRİŞ
-loginForm.onsubmit = async e => {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(loginForm));
+// Token üretme
+const generateToken = id =>
+  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-  try {
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
+// Admin tarafından kullanıcı kaydı
+exports.register = async (req, res) => {
+  const { username, password } = req.body;
 
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.message || "Giriş başarısız");
-
-    sessionStorage.setItem("token", json.token);
-    sessionStorage.setItem("currentUser", json.username);
-    document.getElementById("currentUser").innerText = json.username;
-
-    document.getElementById("authBox").style.display = "none";
-    document.getElementById("dashboard").style.display = "flex";
-  } catch (err) {
-    loginMessage.innerText = "❌ " + err.message;
+  if (!req.user || req.user.username !== "admin") {
+    return res.status(403).json({ message: "Sadece admin kayıt yapabilir" });
   }
+
+  if (!username || !password)
+    return res.status(400).json({ message: "Kullanıcı adı ve şifre zorunludur" });
+
+  const existing = await User.findOne({ username: { $regex: `^${username}$`, $options: "i" } });
+  if (existing)
+    return res.status(400).json({ message: "Bu kullanıcı adı zaten kayıtlı" });
+
+  const user = await User.create({ username, password });
+  res.status(201).json({
+    _id: user._id,
+    username: user.username
+  });
 };
 
-// ÇIKIŞ
-function logout() {
-  sessionStorage.removeItem("token");
-  sessionStorage.removeItem("currentUser");
-  location.reload();
-}
+// Giriş işlemi
+exports.login = async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
 
-// OTOMATİK GİRİŞ
-document.addEventListener("DOMContentLoaded", () => {
-  const token = sessionStorage.getItem("token");
-  const currentUser = sessionStorage.getItem("currentUser");
-
-  if (token && currentUser) {
-    document.getElementById("authBox").style.display = "none";
-    document.getElementById("dashboard").style.display = "flex";
-    document.getElementById("currentUser").innerText = currentUser;
+  if (!user || !(await user.matchPassword(password))) {
+    return res.status(401).json({ message: "Hatalı kullanıcı adı veya şifre" });
   }
 
-  // Sekme geçişleri
-  const tabs = document.querySelectorAll(".tab");
-  const contents = document.querySelectorAll(".tabContent");
+  const token = generateToken(user._id);
 
-  tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      tabs.forEach(t => t.classList.remove("active"));
-      contents.forEach(c => c.classList.remove("active"));
-      tab.classList.add("active");
-
-      const targetId = tab.getAttribute("data-tab");
-      document.getElementById(targetId).classList.add("active");
-    });
+  res.json({
+    _id: user._id,
+    username: user.username,
+    token
   });
-});
+};
