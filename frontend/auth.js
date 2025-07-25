@@ -1,6 +1,7 @@
 const loginForm = document.getElementById("loginForm");
 const loginMessage = document.getElementById("loginMessage");
 
+// Giriş
 loginForm.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(loginForm));
@@ -17,21 +18,23 @@ loginForm.onsubmit = async e => {
 
     sessionStorage.setItem("token", json.token);
     sessionStorage.setItem("currentUser", json.username);
-    document.getElementById("currentUser").innerText = json.username;
 
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
+    document.getElementById("currentUser").innerText = json.username;
   } catch (err) {
     loginMessage.innerText = "❌ " + err.message;
   }
 };
 
+// Çıkış
 function logout() {
   sessionStorage.removeItem("token");
   sessionStorage.removeItem("currentUser");
   location.reload();
 }
 
+// Sayfa yüklendiğinde
 document.addEventListener("DOMContentLoaded", () => {
   const token = sessionStorage.getItem("token");
   const currentUser = sessionStorage.getItem("currentUser");
@@ -42,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("currentUser").innerText = currentUser;
   }
 
+  // Sekme geçişleri
   const tabs = document.querySelectorAll(".tab");
   const contents = document.querySelectorAll(".tabContent");
 
@@ -55,33 +59,28 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById(targetId).classList.add("active");
     });
   });
-});
 
-// Kullanıcı ekleme
-const userForm = document.getElementById("userForm");
-if (userForm) {
-  userForm.onsubmit = async e => {
+  // Kullanıcı ekleme (varsayılan açık)
+  const userForm = document.getElementById("userForm");
+  userForm?.addEventListener("submit", async e => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(userForm));
-    const msgEl = document.getElementById("userMsg");
+    const userMsg = document.getElementById("userMsg");
 
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + token()
-        },
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + sessionStorage.getItem("token") },
         body: JSON.stringify(data)
       });
 
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Kayıt başarısız");
 
-      msgEl.innerText = "✅ Kullanıcı eklendi!";
       userForm.reset();
+      userMsg.innerText = "✅ Kullanıcı eklendi.";
     } catch (err) {
-      msgEl.innerText = "❌ " + err.message;
+      userMsg.innerText = "❌ " + err.message;
     }
-  };
-}
+  });
+});

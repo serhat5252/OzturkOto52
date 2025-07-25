@@ -82,7 +82,7 @@ function renderList(list) {
         <button onclick="sell('${p._id}')">Sat</button>
         <button onclick="edit('${p._id}')">Düzenle</button>
         <button onclick="del('${p._id}')">Sil</button>
-        <button onclick="showDetail('${p._id}')">Detay</button>
+        <button onclick="details('${p._id}')">Detay</button>
       </div>`;
     if (p.minQuantity > 0 && p.quantity <= p.minQuantity)
       li.classList.add("critical-stock");
@@ -115,97 +115,10 @@ window.del = async id => {
   }
 };
 
-window.sell = async id => {
-  const price = prompt("Kaç TL'ye satıldı?");
-  if (!price || isNaN(price)) return alert("Geçerli fiyat girin.");
-
-  try {
-    const res = await fetch(`${API}/${id}/sell`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token()
-      },
-      body: JSON.stringify({ price: parseFloat(price) })
-    });
-
-    const result = await res.json();
-    if (!res.ok) throw new Error(result.message);
-
-    fetchProducts();
-  } catch (err) {
-    alert("Satış hatası: " + err.message);
-  }
-};
-
-window.showDetail = id => {
-  const p = products.find(x => x._id === id);
-  alert(`
-Ad: ${p.name}
-Kategori: ${p.category}
-Marka: ${p.brand}
-Tip: ${p.type}
-Raf No: ${p.shelf}
-Stok: ${p.quantity}
-Kritik Stok: ${p.minQuantity}
-Alış: ${p.buyPrice} ₺
-Satış: ${p.sellPrice} ₺
-Kodlar: ${(p.codes || []).join(", ")}
-Açıklama: ${p.description || ""}
-Eklenme: ${new Date(p.createdAt).toLocaleString()}
-Son Satış: ${(p.sales || []).slice(-1)[0]?.price || "Yok"} ₺
-`);
-};
-
 function resetForm() {
   form.reset();
   form.elements.id.value = "";
   fetchProducts();
-}
-
-function applyFilters() {
-  const key = document.getElementById("filterKeyword").value.trim().toLowerCase();
-  const category = document.getElementById("filterCategory").value;
-  const brand = document.getElementById("filterBrand").value;
-  const type = document.getElementById("filterType").value;
-  const from = new Date(document.getElementById("filterFrom").value || "2000-01-01");
-  const to = new Date(document.getElementById("filterTo").value || Date.now());
-  const saleFrom = new Date(document.getElementById("filterSaleFrom").value || "2000-01-01");
-  const saleTo = new Date(document.getElementById("filterSaleTo").value || Date.now());
-  const onlyCritical = document.getElementById("onlyCriticalStock").checked;
-
-  const filtered = products.filter(p => {
-    const nameMatch = !key || (p.name + p.codes + p.description).toLowerCase().includes(key);
-    const categoryMatch = !category || p.category === category;
-    const brandMatch = !brand || p.brand === brand;
-    const typeMatch = !type || p.type === type;
-    const createDate = new Date(p.createdAt);
-    const createMatch = createDate >= from && createDate <= to;
-
-    const saleMatch = p.sales?.some(s => {
-      const d = new Date(s.date);
-      return d >= saleFrom && d <= saleTo;
-    }) || (!document.getElementById("filterSaleFrom").value && !document.getElementById("filterSaleTo").value);
-
-    const criticalMatch = !onlyCritical || (p.minQuantity && p.quantity <= p.minQuantity);
-
-    return nameMatch && categoryMatch && brandMatch && typeMatch && createMatch && saleMatch && criticalMatch;
-  });
-
-  renderList(filtered);
-}
-
-function resetFilters() {
-  document.getElementById("filterKeyword").value = "";
-  document.getElementById("filterCategory").value = "";
-  document.getElementById("filterBrand").value = "";
-  document.getElementById("filterType").value = "";
-  document.getElementById("filterFrom").value = "";
-  document.getElementById("filterTo").value = "";
-  document.getElementById("filterSaleFrom").value = "";
-  document.getElementById("filterSaleTo").value = "";
-  document.getElementById("onlyCriticalStock").checked = true;
-  renderList(products);
 }
 
 function populateFilterOptions() {
@@ -226,15 +139,78 @@ function populateFilterOptions() {
   fill(typeSel, types);
 }
 
-// Enter tuşuyla arama
-document.getElementById("filterKeyword").addEventListener("keydown", e => {
+// SAT
+window.sell = async id => {
+  const price = prompt("Satış fiyatı?");
+  if (!price) return;
+
+  try {
+    const res = await fetch(API + "/sell/" + id, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token()
+      },
+      body: JSON.stringify({ price })
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.message || "Satış başarısız");
+
+    fetchProducts();
+  } catch (err) {
+    alert("❌ " + err.message);
+  }
+};
+
+// DETAY
+window.details = id => {
+  const p = products.find(x => x._id === id);
+  alert(`
+🧾 Ürün Detayları:
+Ad: ${p.name}
+Kategori: ${p.category}
+Marka: ${p.brand}
+Tip: ${p.type}
+Stok: ${p.quantity}
+Kritik Stok: ${p.minQuantity}
+Raf: ${p.shelf}
+Alış: ${p.buyPrice}
+Satış: ${p.sellPrice}
+Kodlar: ${p.codes?.join(", ")}
+Açıklama: ${p.description}
+Eklenme: ${new Date(p.createdAt).toLocaleDateString()}
+Son Satış: ${p.sales?.slice(-1)[0]?.price || "Yok"}
+`);
+};
+
+// ARAMA
+document.getElementById("filterKeyword")?.addEventListener("keydown", e => {
   if (e.key === "Enter") applyFilters();
 });
+document.getElementById("filterBtn")?.addEventListener("click", applyFilters);
+document.getElementById("clearBtn")?.addEventListener("click", () => {
+  document.getElementById("filterKeyword").value = "";
+  renderList(products);
+});
 
-document.getElementById("filterBtn").onclick = applyFilters;
-document.getElementById("clearBtn").onclick = resetFilters;
-document.getElementById("clearFormBtn").onclick = resetForm;
+function applyFilters() {
+  const key = document.getElementById("filterKeyword").value.trim().toLowerCase();
+  const category = document.getElementById("filterCategory").value;
+  const brand = document.getElementById("filterBrand").value;
+  const type = document.getElementById("filterType").value;
 
+  const filtered = products.filter(p => {
+    const nameMatch = !key || p.name.toLowerCase().includes(key) || p.description?.toLowerCase().includes(key) || p.codes?.some(c => c.toLowerCase().includes(key));
+    const categoryMatch = !category || p.category === category;
+    const brandMatch = !brand || p.brand === brand;
+    const typeMatch = !type || p.type === type;
+    return nameMatch && categoryMatch && brandMatch && typeMatch;
+  });
+
+  renderList(filtered);
+}
+
+// RAPOR
 document.getElementById("reportBtn")?.addEventListener("click", async () => {
   const from = document.getElementById("reportFrom").value;
   const to = document.getElementById("reportTo").value;
@@ -246,6 +222,7 @@ document.getElementById("reportBtn")?.addEventListener("click", async () => {
   document.getElementById("reportResult").innerText = JSON.stringify(json, null, 2);
 });
 
+// Sayfa yüklendiğinde
 document.addEventListener("DOMContentLoaded", () => {
   fetchProducts();
 });

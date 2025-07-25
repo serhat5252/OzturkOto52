@@ -19,18 +19,17 @@
       <div id="loginMessage" class="error"></div>
     </form>
   </div>
-  
+
   <!-- Dashboard -->
   <div id="dashboard" class="dashboard" style="display: none;">
-    <!-- Üst Başlık -->
-<div class="top-header">
-  <div class="user-info">
-    <span id="currentUser">Kullanıcı</span>
-    <button onclick="logout()">Çıkış</button>
-  </div>
-  <div class="title">ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
-</div>
-
+    <!-- Üst Bar -->
+    <div class="navbar">
+      <div class="brand">ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
+      <div class="user">
+        <span id="currentUser"></span>
+        <button onclick="logout()">Çıkış</button>
+      </div>
+    </div>
 
     <div class="main">
       <!-- Sol Menü -->
@@ -43,7 +42,7 @@
         </div>
       </div>
 
-      <!-- İçerik Alanı -->
+      <!-- İçerik -->
       <div class="content">
         <!-- Ürün İşlemleri -->
         <div class="tabContent active" id="urunIslemleri">
@@ -86,40 +85,36 @@
         <div class="tabContent" id="searchTab">
           <div class="filter-section">
             <h3>Detaylı Arama</h3>
-            <input type="text" id="filterKeyword" placeholder="Ürün adı / açıklama / kod / barkod" />
-            <select id="filterCategory"></select>
-            <select id="filterBrand"></select>
-            <select id="filterType"></select>
-            <label>Eklenme Tarihi Başlangıç</label>
-            <input type="date" id="filterFrom" />
-            <label>Eklenme Tarihi Bitiş</label>
-            <input type="date" id="filterTo" />
-            <label>Satış Tarihi Başlangıç</label>
-            <input type="date" id="filterSaleFrom" />
-            <label>Satış Tarihi Bitiş</label>
-            <input type="date" id="filterSaleTo" />
-            <div class="critical-stock-toggle">
-              <input type="checkbox" id="onlyCriticalStock" />
-              <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
+            <div class="filter-row">
+              <input type="text" id="filterKeyword" placeholder="Ürün adı / açıklama / kod / barkod" />
+              <select id="filterCategory"></select>
+              <select id="filterBrand"></select>
+              <select id="filterType"></select>
+              <input type="date" id="filterFrom" />
+              <input type="date" id="filterTo" />
+              <input type="date" id="filterSaleFrom" />
+              <input type="date" id="filterSaleTo" />
             </div>
-            <div class="form-buttons">
-              <button id="filterBtn" type="button">Ara</button>
-              <button id="clearBtn" type="button">Temizle</button>
+            <div class="filter-row">
+              <div class="critical-stock-toggle">
+                <input type="checkbox" id="onlyCriticalStock" />
+                <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
+              </div>
+              <button id="filterBtn">Ara</button>
+              <button id="clearBtn">Temizle</button>
             </div>
-            <ul id="productsUl"></ul>
           </div>
+          <ul id="searchResults"></ul>
         </div>
 
         <!-- Satış Raporu -->
         <div class="tabContent" id="satisRaporu">
           <div class="report-section">
             <h3>Satış Raporu</h3>
-            <label>Tarih Başlangıç</label>
-            <input type="date" id="reportFrom" />
-            <label>Tarih Bitiş</label>
-            <input type="date" id="reportTo" />
-            <div class="form-buttons">
-              <button id="reportBtn" type="button">Rapor Al</button>
+            <div class="filter-row">
+              <input type="date" id="reportFrom" />
+              <input type="date" id="reportTo" />
+              <button id="reportBtn">Rapor Al</button>
             </div>
             <pre id="reportResult">Henüz rapor alınmadı.</pre>
           </div>
@@ -134,7 +129,6 @@
             <div id="userMsg"></div>
           </form>
         </div>
-
       </div>
     </div>
   </div>
