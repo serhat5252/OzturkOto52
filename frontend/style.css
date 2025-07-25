@@ -312,3 +312,55 @@ button#clearBtn {
     align-items: flex-start;
   }
 }
+/* Üst Bar */
+.top-header {
+  background-color: #2e7d32;
+  color: white;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.top-header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.site-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  flex: 1;
+}
+
+.user-box {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+.user-box button {
+  background-color: #d32f2f;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  .top-header .container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .user-box {
+    margin-top: 0.5rem;
+  }
+}
+
