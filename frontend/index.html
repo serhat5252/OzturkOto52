@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -43,7 +42,7 @@
         </div>
       </div>
 
-      <!-- İçerik -->
+      <!-- İçerik Alanı -->
       <div class="content">
         <!-- Ürün İşlemleri -->
         <div class="tabContent active" id="urunIslemleri">
@@ -86,24 +85,27 @@
         <div class="tabContent" id="searchTab">
           <div class="filter-section">
             <h3>Detaylı Arama</h3>
-            <div class="filter-row vertical">
-              <input type="text" id="filterKeyword" placeholder="Ürün adı / açıklama / kod" />
-              <select id="filterCategory"></select>
-              <select id="filterBrand"></select>
-              <select id="filterType"></select>
-              <input type="date" id="filterFrom" />
-              <input type="date" id="filterTo" />
-              <input type="date" id="filterSaleFrom" />
-              <input type="date" id="filterSaleTo" />
+            <input type="text" id="filterKeyword" placeholder="Ürün adı / açıklama / kod / barkod" />
+            <select id="filterCategory"></select>
+            <select id="filterBrand"></select>
+            <select id="filterType"></select>
+            <label>Eklenme Tarihi Başlangıç</label>
+            <input type="date" id="filterFrom" />
+            <label>Eklenme Tarihi Bitiş</label>
+            <input type="date" id="filterTo" />
+            <label>Satış Tarihi Başlangıç</label>
+            <input type="date" id="filterSaleFrom" />
+            <label>Satış Tarihi Bitiş</label>
+            <input type="date" id="filterSaleTo" />
+            <div class="critical-stock-toggle">
+              <input type="checkbox" id="onlyCriticalStock" checked />
+              <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
             </div>
-            <div class="filter-row">
-              <div class="critical-stock-toggle">
-                <input type="checkbox" id="onlyCriticalStock" checked />
-                <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
-              </div>
-              <button id="filterBtn">Ara</button>
-              <button id="clearBtn">Temizle</button>
+            <div class="form-buttons">
+              <button id="filterBtn" type="button">Ara</button>
+              <button id="clearBtn" type="button">Temizle</button>
             </div>
+            <ul id="productsUl"></ul>
           </div>
         </div>
 
@@ -111,10 +113,12 @@
         <div class="tabContent" id="satisRaporu">
           <div class="report-section">
             <h3>Satış Raporu</h3>
-            <div class="filter-row vertical">
-              <input type="date" id="reportFrom" />
-              <input type="date" id="reportTo" />
-              <button id="reportBtn">Rapor Al</button>
+            <label>Tarih Başlangıç</label>
+            <input type="date" id="reportFrom" />
+            <label>Tarih Bitiş</label>
+            <input type="date" id="reportTo" />
+            <div class="form-buttons">
+              <button id="reportBtn" type="button">Rapor Al</button>
             </div>
             <pre id="reportResult">Henüz rapor alınmadı.</pre>
           </div>
@@ -129,6 +133,7 @@
             <div id="userMsg"></div>
           </form>
         </div>
+
       </div>
     </div>
   </div>
