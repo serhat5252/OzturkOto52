@@ -22,14 +22,15 @@
   
   <!-- Dashboard -->
   <div id="dashboard" class="dashboard" style="display: none;">
-    <!-- Üst Bar -->
-    <div class="navbar">
-      <div class="brand">ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
-      <div class="user">
-        <span id="currentUser"></span>
-        <button onclick="logout()">Çıkış</button>
-      </div>
-    </div>
+    <!-- Üst Başlık -->
+<div class="top-header">
+  <div class="user-info">
+    <span id="currentUser">Kullanıcı</span>
+    <button onclick="logout()">Çıkış</button>
+  </div>
+  <div class="title">ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
+</div>
+
 
     <div class="main">
       <!-- Sol Menü -->
@@ -98,7 +99,7 @@
             <label>Satış Tarihi Bitiş</label>
             <input type="date" id="filterSaleTo" />
             <div class="critical-stock-toggle">
-              <input type="checkbox" id="onlyCriticalStock" checked />
+              <input type="checkbox" id="onlyCriticalStock" />
               <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
             </div>
             <div class="form-buttons">
