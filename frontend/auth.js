@@ -1,5 +1,7 @@
 const loginForm = document.getElementById("loginForm");
 const loginMessage = document.getElementById("loginMessage");
+const userForm = document.getElementById("userForm");
+const userMsg = document.getElementById("userMsg");
 
 // GİRİŞ
 loginForm.onsubmit = async e => {
@@ -22,11 +24,6 @@ loginForm.onsubmit = async e => {
 
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
-
-    // Sadece admin'e kullanıcı yönetimi sekmesini göster
-    if (json.username === "admin") {
-      document.getElementById("kullaniciTab").style.display = "block";
-    }
   } catch (err) {
     loginMessage.innerText = "❌ " + err.message;
   }
@@ -48,25 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
     document.getElementById("currentUser").innerText = currentUser;
-
-    if (currentUser === "admin") {
-      document.getElementById("kullaniciTab").style.display = "block";
-    }
   }
-
-// User
-document.getElementById("userForm")?.addEventListener("submit", async e => {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(e.target));
-  const res = await fetch("/api/auth/register", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + sessionStorage.getItem("token") },
-    body: JSON.stringify(data)
-  });
-  const json = await res.json();
-  document.getElementById("userMsg").innerText = res.ok ? "✅ Eklendi" : "❌ " + json.message;
-});
-
 
   // Sekme geçişleri
   const tabs = document.querySelectorAll(".tab");
@@ -83,3 +62,30 @@ document.getElementById("userForm")?.addEventListener("submit", async e => {
     });
   });
 });
+
+// KULLANICI EKLE
+if (userForm) {
+  userForm.onsubmit = async e => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(userForm));
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + sessionStorage.getItem("token")
+        },
+        body: JSON.stringify(data)
+      });
+
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.message || "Kayıt başarısız");
+
+      userMsg.innerText = "✅ Kullanıcı başarıyla eklendi.";
+      userForm.reset();
+    } catch (err) {
+      userMsg.innerText = "❌ " + err.message;
+    }
+  };
+}

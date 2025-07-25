@@ -1,44 +1,36 @@
 /* Genel Ayarlar */
 * {
   box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
   margin: 0;
   padding: 0;
-  font-family: "Segoe UI", sans-serif;
 }
 
 body {
-  background-color: #f9f9f9;
+  background: #f9f9f9;
   color: #333;
 }
 
-/* Giriş Ekranı */
+/* Giriş Kutusu */
 .auth-container {
   max-width: 400px;
   margin: 80px auto;
   padding: 2rem;
   background: #fff;
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 .auth-container h1 {
   font-size: 2rem;
-  text-align: center;
   color: #2e7d32;
-  font-weight: bold;
 }
 
 .auth-container h2 {
   font-size: 1.1rem;
-  text-align: center;
   color: #333;
   margin-bottom: 1.5rem;
-}
-
-.auth-container form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
 }
 
 .auth-container input,
@@ -47,23 +39,18 @@ body {
   font-size: 1rem;
   border-radius: 8px;
   border: 1px solid #ccc;
+  margin-bottom: 1rem;
+  width: 100%;
 }
 
 .auth-container button {
   background: #2e7d32;
   color: white;
-  border: none;
   cursor: pointer;
-}
-
-.auth-container button:hover {
-  background: #1b5e20;
 }
 
 .error {
   color: red;
-  text-align: center;
-  margin-top: 0.5rem;
 }
 
 /* Dashboard */
@@ -73,9 +60,9 @@ body {
   min-height: 100vh;
 }
 
-/* Üst Bar */
+/* Navbar */
 .navbar {
-  background-color: #2e7d32;
+  background: #2e7d32;
   color: white;
   display: flex;
   justify-content: space-between;
@@ -83,33 +70,28 @@ body {
   align-items: center;
 }
 
-.navbar .brand {
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
 .navbar .user {
   display: flex;
-  gap: 1rem;
   align-items: center;
+  gap: 1rem;
 }
 
 .navbar button {
   background: #d32f2f;
-  color: white;
-  padding: 6px 10px;
   border: none;
-  border-radius: 4px;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
   cursor: pointer;
 }
 
-/* Ana Alan */
+/* Ana Kısım */
 .main {
   display: flex;
   flex: 1;
 }
 
-/* Sol Menü */
+/* Sidebar */
 .sidebar {
   background: #e0e0e0;
   width: 220px;
@@ -127,7 +109,6 @@ body {
   padding: 10px;
   cursor: pointer;
   border-radius: 6px;
-  transition: background 0.3s;
 }
 
 .tab.active {
@@ -135,7 +116,7 @@ body {
   font-weight: bold;
 }
 
-/* İçerik */
+/* Content */
 .content {
   flex: 1;
   padding: 2rem;
@@ -150,57 +131,16 @@ body {
   display: block;
 }
 
-/* Ürün Formu */
-.filter-form {
-  display: flex;
-  flex-direction: column;
+/* Form ve Liste */
+form {
   background: white;
   padding: 1.5rem;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
   margin-bottom: 2rem;
-}
-
-.filter-form input,
-.filter-form select {
-  padding: 0.7rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-.report-section {
-  display: flex;
-  flex-direction: column;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
-  gap: 1rem;
-  max-width: 600px;
-}
-
-.report-section input,
-.report-section button {
-  padding: 0.7rem;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-#productForm input,
-#productForm select,
-#productForm textarea {
-  width: 100%;
-  padding: 0.7rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-#productForm textarea {
-  resize: vertical;
-  min-height: 80px;
 }
 
 .form-buttons {
@@ -208,77 +148,47 @@ body {
   gap: 1rem;
 }
 
-#productForm button {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-#productForm button[type="submit"] {
-  background-color: #2e7d32;
-  color: white;
-}
-
-#clearFormBtn {
-  background-color: #888;
-  color: white;
-}
-
-/* Ürün Listesi */
-#productsUl {
+ul#productsUl {
   list-style: none;
   padding: 0;
-  margin-top: 1rem;
 }
 
-#productsUl li {
+ul#productsUl li {
   background: white;
-  margin-bottom: 10px;
   padding: 1rem;
+  margin-bottom: 10px;
   border-left: 6px solid #2e7d32;
   border-radius: 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 0 5px rgba(0,0,0,0.05);
 }
 
-#productsUl li.critical-stock {
+ul#productsUl li.critical-stock {
   border-left-color: red;
 }
 
-#productsUl button {
+ul#productsUl button {
   margin-left: 5px;
 }
 
-/* Filtreler / Arama */
+/* Detaylı Arama & Rapor */
 .filter-section,
 .report-section {
-  background: #fff;
-  padding: 1.5rem;
+  background: white;
+  padding: 1rem;
   border-radius: 10px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.05);
-  margin-bottom: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
 }
 
 .filter-row {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.filter-row-inline {
-  display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-.filter-row-inline > * {
+.filter-row > * {
   flex: 1;
   min-width: 160px;
 }
@@ -289,13 +199,12 @@ body {
   gap: 0.5rem;
 }
 
-/* Satış Raporu */
 #reportResult {
   background: #f1f1f1;
   padding: 1rem;
-  border-radius: 8px;
-  font-family: monospace;
+  border-radius: 6px;
   white-space: pre-wrap;
+  font-family: monospace;
 }
 
 /* Responsive */
@@ -308,26 +217,12 @@ body {
     width: 100%;
   }
 
-  .content {
-    padding: 1rem;
-  }
-
-  #productsUl li {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .navbar {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
   .form-buttons {
     flex-direction: column;
-    gap: 0.5rem;
   }
 
-  .filter-row-inline {
+  ul#productsUl li {
     flex-direction: column;
+    align-items: flex-start;
   }
 }
