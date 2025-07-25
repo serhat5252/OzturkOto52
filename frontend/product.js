@@ -52,7 +52,10 @@ form.onsubmit = async e => {
 async function fetchProducts() {
   try {
     const res = await fetch(API, {
-      headers: { "Authorization": "Bearer " + token() }
+      headers: {
+  "Authorization": "Bearer " + sessionStorage.getItem("token")
+}
+
     });
     if (!res.ok) throw new Error("Yetki veya bağlantı hatası");
 
