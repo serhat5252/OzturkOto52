@@ -36,7 +36,32 @@ function logout() {
   location.reload();
 }
 
-// OTOMATİK GİRİŞ
+// Kullanıcı ekle (form varsa)
+userForm?.addEventListener("submit", async e => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(userForm));
+  try {
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + sessionStorage.getItem("token")
+      },
+      body: JSON.stringify(data)
+    });
+
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.message || "Kullanıcı eklenemedi");
+    userForm.reset();
+    userMsg.innerText = "✅ Kullanıcı eklendi!";
+    userMsg.style.color = "green";
+  } catch (err) {
+    userMsg.innerText = "❌ " + err.message;
+    userMsg.style.color = "red";
+  }
+});
+
+// Sekme geçişleri ve otomatik giriş
 document.addEventListener("DOMContentLoaded", () => {
   const token = sessionStorage.getItem("token");
   const currentUser = sessionStorage.getItem("currentUser");
@@ -47,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("currentUser").innerText = currentUser;
   }
 
-  // Sekme geçişleri
+  // Sekme geçişi
   const tabs = document.querySelectorAll(".tab");
   const contents = document.querySelectorAll(".tabContent");
 
@@ -62,30 +87,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-
-// KULLANICI EKLE
-if (userForm) {
-  userForm.onsubmit = async e => {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(userForm));
-
-    try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + sessionStorage.getItem("token")
-        },
-        body: JSON.stringify(data)
-      });
-
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.message || "Kayıt başarısız");
-
-      userMsg.innerText = "✅ Kullanıcı başarıyla eklendi.";
-      userForm.reset();
-    } catch (err) {
-      userMsg.innerText = "❌ " + err.message;
-    }
-  };
-}

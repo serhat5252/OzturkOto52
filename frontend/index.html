@@ -22,7 +22,6 @@
 
   <!-- Dashboard -->
   <div id="dashboard" class="dashboard" style="display: none;">
-    <!-- Üst Bar -->
     <div class="navbar">
       <div class="brand">ÖZTÜRK OTOMOBİL OTO ELEKTRİK</div>
       <div class="user">
@@ -32,7 +31,6 @@
     </div>
 
     <div class="main">
-      <!-- Sol Menü -->
       <div class="sidebar">
         <div class="tabs">
           <div class="tab active" data-tab="urunIslemleri">Ürün İşlemleri</div>
@@ -42,30 +40,15 @@
         </div>
       </div>
 
-      <!-- İçerik -->
       <div class="content">
         <!-- Ürün İşlemleri -->
         <div class="tabContent active" id="urunIslemleri">
           <form id="productForm">
             <input type="hidden" name="id" />
             <input type="text" name="name" placeholder="Ürün Adı" required />
-            <select name="category" required>
-              <option value="">Kategori Seç</option>
-              <option>Elektrik</option>
-              <option>Kaporta</option>
-              <option>Motor</option>
-            </select>
-            <select name="brand" required>
-              <option value="">Marka Seç</option>
-              <option>Bosch</option>
-              <option>Valeo</option>
-              <option>Lucas</option>
-            </select>
-            <select name="type" required>
-              <option value="">Tip Seç</option>
-              <option>Orijinal</option>
-              <option>Yan Sanayi</option>
-            </select>
+            <select name="category" required></select>
+            <select name="brand" required></select>
+            <select name="type" required></select>
             <input type="text" name="shelf" placeholder="Raf No" />
             <input type="number" name="quantity" placeholder="Stok Miktarı" />
             <input type="number" name="minQuantity" placeholder="Kritik Stok" />
@@ -85,24 +68,27 @@
         <div class="tabContent" id="searchTab">
           <div class="filter-section">
             <h3>Detaylı Arama</h3>
-            <div class="filter-row">
-              <input type="text" id="filterKeyword" placeholder="Ürün adı / açıklama / kod" />
+            <form id="filterForm">
+              <input type="text" id="filterKeyword" placeholder="Ürün adı / açıklama / kod / barkod" />
               <select id="filterCategory"></select>
               <select id="filterBrand"></select>
               <select id="filterType"></select>
+              <label>Eklenme Tarihi</label>
               <input type="date" id="filterFrom" />
               <input type="date" id="filterTo" />
+              <label>Satış Tarihi</label>
               <input type="date" id="filterSaleFrom" />
               <input type="date" id="filterSaleTo" />
-            </div>
-            <div class="filter-row">
               <div class="critical-stock-toggle">
                 <input type="checkbox" id="onlyCriticalStock" checked />
                 <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
               </div>
-              <button id="filterBtn">Ara</button>
-              <button id="clearBtn">Temizle</button>
-            </div>
+              <div class="form-buttons">
+                <button type="button" id="filterBtn">Ara</button>
+                <button type="button" id="clearBtn">Temizle</button>
+              </div>
+            </form>
+            <div id="filterMatches"></div>
           </div>
         </div>
 
@@ -110,11 +96,12 @@
         <div class="tabContent" id="satisRaporu">
           <div class="report-section">
             <h3>Satış Raporu</h3>
-            <div class="filter-row">
+            <form>
+              <label>Satış Tarihi Aralığı</label>
               <input type="date" id="reportFrom" />
               <input type="date" id="reportTo" />
-              <button id="reportBtn">Rapor Al</button>
-            </div>
+              <button type="button" id="reportBtn">Rapor Al</button>
+            </form>
             <pre id="reportResult">Henüz rapor alınmadı.</pre>
           </div>
         </div>
@@ -132,7 +119,6 @@
     </div>
   </div>
 
-  <!-- Scriptler -->
   <script src="/socket.io/socket.io.js"></script>
   <script src="auth.js"></script>
   <script src="product.js"></script>
