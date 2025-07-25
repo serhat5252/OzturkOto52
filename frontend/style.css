@@ -7,30 +7,36 @@
 }
 
 body {
-  background: #f9f9f9;
+  background: #f5f5f5;
   color: #333;
 }
 
-/* Giriş Kutusu */
+/* Giriş Ekranı */
 .auth-container {
   max-width: 400px;
   margin: 80px auto;
   padding: 2rem;
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
   text-align: center;
 }
 
 .auth-container h1 {
   font-size: 2rem;
   color: #2e7d32;
+  font-weight: bold;
 }
 
 .auth-container h2 {
   font-size: 1.1rem;
-  color: #333;
   margin-bottom: 1.5rem;
+}
+
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .auth-container input,
@@ -39,18 +45,22 @@ body {
   font-size: 1rem;
   border-radius: 8px;
   border: 1px solid #ccc;
-  margin-bottom: 1rem;
-  width: 100%;
 }
 
 .auth-container button {
   background: #2e7d32;
   color: white;
+  border: none;
   cursor: pointer;
+}
+
+.auth-container button:hover {
+  background: #1b5e20;
 }
 
 .error {
   color: red;
+  margin-top: 0.5rem;
 }
 
 /* Dashboard */
@@ -60,7 +70,6 @@ body {
   min-height: 100vh;
 }
 
-/* Navbar */
 .navbar {
   background: #2e7d32;
   color: white;
@@ -72,26 +81,25 @@ body {
 
 .navbar .user {
   display: flex;
-  align-items: center;
   gap: 1rem;
+  align-items: center;
 }
 
 .navbar button {
-  background: #d32f2f;
+  background: #c62828;
+  padding: 6px 12px;
   border: none;
   color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
-/* Ana Kısım */
+/* Ana Yapı */
 .main {
   display: flex;
   flex: 1;
 }
 
-/* Sidebar */
 .sidebar {
   background: #e0e0e0;
   width: 220px;
@@ -107,8 +115,8 @@ body {
 .tab {
   background: #ccc;
   padding: 10px;
-  cursor: pointer;
   border-radius: 6px;
+  cursor: pointer;
 }
 
 .tab.active {
@@ -116,13 +124,13 @@ body {
   font-weight: bold;
 }
 
-/* Content */
 .content {
   flex: 1;
   padding: 2rem;
   background: #f4f4f4;
 }
 
+/* Sekmeler */
 .tabContent {
   display: none;
 }
@@ -131,16 +139,25 @@ body {
   display: block;
 }
 
-/* Form ve Liste */
+/* Formlar */
 form {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-bottom: 2rem;
+}
+
+form input,
+form select,
+form textarea {
+  padding: 0.7rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+form textarea {
+  resize: vertical;
+  min-height: 80px;
 }
 
 .form-buttons {
@@ -148,63 +165,98 @@ form {
   gap: 1rem;
 }
 
-ul#productsUl {
-  list-style: none;
-  padding: 0;
+.form-buttons button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-ul#productsUl li {
+button[type="submit"] {
+  background-color: #2e7d32;
+  color: white;
+}
+
+#clearFormBtn {
+  background-color: #888;
+  color: white;
+}
+
+/* Ürün Listesi */
+#productsUl {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+#productsUl li {
   background: white;
-  padding: 1rem;
   margin-bottom: 10px;
+  padding: 1rem;
   border-left: 6px solid #2e7d32;
   border-radius: 6px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  box-shadow: 0 0 5px rgba(0,0,0,0.05);
 }
 
-ul#productsUl li.critical-stock {
+#productsUl li.critical-stock {
   border-left-color: red;
 }
 
-ul#productsUl button {
-  margin-left: 5px;
+#productsUl button {
+  margin-top: 0.3rem;
 }
 
-/* Detaylı Arama & Rapor */
+/* Detaylı Arama & Satış Raporu */
 .filter-section,
 .report-section {
   background: white;
-  padding: 1rem;
+  padding: 1.5rem;
   border-radius: 10px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
-}
-
-.filter-row {
+  box-shadow: 0 0 5px rgba(0,0,0,0.05);
+  margin-bottom: 2rem;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 1rem;
+}
+
+.filter-section h3,
+.report-section h3 {
   margin-bottom: 1rem;
+  color: #2e7d32;
 }
 
-.filter-row > * {
-  flex: 1;
-  min-width: 160px;
+/* Kutular alt alta */
+.filter-section .filter-row,
+.report-section .filter-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
+.filter-section button,
+.report-section button {
+  width: fit-content;
+  padding: 0.5rem 1.2rem;
+}
+
+/* Kritik stok seçeneği */
 .critical-stock-toggle {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+/* Satış Raporu */
 #reportResult {
   background: #f1f1f1;
   padding: 1rem;
-  border-radius: 6px;
-  white-space: pre-wrap;
+  border-radius: 8px;
   font-family: monospace;
+  white-space: pre-wrap;
 }
 
 /* Responsive */
@@ -217,11 +269,15 @@ ul#productsUl button {
     width: 100%;
   }
 
+  .content {
+    padding: 1rem;
+  }
+
   .form-buttons {
     flex-direction: column;
   }
 
-  ul#productsUl li {
+  #productsUl li {
     flex-direction: column;
     align-items: flex-start;
   }
