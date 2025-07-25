@@ -5,21 +5,19 @@ const ul = document.getElementById("productsUl");
 
 let products = [];
 
-// Ürün Kaydetme
 form.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(form));
+
   if (!data.name) return alert("Ürün adı zorunludur");
 
-  // Dönüştürme ve Temizleme
-  data.codes = data.codes?.split(",").map(c => c.trim()) || [];
   ["quantity", "minQuantity"].forEach(k => data[k] = parseInt(data[k]) || 0);
   ["buyPrice", "sellPrice"].forEach(k => data[k] = parseFloat(data[k]) || 0);
+  data.codes = data.codes?.split(",").map(s => s.trim()) || [];
 
   const isUpdate = Boolean(data.id);
   if (!data.id) delete data.id;
 
-  // Aynı ad varsa uyar
   const nameExists = products.some(p =>
     p.name.toLowerCase() === data.name.toLowerCase() &&
     (!isUpdate || p._id !== data.id)
@@ -51,13 +49,13 @@ form.onsubmit = async e => {
   }
 };
 
-// Ürünleri Listele
 async function fetchProducts() {
   try {
     const res = await fetch(API, {
       headers: { "Authorization": "Bearer " + token() }
     });
     if (!res.ok) throw new Error("Yetki veya bağlantı hatası");
+
     products = await res.json();
     renderList(products);
     populateFilterOptions();
@@ -66,54 +64,34 @@ async function fetchProducts() {
   }
 }
 
-// Listeyi Render Et
 function renderList(list) {
   ul.innerHTML = "";
-  if (!list.length) return ul.innerHTML = "<li>Ürün bulunamadı.</li>";
+  if (!list.length) {
+    ul.innerHTML = "<li>Ürün bulunamadı.</li>";
+    return;
+  }
 
   list.forEach(p => {
     const li = document.createElement("li");
     li.innerHTML = `
-      <div><strong>${p.name}</strong> (${p.quantity} adet)</div>
-      <small>${p.category || ""} | ${p.brand || ""} | ${p.type || ""}</small>
-      <div style="margin-top: 0.5rem;">
-        <button onclick="sale('${p._id}')">Sat</button>
+      <div>
+        <strong>${p.name}</strong> (${p.quantity} adet)
+        <br><small>${p.category || ""} | ${p.brand || ""} | ${p.type || ""}</small>
+      </div>
+      <div>
+        <button onclick="sell('${p._id}')">Sat</button>
         <button onclick="edit('${p._id}')">Düzenle</button>
         <button onclick="del('${p._id}')">Sil</button>
-        <button onclick="details('${p._id}')">Detay</button>
-      </div>
-    `;
-    if (p.minQuantity && p.quantity <= p.minQuantity) li.classList.add("critical-stock");
+        <button onclick="showDetail('${p._id}')">Detay</button>
+      </div>`;
+    if (p.minQuantity > 0 && p.quantity <= p.minQuantity)
+      li.classList.add("critical-stock");
     ul.appendChild(li);
   });
 }
 
-// Satış işlemi
-window.sale = async id => {
-  const adet = prompt("Kaç adet satıldı?");
-  const quantity = parseInt(adet);
-  if (!quantity || quantity < 1) return;
-  try {
-    const res = await fetch(`${API}/sale/${id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token()
-      },
-      body: JSON.stringify({ quantity })
-    });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.message);
-    products = products.map(p => p._id === json._id ? json : p);
-    renderList(products);
-  } catch (err) {
-    alert("Satış yapılamadı: " + err.message);
-  }
-};
-
-// Ürün Düzenle
 window.edit = id => {
-  const p = products.find(p => p._id === id);
+  const p = products.find(x => x._id === id);
   Object.entries(p).forEach(([k, v]) => {
     const el = form.elements[k];
     if (el) el.value = Array.isArray(v) ? v.join(", ") : v;
@@ -121,7 +99,6 @@ window.edit = id => {
   form.elements.id.value = p._id;
 };
 
-// Ürün Sil
 window.del = async id => {
   if (!confirm("Silmek istediğinize emin misiniz?")) return;
   try {
@@ -130,6 +107,7 @@ window.del = async id => {
       headers: { "Authorization": "Bearer " + token() }
     });
     if (!res.ok) throw new Error("Silinemedi");
+
     products = products.filter(p => p._id !== id);
     renderList(products);
   } catch (err) {
@@ -137,27 +115,54 @@ window.del = async id => {
   }
 };
 
-// Ürün Detay
-window.details = id => {
-  const p = products.find(x => x._id === id);
-  alert(`
-🛠 ${p.name}
-📦 Kategori: ${p.category}
-🏷 Marka: ${p.brand}
-🔧 Tip: ${p.type}
-📌 Raf: ${p.shelf}
-📉 Adet: ${p.quantity}
-⚠ Kritik: ${p.minQuantity}
-💰 Alış: ${p.buyPrice} ₺
-💸 Satış: ${p.sellPrice} ₺
-📅 Eklenme: ${p.createdAt ? new Date(p.createdAt).toLocaleDateString() : "-"}
-📅 Son Satış: ${p.sales?.slice(-1)[0]?.date ? new Date(p.sales.slice(-1)[0].date).toLocaleDateString() : "-"}
-🆔 Kodlar: ${(p.codes || []).join(", ")}
-📃 Açıklama: ${p.description || "-"}
-  `);
+window.sell = async id => {
+  const price = prompt("Kaç TL'ye satıldı?");
+  if (!price || isNaN(price)) return alert("Geçerli fiyat girin.");
+
+  try {
+    const res = await fetch(`${API}/${id}/sell`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token()
+      },
+      body: JSON.stringify({ price: parseFloat(price) })
+    });
+
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.message);
+
+    fetchProducts();
+  } catch (err) {
+    alert("Satış hatası: " + err.message);
+  }
 };
 
-// Filtreleme
+window.showDetail = id => {
+  const p = products.find(x => x._id === id);
+  alert(`
+Ad: ${p.name}
+Kategori: ${p.category}
+Marka: ${p.brand}
+Tip: ${p.type}
+Raf No: ${p.shelf}
+Stok: ${p.quantity}
+Kritik Stok: ${p.minQuantity}
+Alış: ${p.buyPrice} ₺
+Satış: ${p.sellPrice} ₺
+Kodlar: ${(p.codes || []).join(", ")}
+Açıklama: ${p.description || ""}
+Eklenme: ${new Date(p.createdAt).toLocaleString()}
+Son Satış: ${(p.sales || []).slice(-1)[0]?.price || "Yok"} ₺
+`);
+};
+
+function resetForm() {
+  form.reset();
+  form.elements.id.value = "";
+  fetchProducts();
+}
+
 function applyFilters() {
   const key = document.getElementById("filterKeyword").value.trim().toLowerCase();
   const category = document.getElementById("filterCategory").value;
@@ -170,14 +175,10 @@ function applyFilters() {
   const onlyCritical = document.getElementById("onlyCriticalStock").checked;
 
   const filtered = products.filter(p => {
-    const nameMatch = !key || p.name.toLowerCase().includes(key) ||
-      (p.codes || []).some(c => c.toLowerCase().includes(key)) ||
-      (p.description || "").toLowerCase().includes(key);
-
+    const nameMatch = !key || (p.name + p.codes + p.description).toLowerCase().includes(key);
     const categoryMatch = !category || p.category === category;
     const brandMatch = !brand || p.brand === brand;
     const typeMatch = !type || p.type === type;
-
     const createDate = new Date(p.createdAt);
     const createMatch = createDate >= from && createDate <= to;
 
@@ -194,27 +195,19 @@ function applyFilters() {
   renderList(filtered);
 }
 
-// Temizle
 function resetFilters() {
   document.getElementById("filterKeyword").value = "";
-  ["filterCategory", "filterBrand", "filterType"].forEach(id => {
-    document.getElementById(id).value = "";
-  });
-  ["filterFrom", "filterTo", "filterSaleFrom", "filterSaleTo"].forEach(id => {
-    document.getElementById(id).value = "";
-  });
+  document.getElementById("filterCategory").value = "";
+  document.getElementById("filterBrand").value = "";
+  document.getElementById("filterType").value = "";
+  document.getElementById("filterFrom").value = "";
+  document.getElementById("filterTo").value = "";
+  document.getElementById("filterSaleFrom").value = "";
+  document.getElementById("filterSaleTo").value = "";
   document.getElementById("onlyCriticalStock").checked = true;
   renderList(products);
 }
 
-// Reset form
-function resetForm() {
-  form.reset();
-  form.elements.id.value = "";
-  fetchProducts();
-}
-
-// Kategori, Marka, Tip Seçeneklerini Doldur
 function populateFilterOptions() {
   const catSel = document.getElementById("filterCategory");
   const brandSel = document.getElementById("filterBrand");
@@ -233,7 +226,7 @@ function populateFilterOptions() {
   fill(typeSel, types);
 }
 
-// Event Listeners
+// Enter tuşuyla arama
 document.getElementById("filterKeyword").addEventListener("keydown", e => {
   if (e.key === "Enter") applyFilters();
 });
@@ -253,5 +246,6 @@ document.getElementById("reportBtn")?.addEventListener("click", async () => {
   document.getElementById("reportResult").innerText = JSON.stringify(json, null, 2);
 });
 
-// Sayfa yüklendiğinde ürünleri getir
-document.addEventListener("DOMContentLoaded", fetchProducts);
+document.addEventListener("DOMContentLoaded", () => {
+  fetchProducts();
+});
