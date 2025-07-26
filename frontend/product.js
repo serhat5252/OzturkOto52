@@ -67,10 +67,10 @@ async function fetchProducts() {
   }
 }
 
-function renderList(list) {
-  ul.innerHTML = "";
+function renderList(list, ulTarget = ul) {
+  ulTarget.innerHTML = "";
   if (!list.length) {
-    ul.innerHTML = "<li>Ürün bulunamadı.</li>";
+    ulTarget.innerHTML = "<li>Ürün bulunamadı.</li>";
     return;
   }
 
@@ -89,7 +89,7 @@ function renderList(list) {
       </div>`;
     if (p.minQuantity > 0 && p.quantity <= p.minQuantity)
       li.classList.add("critical-stock");
-    ul.appendChild(li);
+    ulTarget.appendChild(li);
   });
 }
 
@@ -201,10 +201,10 @@ function applyFilters() {
   const category = document.getElementById("filterCategory").value;
   const brand = document.getElementById("filterBrand").value;
   const type = document.getElementById("filterType").value;
-  const from = new Date(document.getElementById("filterFrom").value || "2000-01-01");
-  const to = new Date(document.getElementById("filterTo").value || Date.now());
-  const saleFrom = new Date(document.getElementById("filterSaleFrom").value || "2000-01-01");
-  const saleTo = new Date(document.getElementById("filterSaleTo").value || Date.now());
+  const from = new Date(document.getElementById("filterFrom")?.value || "2000-01-01");
+  const to = new Date(document.getElementById("filterTo")?.value || Date.now());
+  const saleFrom = new Date(document.getElementById("filterSaleFrom")?.value || "2000-01-01");
+  const saleTo = new Date(document.getElementById("filterSaleTo")?.value || Date.now());
   const onlyCritical = document.getElementById("onlyCriticalStock")?.checked;
 
   const filtered = products.filter(p => {
@@ -218,14 +218,15 @@ function applyFilters() {
     const saleMatch = p.sales?.some(s => {
       const d = new Date(s.date);
       return d >= saleFrom && d <= saleTo;
-    }) || (!document.getElementById("filterSaleFrom").value && !document.getElementById("filterSaleTo").value);
+    }) || (!document.getElementById("filterSaleFrom")?.value && !document.getElementById("filterSaleTo")?.value);
 
     const criticalMatch = !onlyCritical || (p.minQuantity && p.quantity <= p.minQuantity);
 
     return nameMatch && categoryMatch && brandMatch && typeMatch && createMatch && saleMatch && criticalMatch;
   });
 
-  renderList(filtered);
+  const resultUl = document.getElementById("searchResultsUl");
+  renderList(filtered, resultUl);
 }
 
 
