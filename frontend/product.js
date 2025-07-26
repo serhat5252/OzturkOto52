@@ -194,7 +194,17 @@ document.getElementById("filterKeyword")?.addEventListener("keydown", e => {
 document.getElementById("filterBtn")?.addEventListener("click", applyFilters);
 document.getElementById("clearBtn")?.addEventListener("click", () => {
   document.getElementById("filterKeyword").value = "";
-  renderList(products);
+  document.getElementById("filterCategory").value = "";
+  document.getElementById("filterBrand").value = "";
+  document.getElementById("filterType").value = "";
+  document.getElementById("filterFrom").value = "";
+  document.getElementById("filterTo").value = "";
+  document.getElementById("filterSaleFrom").value = "";
+  document.getElementById("filterSaleTo").value = "";
+  document.getElementById("onlyCriticalStock").checked = false;
+
+  const resultsUl = document.getElementById("searchResultsUl");
+  resultsUl.innerHTML = "";
 });
 
 function applyFilters() {
@@ -221,9 +231,10 @@ function applyFilters() {
 }
 
 // RAPOR
-document.getElementById("reportBtn")?.addEventListener("click", async () => {
-  const from = document.getElementById("reportFrom").value;
-  const to = document.getElementById("reportTo").value;
+document.getElementById("clearReportBtn")?.addEventListener("click", () => {
+  document.getElementById("reportFrom").value = "";
+  document.getElementById("reportTo").value = "";
+  document.getElementById("reportResult").innerText = "Henüz rapor alınmadı.";
 
   const res = await fetch(`/api/products/sales-report?from=${from}&to=${to}`, {
     headers: { "Authorization": "Bearer " + token() }
