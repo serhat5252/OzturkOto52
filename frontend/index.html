@@ -83,29 +83,30 @@
 
         <!-- Detaylı Arama -->
         <div class="tabContent" id="searchTab">
-          <div class="filter-section">
-            <h3>Detaylı Arama</h3>
-            <div class="filter-group">
-              <input type="text" id="filterKeyword" placeholder="Ürün adı / açıklama / kod" />
-              <select id="filterCategory"></select>
-              <select id="filterBrand"></select>
-              <select id="filterType"></select>
-              <input type="date" id="filterFrom" />
-              <input type="date" id="filterTo" />
-              <input type="date" id="filterSaleFrom" />
-              <input type="date" id="filterSaleTo" />
-            </div>
-            <div class="critical-stock-toggle">
-              <input type="checkbox" id="onlyCriticalStock" />
-              <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
-            </div>
-            <div class="filter-buttons">
-              <button id="filterBtn">Ara</button>
-              <button id="clearBtn">Temizle</button>
-            </div>
-          </div>
-          <ul id="searchProductsUl"></ul>
-        </div>
+  <div class="filter-section">
+    <h3>Detaylı Arama</h3>
+    <div class="filter-group">
+      <input type="text" id="filterKeyword" placeholder="Ürün adı, kod veya açıklama" />
+      <select id="filterCategory"></select>
+      <select id="filterBrand"></select>
+      <select id="filterType"></select>
+      <input type="date" id="filterFrom" />
+      <input type="date" id="filterTo" />
+      <input type="date" id="filterSaleFrom" />
+      <input type="date" id="filterSaleTo" />
+      <div class="critical-stock-toggle">
+        <input type="checkbox" id="onlyCriticalStock" />
+        <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
+      </div>
+      <div class="filter-buttons">
+        <button id="filterBtn">Ara</button>
+        <button id="clearBtn">Temizle</button>
+      </div>
+    </div>
+  </div>
+  <ul id="searchResultsUl"></ul>
+</div>
+
 
         <!-- Satış Raporu -->
         <div class="tabContent" id="satisRaporu">
