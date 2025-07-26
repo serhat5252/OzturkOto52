@@ -67,7 +67,10 @@ async function fetchProducts() {
 }
 
 function renderList(list) {
+  const ul = document.getElementById("searchResultsUl"); // veya "productsUl"
+  if (!ul) return;
   ul.innerHTML = "";
+
   if (!list.length) {
     ul.innerHTML = "<li>Ürün bulunamadı.</li>";
     return;
@@ -86,11 +89,10 @@ function renderList(list) {
         <button onclick="del('${p._id}')">Sil</button>
         <button onclick="details('${p._id}')">Detay</button>
       </div>`;
-    if (p.minQuantity > 0 && p.quantity <= p.minQuantity)
-      li.classList.add("critical-stock");
     ul.appendChild(li);
   });
 }
+
 
 window.edit = id => {
   const p = products.find(x => x._id === id);
