@@ -75,58 +75,53 @@
             <textarea name="description" placeholder="Açıklama"></textarea>
             <div class="form-buttons">
               <button type="submit">Kaydet</button>
-              <button type="button" id="clearFormBtn">Temizle</button>
+              <button type="button" id="clearFormBtn" onclick="resetForm()">Temizle</button>
             </div>
           </form>
           <ul id="productsUl"></ul>
         </div>
 
         <!-- Detaylı Arama -->
-<div class="tabContent" id="searchTab">
-  <div class="filter-section">
-    <h3>Detaylı Arama</h3>
-    <div class="filter-group">
-      <input type="text" id="filterKeyword" placeholder="Ürün adı, kod, açıklama" />
-      <select id="filterCategory"></select>
-      <select id="filterBrand"></select>
-      <select id="filterType"></select>
-      <input type="date" id="filterFrom" />
-      <input type="date" id="filterTo" />
-      <input type="date" id="filterSaleFrom" />
-      <input type="date" id="filterSaleTo" />
-    </div>
-    <div class="filter-buttons">
-      <div class="critical-stock-toggle">
-        <input type="checkbox" id="onlyCriticalStock" />
-        <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
-      </div>
-      <button id="filterBtn">Ara</button>
-      <button id="clearBtn">Temizle</button>
-    </div>
-  </div>
-
-  <ul id="searchResultsUl" class="product-list"></ul>
-</div>
-
-
+        <div class="tabContent" id="searchTab">
+          <div class="filter-section">
+            <h3>Detaylı Arama</h3>
+            <div class="filter-group">
+              <input type="text" id="filterKeyword" placeholder="Ürün adı / açıklama / kod" />
+              <select id="filterCategory"></select>
+              <select id="filterBrand"></select>
+              <select id="filterType"></select>
+              <input type="date" id="filterFrom" />
+              <input type="date" id="filterTo" />
+              <input type="date" id="filterSaleFrom" />
+              <input type="date" id="filterSaleTo" />
+            </div>
+            <div class="critical-stock-toggle">
+              <input type="checkbox" id="onlyCriticalStock" />
+              <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
+            </div>
+            <div class="filter-buttons">
+              <button id="filterBtn">Ara</button>
+              <button id="clearBtn">Temizle</button>
+            </div>
+          </div>
+          <ul id="searchProductsUl"></ul>
+        </div>
 
         <!-- Satış Raporu -->
-<div class="tabContent" id="satisRaporu">
-  <div class="report-section">
-    <h3>Satış Raporu</h3>
-    <div class="report-group">
-      <input type="date" id="reportFrom" />
-      <input type="date" id="reportTo" />
-      <div class="filter-buttons">
-        <button id="reportBtn">Rapor Al</button>
-        <button id="clearReportBtn">Temizle</button>
-      </div>
-    </div>
-    <pre id="reportResult">Henüz rapor alınmadı.</pre>
-  </div>
-</div>
-
-
+        <div class="tabContent" id="satisRaporu">
+          <div class="report-section">
+            <h3>Satış Raporu</h3>
+            <div class="report-group">
+              <input type="date" id="reportFrom" />
+              <input type="date" id="reportTo" />
+              <div class="filter-buttons">
+                <button id="reportBtn">Rapor Al</button>
+                <button id="reportClearBtn">Temizle</button>
+              </div>
+              <pre id="reportResult">Henüz rapor alınmadı.</pre>
+            </div>
+          </div>
+        </div>
 
         <!-- Kullanıcı Ekle -->
         <div class="tabContent" id="userTab">
@@ -145,7 +140,5 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="auth.js"></script>
   <script src="product.js"></script>
-
-
 </body>
 </html>
