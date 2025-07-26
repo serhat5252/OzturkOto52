@@ -67,10 +67,10 @@ async function fetchProducts() {
   }
 }
 
-function renderList(list, ulTarget = ul) {
-  ulTarget.innerHTML = "";
+function renderList(list, targetUl = ul) {
+  targetUl.innerHTML = "";
   if (!list.length) {
-    ulTarget.innerHTML = "<li>Ürün bulunamadı.</li>";
+    targetUl.innerHTML = "<li>Ürün bulunamadı.</li>";
     return;
   }
 
@@ -81,17 +81,18 @@ function renderList(list, ulTarget = ul) {
         <strong>${p.name}</strong> (${p.quantity} adet)
         <br><small>${p.category || ""} | ${p.brand || ""} | ${p.type || ""}</small>
       </div>
-      <div>
-        <button onclick="sell('${p._id}')">Sat</button>
-        <button onclick="edit('${p._id}')">Düzenle</button>
-        <button onclick="del('${p._id}')">Sil</button>
-        <button onclick="details('${p._id}')">Detay</button>
+      <div class="action-buttons">
+        <button onclick="sell('${p._id}')">💰</button>
+        <button onclick="edit('${p._id}')">✏️</button>
+        <button onclick="del('${p._id}')">🗑️</button>
+        <button onclick="details('${p._id}')">ℹ️</button>
       </div>`;
     if (p.minQuantity > 0 && p.quantity <= p.minQuantity)
       li.classList.add("critical-stock");
-    ulTarget.appendChild(li);
+    targetUl.appendChild(li);
   });
 }
+
 
 window.edit = id => {
   const p = products.find(x => x._id === id);
@@ -201,34 +202,23 @@ function applyFilters() {
   const category = document.getElementById("filterCategory").value;
   const brand = document.getElementById("filterBrand").value;
   const type = document.getElementById("filterType").value;
-  const from = new Date(document.getElementById("filterFrom")?.value || "2000-01-01");
-  const to = new Date(document.getElementById("filterTo")?.value || Date.now());
-  const saleFrom = new Date(document.getElementById("filterSaleFrom")?.value || "2000-01-01");
-  const saleTo = new Date(document.getElementById("filterSaleTo")?.value || Date.now());
-  const onlyCritical = document.getElementById("onlyCriticalStock")?.checked;
+  const onlyCritical = document.getElementById("onlyCriticalStock").checked;
 
   const filtered = products.filter(p => {
-    const nameMatch = !key || p.name.toLowerCase().includes(key) || p.description?.toLowerCase().includes(key) || p.codes?.some(c => c.toLowerCase().includes(key));
+    const nameMatch = !key || p.name.toLowerCase().includes(key) ||
+      p.description?.toLowerCase().includes(key) ||
+      p.codes?.some(c => c.toLowerCase().includes(key));
     const categoryMatch = !category || p.category === category;
     const brandMatch = !brand || p.brand === brand;
     const typeMatch = !type || p.type === type;
-    const createDate = new Date(p.createdAt);
-    const createMatch = createDate >= from && createDate <= to;
+    const criticalMatch = !onlyCritical || (p.minQuantity > 0 && p.quantity <= p.minQuantity);
 
-    const saleMatch = p.sales?.some(s => {
-      const d = new Date(s.date);
-      return d >= saleFrom && d <= saleTo;
-    }) || (!document.getElementById("filterSaleFrom")?.value && !document.getElementById("filterSaleTo")?.value);
-
-    const criticalMatch = !onlyCritical || (p.minQuantity && p.quantity <= p.minQuantity);
-
-    return nameMatch && categoryMatch && brandMatch && typeMatch && createMatch && saleMatch && criticalMatch;
+    return nameMatch && categoryMatch && brandMatch && typeMatch && criticalMatch;
   });
 
-  const resultUl = document.getElementById("searchResultsUl");
-  renderList(filtered, resultUl);
+  const resultsUl = document.getElementById("searchResultsUl");
+  renderList(filtered, resultsUl);
 }
-
 
 // RAPOR
 document.getElementById("reportBtn")?.addEventListener("click", async () => {
