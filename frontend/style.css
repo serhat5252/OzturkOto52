@@ -279,6 +279,21 @@ body {
   background: #888;
 }
 
+#searchResultsUl li {
+  background: white;
+  margin-bottom: 10px;
+  padding: 1rem;
+  border-left: 6px solid #2e7d32;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#searchResultsUl li.critical-stock {
+  border-left-color: red;
+}
+
 /* Satış Raporu */
 .report-section {
   max-width: 700px;
