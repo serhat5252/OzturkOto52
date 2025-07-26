@@ -22,6 +22,8 @@ loginForm.onsubmit = async e => {
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
     document.getElementById("currentUser").innerText = json.username;
+
+    showTab("urunIslemleri");
   } catch (err) {
     loginMessage.innerText = "❌ " + err.message;
   }
@@ -34,18 +36,17 @@ function logout() {
   location.reload();
 }
 
-// Sayfa yüklendiğinde
+// Sayfa yüklenince
 document.addEventListener("DOMContentLoaded", () => {
   const token = sessionStorage.getItem("token");
-  const currentUser = sessionStorage.getItem("currentUser");
+  const user = sessionStorage.getItem("currentUser");
 
-  if (token && currentUser) {
+  if (token && user) {
     document.getElementById("authBox").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
-    document.getElementById("currentUser").innerText = currentUser;
+    document.getElementById("currentUser").innerText = user;
   }
 
-  // Sekme geçişleri
   const tabs = document.querySelectorAll(".tab");
   const contents = document.querySelectorAll(".tabContent");
 
@@ -53,34 +54,26 @@ document.addEventListener("DOMContentLoaded", () => {
     tab.addEventListener("click", () => {
       tabs.forEach(t => t.classList.remove("active"));
       contents.forEach(c => c.classList.remove("active"));
-      tab.classList.add("active");
 
-      const targetId = tab.getAttribute("data-tab");
-      document.getElementById(targetId).classList.add("active");
+      tab.classList.add("active");
+      const id = tab.getAttribute("data-tab");
+      document.getElementById(id).classList.add("active");
     });
   });
-
-  // Kullanıcı ekleme (varsayılan açık)
-  const userForm = document.getElementById("userForm");
-  userForm?.addEventListener("submit", async e => {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(userForm));
-    const userMsg = document.getElementById("userMsg");
-
-    try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + sessionStorage.getItem("token") },
-        body: JSON.stringify(data)
-      });
-
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.message || "Kayıt başarısız");
-
-      userForm.reset();
-      userMsg.innerText = "✅ Kullanıcı eklendi.";
-    } catch (err) {
-      userMsg.innerText = "❌ " + err.message;
-    }
-  });
 });
+
+function showTab(tabId) {
+  const tabs = document.querySelectorAll(".tab");
+  const contents = document.querySelectorAll(".tabContent");
+
+  tabs.forEach(t => t.classList.remove("active"));
+  contents.forEach(c => c.classList.remove("active"));
+
+  const tab = document.querySelector(`.tab[data-tab="${tabId}"]`);
+  const content = document.getElementById(tabId);
+
+  if (tab && content) {
+    tab.classList.add("active");
+    content.classList.add("active");
+  }
+}
