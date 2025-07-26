@@ -50,12 +50,12 @@ form.onsubmit = async e => {
 };
 
 async function fetchProducts() {
+  const t = token();
+  if (!t) return alert("Giriş oturumu bulunamadı. Lütfen yeniden giriş yapınız.");
+
   try {
     const res = await fetch(API, {
-      headers: {
-  "Authorization": "Bearer " + sessionStorage.getItem("token")
-}
-
+      headers: { "Authorization": "Bearer " + t }
     });
     if (!res.ok) throw new Error("Yetki veya bağlantı hatası");
 
@@ -201,17 +201,33 @@ function applyFilters() {
   const category = document.getElementById("filterCategory").value;
   const brand = document.getElementById("filterBrand").value;
   const type = document.getElementById("filterType").value;
+  const from = new Date(document.getElementById("filterFrom").value || "2000-01-01");
+  const to = new Date(document.getElementById("filterTo").value || Date.now());
+  const saleFrom = new Date(document.getElementById("filterSaleFrom").value || "2000-01-01");
+  const saleTo = new Date(document.getElementById("filterSaleTo").value || Date.now());
+  const onlyCritical = document.getElementById("onlyCriticalStock")?.checked;
 
   const filtered = products.filter(p => {
     const nameMatch = !key || p.name.toLowerCase().includes(key) || p.description?.toLowerCase().includes(key) || p.codes?.some(c => c.toLowerCase().includes(key));
     const categoryMatch = !category || p.category === category;
     const brandMatch = !brand || p.brand === brand;
     const typeMatch = !type || p.type === type;
-    return nameMatch && categoryMatch && brandMatch && typeMatch;
+    const createDate = new Date(p.createdAt);
+    const createMatch = createDate >= from && createDate <= to;
+
+    const saleMatch = p.sales?.some(s => {
+      const d = new Date(s.date);
+      return d >= saleFrom && d <= saleTo;
+    }) || (!document.getElementById("filterSaleFrom").value && !document.getElementById("filterSaleTo").value);
+
+    const criticalMatch = !onlyCritical || (p.minQuantity && p.quantity <= p.minQuantity);
+
+    return nameMatch && categoryMatch && brandMatch && typeMatch && createMatch && saleMatch && criticalMatch;
   });
 
   renderList(filtered);
 }
+
 
 // RAPOR
 document.getElementById("reportBtn")?.addEventListener("click", async () => {
