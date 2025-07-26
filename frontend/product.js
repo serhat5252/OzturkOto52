@@ -5,7 +5,6 @@ const ul = document.getElementById("productsUl");
 
 let products = [];
 
-// ÜRÜN KAYDET/GÜNCELLE
 form.onsubmit = async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(form));
@@ -58,8 +57,8 @@ async function fetchProducts() {
       }
     });
     if (!res.ok) throw new Error("Yetki veya bağlantı hatası");
+
     products = await res.json();
-    renderList(products);
     populateFilterOptions();
   } catch (err) {
     alert("Ürünler alınamadı: " + err.message);
@@ -67,10 +66,7 @@ async function fetchProducts() {
 }
 
 function renderList(list) {
-  const ul = document.getElementById("searchResultsUl"); // veya "productsUl"
-  if (!ul) return;
   ul.innerHTML = "";
-
   if (!list.length) {
     ul.innerHTML = "<li>Ürün bulunamadı.</li>";
     return;
@@ -89,10 +85,11 @@ function renderList(list) {
         <button onclick="del('${p._id}')">Sil</button>
         <button onclick="details('${p._id}')">Detay</button>
       </div>`;
+    if (p.minQuantity > 0 && p.quantity <= p.minQuantity)
+      li.classList.add("critical-stock");
     ul.appendChild(li);
   });
 }
-
 
 window.edit = id => {
   const p = products.find(x => x._id === id);
@@ -111,6 +108,7 @@ window.del = async id => {
       headers: { "Authorization": "Bearer " + token() }
     });
     if (!res.ok) throw new Error("Silinemedi");
+
     products = products.filter(p => p._id !== id);
     renderList(products);
   } catch (err) {
@@ -134,8 +132,7 @@ function populateFilterOptions() {
   const types = [...new Set(products.map(p => p.type).filter(Boolean))];
 
   const fill = (select, items) => {
-    if (select)
-      select.innerHTML = "<option value=''>Tümü</option>" + items.map(i => `<option>${i}</option>`).join("");
+    select.innerHTML = `<option value="">Tümü</option>` + items.map(i => `<option>${i}</option>`).join("");
   };
 
   fill(catSel, categories);
@@ -145,11 +142,11 @@ function populateFilterOptions() {
 
 // SAT
 window.sell = async id => {
-  const quantity = prompt("Kaç adet satıldı?");
-  if (!quantity || isNaN(quantity)) return;
+  const quantity = parseInt(prompt("Kaç adet satıldı?"));
+  if (!quantity || quantity <= 0) return;
 
-  const price = prompt("Satış fiyatı?");
-  if (!price || isNaN(price)) return;
+  const price = parseFloat(prompt("Toplam satış fiyatı?"));
+  if (!price || price <= 0) return;
 
   try {
     const res = await fetch(API + "/sell/" + id, {
@@ -158,9 +155,8 @@ window.sell = async id => {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + token()
       },
-      body: JSON.stringify({ price: parseFloat(price), quantity: parseInt(quantity) })
+      body: JSON.stringify({ quantity, price })
     });
-
     const result = await res.json();
     if (!res.ok) throw new Error(result.message || "Satış başarısız");
 
@@ -192,24 +188,37 @@ Son Satış: ${p.sales?.slice(-1)[0]?.price || "Yok"}
 };
 
 // ARAMA
+document.getElementById("filterKeyword")?.addEventListener("keydown", e => {
+  if (e.key === "Enter") applyFilters();
+});
 document.getElementById("filterBtn")?.addEventListener("click", applyFilters);
 document.getElementById("clearBtn")?.addEventListener("click", () => {
   document.getElementById("filterKeyword").value = "";
-  renderList(products);
+  document.getElementById("filterCategory").value = "";
+  document.getElementById("filterBrand").value = "";
+  document.getElementById("filterType").value = "";
+  document.getElementById("filterFrom").value = "";
+  document.getElementById("filterTo").value = "";
+  document.getElementById("filterSaleFrom").value = "";
+  document.getElementById("filterSaleTo").value = "";
+  document.getElementById("onlyCriticalStock").checked = false;
+  ul.innerHTML = "";
 });
 
 function applyFilters() {
-  const key = document.getElementById("filterKeyword")?.value?.trim()?.toLowerCase() || "";
-  const category = document.getElementById("filterCategory")?.value || "";
-  const brand = document.getElementById("filterBrand")?.value || "";
-  const type = document.getElementById("filterType")?.value || "";
+  const key = document.getElementById("filterKeyword").value.trim().toLowerCase();
+  const category = document.getElementById("filterCategory").value;
+  const brand = document.getElementById("filterBrand").value;
+  const type = document.getElementById("filterType").value;
+  const onlyCritical = document.getElementById("onlyCriticalStock").checked;
 
   const filtered = products.filter(p => {
     const nameMatch = !key || p.name.toLowerCase().includes(key) || p.description?.toLowerCase().includes(key) || p.codes?.some(c => c.toLowerCase().includes(key));
     const categoryMatch = !category || p.category === category;
     const brandMatch = !brand || p.brand === brand;
     const typeMatch = !type || p.type === type;
-    return nameMatch && categoryMatch && brandMatch && typeMatch;
+    const criticalMatch = !onlyCritical || (p.minQuantity > 0 && p.quantity <= p.minQuantity);
+    return nameMatch && categoryMatch && brandMatch && typeMatch && criticalMatch;
   });
 
   renderList(filtered);
@@ -217,8 +226,8 @@ function applyFilters() {
 
 // RAPOR
 document.getElementById("reportBtn")?.addEventListener("click", async () => {
-  const from = document.getElementById("reportFrom")?.value;
-  const to = document.getElementById("reportTo")?.value;
+  const from = document.getElementById("reportFrom").value;
+  const to = document.getElementById("reportTo").value;
 
   const res = await fetch(`/api/products/sales-report?from=${from}&to=${to}`, {
     headers: { "Authorization": "Bearer " + token() }
@@ -227,12 +236,13 @@ document.getElementById("reportBtn")?.addEventListener("click", async () => {
   document.getElementById("reportResult").innerText = JSON.stringify(json, null, 2);
 });
 
-document.getElementById("reportClearBtn")?.addEventListener("click", () => {
+document.getElementById("clearReportBtn")?.addEventListener("click", () => {
   document.getElementById("reportFrom").value = "";
   document.getElementById("reportTo").value = "";
   document.getElementById("reportResult").innerText = "";
 });
 
+// Sayfa yüklendiğinde sadece ürünleri getir ama listeleme yapma
 document.addEventListener("DOMContentLoaded", () => {
   fetchProducts();
 });

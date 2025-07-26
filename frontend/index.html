@@ -44,6 +44,7 @@
 
       <!-- İçerik -->
       <div class="content">
+
         <!-- Ürün İşlemleri -->
         <div class="tabContent active" id="urunIslemleri">
           <form id="productForm">
@@ -75,37 +76,36 @@
             <textarea name="description" placeholder="Açıklama"></textarea>
             <div class="form-buttons">
               <button type="submit">Kaydet</button>
-              <button type="button" id="clearFormBtn" onclick="resetForm()">Temizle</button>
+              <button type="button" id="clearFormBtn">Temizle</button>
             </div>
           </form>
         </div>
 
         <!-- Detaylı Arama -->
         <div class="tabContent" id="searchTab">
-  <div class="filter-section">
-    <h3>Detaylı Arama</h3>
-    <div class="filter-group">
-      <input type="text" id="filterKeyword" placeholder="Ürün adı, kod veya açıklama" />
-      <select id="filterCategory"></select>
-      <select id="filterBrand"></select>
-      <select id="filterType"></select>
-      <input type="date" id="filterFrom" />
-      <input type="date" id="filterTo" />
-      <input type="date" id="filterSaleFrom" />
-      <input type="date" id="filterSaleTo" />
-      <div class="critical-stock-toggle">
-        <input type="checkbox" id="onlyCriticalStock" />
-        <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
-      </div>
-      <div class="filter-buttons">
-        <button id="filterBtn">Ara</button>
-        <button id="clearBtn">Temizle</button>
-      </div>
-    </div>
-  </div>
-  <ul id="searchResultsUl"></ul>
-</div>
-
+          <div class="filter-section">
+            <h3>Detaylı Arama</h3>
+            <div class="filter-group">
+              <input type="text" id="filterKeyword" placeholder="Ürün adı / açıklama / kod" />
+              <select id="filterCategory"></select>
+              <select id="filterBrand"></select>
+              <select id="filterType"></select>
+              <input type="date" id="filterFrom" />
+              <input type="date" id="filterTo" />
+              <input type="date" id="filterSaleFrom" />
+              <input type="date" id="filterSaleTo" />
+              <div class="critical-stock-toggle">
+                <input type="checkbox" id="onlyCriticalStock" />
+                <label for="onlyCriticalStock">Kritik stokta olanları göster</label>
+              </div>
+              <div class="filter-buttons">
+                <button id="filterBtn">Ara</button>
+                <button id="clearBtn">Temizle</button>
+              </div>
+            </div>
+          </div>
+          <ul id="productsUl"></ul>
+        </div>
 
         <!-- Satış Raporu -->
         <div class="tabContent" id="satisRaporu">
@@ -116,10 +116,10 @@
               <input type="date" id="reportTo" />
               <div class="filter-buttons">
                 <button id="reportBtn">Rapor Al</button>
-                <button id="reportClearBtn">Temizle</button>
+                <button id="clearReportBtn">Temizle</button>
               </div>
-              <pre id="reportResult">Henüz rapor alınmadı.</pre>
             </div>
+            <pre id="reportResult">Henüz rapor alınmadı.</pre>
           </div>
         </div>
 
@@ -132,6 +132,7 @@
             <div id="userMsg"></div>
           </form>
         </div>
+
       </div>
     </div>
   </div>
