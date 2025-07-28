@@ -119,8 +119,8 @@ window.del = async id => {
 function resetForm() {
   form.reset();
   form.elements.id.value = "";
-  fetchProducts();
 }
+
 
 function populateFilterOptions() {
   const catSel = document.getElementById("filterCategory");
