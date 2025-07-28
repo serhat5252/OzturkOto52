@@ -2,7 +2,6 @@ const API = "/api/products";
 const token = () => sessionStorage.getItem("token");
 const form = document.getElementById("productForm");
 const ul = document.getElementById("productsUl");
-
 let products = [];
 
 form.onsubmit = async e => {
@@ -66,6 +65,7 @@ async function fetchProducts() {
 }
 
 function renderList(list) {
+  if (!ul) return;
   ul.innerHTML = "";
   if (!list.length) {
     ul.innerHTML = "<li>Ürün bulunamadı.</li>";
@@ -122,32 +122,17 @@ function resetForm() {
   fetchProducts();
 }
 
-
-function populateFilterOptions() {
-  const catSel = document.getElementById("filterCategory");
-  const brandSel = document.getElementById("filterBrand");
-  const typeSel = document.getElementById("filterType");
-
-  const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
-  const brands = [...new Set(products.map(p => p.brand).filter(Boolean))];
-  const types = [...new Set(products.map(p => p.type).filter(Boolean))];
-
-  const fill = (select, items) => {
-    select.innerHTML = `<option value="">Tümü</option>` + items.map(i => `<option>${i}</option>`).join("");
-  };
-
-  fill(catSel, categories);
-  fill(brandSel, brands);
-  fill(typeSel, types);
-}
+// Temizle Butonu - Ürün Formu
+document.getElementById("clearFormBtn")?.addEventListener("click", () => {
+  form.reset();
+  form.elements.id.value = "";
+});
 
 // SAT
 window.sell = async id => {
-  const quantity = parseInt(prompt("Kaç adet satıldı?"));
-  if (!quantity || quantity <= 0) return;
-
-  const price = parseFloat(prompt("Toplam satış fiyatı?"));
-  if (!price || price <= 0) return;
+  const quantity = prompt("Kaç adet satıldı?");
+  const price = prompt("Toplam satış fiyatı?");
+  if (!quantity || !price) return;
 
   try {
     const res = await fetch(API + "/sell/" + id, {
@@ -170,8 +155,7 @@ window.sell = async id => {
 // DETAY
 window.details = id => {
   const p = products.find(x => x._id === id);
-  alert(`
-🧾 Ürün Detayları:
+  alert(`🧾 Ürün Detayları:
 Ad: ${p.name}
 Kategori: ${p.category}
 Marka: ${p.brand}
@@ -188,7 +172,7 @@ Son Satış: ${p.sales?.slice(-1)[0]?.price || "Yok"}
 `);
 };
 
-// ARAMA
+// FİLTRELEME
 document.getElementById("filterKeyword")?.addEventListener("keydown", e => {
   if (e.key === "Enter") applyFilters();
 });
@@ -203,6 +187,7 @@ document.getElementById("clearBtn")?.addEventListener("click", () => {
   document.getElementById("filterSaleFrom").value = "";
   document.getElementById("filterSaleTo").value = "";
   document.getElementById("onlyCriticalStock").checked = false;
+
   ul.innerHTML = "";
 });
 
@@ -211,15 +196,13 @@ function applyFilters() {
   const category = document.getElementById("filterCategory").value;
   const brand = document.getElementById("filterBrand").value;
   const type = document.getElementById("filterType").value;
-  const onlyCritical = document.getElementById("onlyCriticalStock").checked;
 
   const filtered = products.filter(p => {
     const nameMatch = !key || p.name.toLowerCase().includes(key) || p.description?.toLowerCase().includes(key) || p.codes?.some(c => c.toLowerCase().includes(key));
     const categoryMatch = !category || p.category === category;
     const brandMatch = !brand || p.brand === brand;
     const typeMatch = !type || p.type === type;
-    const criticalMatch = !onlyCritical || (p.minQuantity > 0 && p.quantity <= p.minQuantity);
-    return nameMatch && categoryMatch && brandMatch && typeMatch && criticalMatch;
+    return nameMatch && categoryMatch && brandMatch && typeMatch;
   });
 
   renderList(filtered);
@@ -237,13 +220,13 @@ document.getElementById("reportBtn")?.addEventListener("click", async () => {
   document.getElementById("reportResult").innerText = JSON.stringify(json, null, 2);
 });
 
+// RAPOR TEMİZLE
 document.getElementById("clearReportBtn")?.addEventListener("click", () => {
   document.getElementById("reportFrom").value = "";
   document.getElementById("reportTo").value = "";
   document.getElementById("reportResult").innerText = "";
 });
 
-// Sayfa yüklendiğinde sadece ürünleri getir ama listeleme yapma
 document.addEventListener("DOMContentLoaded", () => {
   fetchProducts();
 });
