@@ -64,11 +64,11 @@ async function fetchProducts() {
   }
 }
 
-function renderList(list) {
-  if (!ul) return;
-  ul.innerHTML = "";
+function renderList(list, targetUl = ul) {
+  if (!targetUl) return;
+  targetUl.innerHTML = "";
   if (!list.length) {
-    ul.innerHTML = "<li>Ürün bulunamadı.</li>";
+    targetUl.innerHTML = "<li>Ürün bulunamadı.</li>";
     return;
   }
 
@@ -87,9 +87,10 @@ function renderList(list) {
       </div>`;
     if (p.minQuantity > 0 && p.quantity <= p.minQuantity)
       li.classList.add("critical-stock");
-    ul.appendChild(li);
+    targetUl.appendChild(li);
   });
 }
+
 
 window.edit = id => {
   const p = products.find(x => x._id === id);
@@ -196,6 +197,7 @@ function applyFilters() {
   const category = document.getElementById("filterCategory").value;
   const brand = document.getElementById("filterBrand").value;
   const type = document.getElementById("filterType").value;
+  const target = document.getElementById("searchResults");
 
   const filtered = products.filter(p => {
     const nameMatch = !key || p.name.toLowerCase().includes(key) || p.description?.toLowerCase().includes(key) || p.codes?.some(c => c.toLowerCase().includes(key));
@@ -205,7 +207,7 @@ function applyFilters() {
     return nameMatch && categoryMatch && brandMatch && typeMatch;
   });
 
-  renderList(filtered);
+  renderList(filtered, target);
 }
 
 // RAPOR
@@ -226,6 +228,27 @@ document.getElementById("clearReportBtn")?.addEventListener("click", () => {
   document.getElementById("reportTo").value = "";
   document.getElementById("reportResult").innerText = "";
 });
+
+function populateFilterOptions() {
+  const catSel = document.getElementById("filterCategory");
+  const brandSel = document.getElementById("filterBrand");
+  const typeSel = document.getElementById("filterType");
+
+  if (!catSel || !brandSel || !typeSel) return;
+
+  const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
+  const brands = [...new Set(products.map(p => p.brand).filter(Boolean))];
+  const types = [...new Set(products.map(p => p.type).filter(Boolean))];
+
+  const fill = (select, items) => {
+    select.innerHTML = `<option value="">Tümü</option>` + items.map(i => `<option>${i}</option>`).join("");
+  };
+
+  fill(catSel, categories);
+  fill(brandSel, brands);
+  fill(typeSel, types);
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
   fetchProducts();
