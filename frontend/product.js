@@ -187,7 +187,9 @@ document.getElementById("clearBtn")?.addEventListener("click", () => {
   document.getElementById("filterSaleFrom").value = "";
   document.getElementById("filterSaleTo").value = "";
   document.getElementById("onlyCriticalStock").checked = false;
-  renderList(products);
+
+  renderList([]);           // Arama kutusunu temizleyince boş liste göster
+  populateFilterOptions();  // Seçenekleri güncelle
 });
 
 function applyFilters() {
@@ -229,6 +231,9 @@ function populateFilterOptions() {
 }
 
 // Sayfa Yüklendiğinde
-document.addEventListener("DOMContentLoaded", () => {
-  fetchProducts();
+document.addEventListener("DOMContentLoaded", async () => {
+  await fetchProducts();          // Ürünleri al
+  renderList([]);                // Sayfa açıldığında boş liste göster
+  populateFilterOptions();       // Filtreleri doldur
 });
+
