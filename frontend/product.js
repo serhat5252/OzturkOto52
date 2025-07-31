@@ -58,7 +58,7 @@ async function fetchProducts() {
     });
     if (!res.ok) throw new Error("Yetki veya bağlantı hatası");
     products = await res.json();
-    populateFilterOptions();
+    // populateFilterOptions();
     renderList(products);
   } catch (err) {
     alert("Ürünler alınamadı: " + err.message);
