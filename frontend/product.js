@@ -152,8 +152,11 @@ window.sell = async id => {
 // Detay
 window.details = id => {
   const p = products.find(x => x._id === id);
-  alert(`
-🧾 Ürün Detayları:
+  const salesList = p.sales?.map(s => 
+    `🗓️ ${new Date(s.date).toLocaleDateString()} - 💰 ${s.price} TL - 📦 ${s.quantity} adet`
+  ).join("\n") || "Yok";
+
+  alert(`🧾 Ürün Detayları:
 Ad: ${p.name}
 Kategori: ${p.category}
 Marka: ${p.brand}
@@ -166,9 +169,11 @@ Satış: ${p.sellPrice}
 Kodlar: ${p.codes?.join(", ")}
 Açıklama: ${p.description}
 Eklenme: ${new Date(p.createdAt).toLocaleDateString()}
-Son Satış: ${p.sales?.slice(-1)[0]?.price || "Yok"}
+📈 Satışlar:
+${salesList}
 `);
 };
+
 
 // Filtreleme / Arama
 document.getElementById("filterBtn")?.addEventListener("click", applyFilters);
