@@ -192,7 +192,7 @@ document.getElementById("clearBtn")?.addEventListener("click", () => {
   document.getElementById("onlyCriticalStock").checked = false;
 
   renderList([]);           // Arama kutusunu temizleyince boş liste göster
-  populateFilterOptions();  // Seçenekleri güncelle
+  // populateFilterOptions();  // Seçenekleri güncelle
 });
 
 function applyFilters() {
@@ -213,31 +213,13 @@ function applyFilters() {
 }
 
 // Filtre dropdownlarını doldur
-function populateFilterOptions() {
-  const catSel = document.getElementById("filterCategory");
-  const brandSel = document.getElementById("filterBrand");
-  const typeSel = document.getElementById("filterType");
 
-  // Benzersiz verileri filtrele
-  const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
-  const brands = [...new Set(products.map(p => p.brand).filter(Boolean))];
-  const types = [...new Set(products.map(p => p.type).filter(Boolean))];
-
-  // Seçenekleri dolduran yardımcı fonksiyon
-  const fill = (select, items) => {
-    select.innerHTML = `<option value="">Tümü</option>` + items.map(i => `<option>${i}</option>`).join("");
-  };
-
-  fill(catSel, categories);
-  fill(brandSel, brands);
-  fill(typeSel, types);
-}
 
 
 // Sayfa Yüklendiğinde
 document.addEventListener("DOMContentLoaded", async () => {
   await fetchProducts();          // Ürünleri al
   renderList([]);                // Sayfa açıldığında boş liste göster
-  populateFilterOptions();       // Filtreleri doldur
+  // populateFilterOptions();       // Filtreleri doldur
 });
 
