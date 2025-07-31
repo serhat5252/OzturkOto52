@@ -4,7 +4,8 @@ const form = document.getElementById("productForm");
 const ul = document.getElementById("productsUl");
 let products = [];
 
-form.onsubmit = async e => {
+// Ürün Formu Gönderme
+form?.addEventListener("submit", async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(form));
 
@@ -42,33 +43,34 @@ form.onsubmit = async e => {
     }
 
     resetForm();
+    renderList(products);
     alert("✅ Başarılı!");
   } catch (err) {
     alert("❌ " + err.message);
   }
-};
+});
 
+// Ürünleri Getir
 async function fetchProducts() {
   try {
     const res = await fetch(API, {
-      headers: {
-        "Authorization": "Bearer " + token()
-      }
+      headers: { "Authorization": "Bearer " + token() }
     });
     if (!res.ok) throw new Error("Yetki veya bağlantı hatası");
-
     products = await res.json();
     populateFilterOptions();
+    renderList(products);
   } catch (err) {
     alert("Ürünler alınamadı: " + err.message);
   }
 }
 
-function renderList(list, targetUl = ul) {
-  if (!targetUl) return;
-  targetUl.innerHTML = "";
+// Listele
+function renderList(list) {
+  if (!ul) return;
+  ul.innerHTML = "";
   if (!list.length) {
-    targetUl.innerHTML = "<li>Ürün bulunamadı.</li>";
+    ul.innerHTML = "<li>Ürün bulunamadı.</li>";
     return;
   }
 
@@ -87,11 +89,33 @@ function renderList(list, targetUl = ul) {
       </div>`;
     if (p.minQuantity > 0 && p.quantity <= p.minQuantity)
       li.classList.add("critical-stock");
-    targetUl.appendChild(li);
+    ul.appendChild(li);
   });
 }
 
+// Formu Temizle
+function resetForm() {
+  form.reset();
+  form.elements.id.value = "";
+}
 
+// Sil
+window.del = async id => {
+  if (!confirm("Silmek istediğinize emin misiniz?")) return;
+  try {
+    const res = await fetch(`${API}/${id}`, {
+      method: "DELETE",
+      headers: { "Authorization": "Bearer " + token() }
+    });
+    if (!res.ok) throw new Error("Silinemedi");
+    products = products.filter(p => p._id !== id);
+    renderList(products);
+  } catch (err) {
+    alert("❌ " + err.message);
+  }
+};
+
+// Düzenle
 window.edit = id => {
   const p = products.find(x => x._id === id);
   Object.entries(p).forEach(([k, v]) => {
@@ -101,42 +125,14 @@ window.edit = id => {
   form.elements.id.value = p._id;
 };
 
-window.del = async id => {
-  if (!confirm("Silmek istediğinize emin misiniz?")) return;
-  try {
-    const res = await fetch(API + "/" + id, {
-      method: "DELETE",
-      headers: { "Authorization": "Bearer " + token() }
-    });
-    if (!res.ok) throw new Error("Silinemedi");
-
-    products = products.filter(p => p._id !== id);
-    renderList(products);
-  } catch (err) {
-    alert("❌ " + err.message);
-  }
-};
-
-function resetForm() {
-  form.reset();
-  form.elements.id.value = "";
-  fetchProducts();
-}
-
-// Temizle Butonu - Ürün Formu
-document.getElementById("clearFormBtn")?.addEventListener("click", () => {
-  form.reset();
-  form.elements.id.value = "";
-});
-
-// SAT
+// Sat
 window.sell = async id => {
-  const quantity = prompt("Kaç adet satıldı?");
-  const price = prompt("Toplam satış fiyatı?");
+  const quantity = parseInt(prompt("Kaç adet satıldı?"));
+  const price = parseFloat(prompt("Toplam satış fiyatı?"));
   if (!quantity || !price) return;
 
   try {
-    const res = await fetch(API + "/sell/" + id, {
+    const res = await fetch(`${API}/${id}/sell`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -153,10 +149,11 @@ window.sell = async id => {
   }
 };
 
-// DETAY
+// Detay
 window.details = id => {
   const p = products.find(x => x._id === id);
-  alert(`🧾 Ürün Detayları:
+  alert(`
+🧾 Ürün Detayları:
 Ad: ${p.name}
 Kategori: ${p.category}
 Marka: ${p.brand}
@@ -173,10 +170,7 @@ Son Satış: ${p.sales?.slice(-1)[0]?.price || "Yok"}
 `);
 };
 
-// FİLTRELEME
-document.getElementById("filterKeyword")?.addEventListener("keydown", e => {
-  if (e.key === "Enter") applyFilters();
-});
+// Filtreleme / Arama
 document.getElementById("filterBtn")?.addEventListener("click", applyFilters);
 document.getElementById("clearBtn")?.addEventListener("click", () => {
   document.getElementById("filterKeyword").value = "";
@@ -188,8 +182,7 @@ document.getElementById("clearBtn")?.addEventListener("click", () => {
   document.getElementById("filterSaleFrom").value = "";
   document.getElementById("filterSaleTo").value = "";
   document.getElementById("onlyCriticalStock").checked = false;
-
-  ul.innerHTML = "";
+  renderList(products);
 });
 
 function applyFilters() {
@@ -197,7 +190,6 @@ function applyFilters() {
   const category = document.getElementById("filterCategory").value;
   const brand = document.getElementById("filterBrand").value;
   const type = document.getElementById("filterType").value;
-  const target = document.getElementById("searchResults");
 
   const filtered = products.filter(p => {
     const nameMatch = !key || p.name.toLowerCase().includes(key) || p.description?.toLowerCase().includes(key) || p.codes?.some(c => c.toLowerCase().includes(key));
@@ -207,28 +199,10 @@ function applyFilters() {
     return nameMatch && categoryMatch && brandMatch && typeMatch;
   });
 
-  renderList(filtered, target);
+  renderList(filtered);
 }
 
-// RAPOR
-document.getElementById("reportBtn")?.addEventListener("click", async () => {
-  const from = document.getElementById("reportFrom").value;
-  const to = document.getElementById("reportTo").value;
-
-  const res = await fetch(`/api/products/sales-report?from=${from}&to=${to}`, {
-    headers: { "Authorization": "Bearer " + token() }
-  });
-  const json = await res.json();
-  document.getElementById("reportResult").innerText = JSON.stringify(json, null, 2);
-});
-
-// RAPOR TEMİZLE
-document.getElementById("clearReportBtn")?.addEventListener("click", () => {
-  document.getElementById("reportFrom").value = "";
-  document.getElementById("reportTo").value = "";
-  document.getElementById("reportResult").innerText = "";
-});
-
+// Filtre dropdownlarını doldur
 function populateFilterOptions() {
   const catSel = document.getElementById("filterCategory");
   const brandSel = document.getElementById("filterBrand");
@@ -249,7 +223,7 @@ function populateFilterOptions() {
   fill(typeSel, types);
 }
 
-
+// Sayfa Yüklendiğinde
 document.addEventListener("DOMContentLoaded", () => {
   fetchProducts();
 });
