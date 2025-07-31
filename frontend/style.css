@@ -400,5 +400,41 @@ body {
 #searchResultsUl button:hover {
   background: #1b5e20;
 }
+/* Barkod Tarayıcı */
+.barcode-section {
+  margin-bottom: 1rem;
+}
+
+.scan-btn,
+.stop-btn {
+  background-color: #2e7d32;
+  color: white;
+  font-weight: bold;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.stop-btn {
+  background-color: #c62828;
+}
+
+.scanner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.reader-box {
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1;
+  border: 2px solid #2e7d32;
+  border-radius: 10px;
+  overflow: hidden;
+}
 
 

@@ -235,7 +235,8 @@ function applyFilters() {
 
 // Barkod Tara
 document.getElementById("scanBtn")?.addEventListener("click", () => {
-  document.getElementById("barcodeScanner").style.display = "block";
+  const scannerBox = document.getElementById("barcodeScanner");
+  scannerBox.style.display = "flex";
 
   const html5QrCode = new Html5Qrcode("reader");
 
@@ -245,32 +246,31 @@ document.getElementById("scanBtn")?.addEventListener("click", () => {
 
       html5QrCode.start(
         cameraId,
-        { fps: 10, qrbox: { width: 250, height: 250 } },
+        { fps: 10, qrbox: 250 },
         decodedText => {
           html5QrCode.stop();
-          document.getElementById("barcodeScanner").style.display = "none";
+          scannerBox.style.display = "none";
           document.getElementById("filterKeyword").value = decodedText;
-          applyFilters(); // arama yap
+          applyFilters();
         },
         errorMsg => {
-          // Konsola hataları yazmak istersen
-          // console.warn("Hata:", errorMsg);
+          // hata mesajı yazmak istersen buraya
         }
       );
     }
   }).catch(err => {
-    alert("Kamera açılamadı: " + err);
+    alert("Kamera bulunamadı veya izin verilmedi: " + err);
   });
 
-  // Durdur Butonu
-  document.getElementById("stopScanBtn").onclick = () => {
+  document.getElementById("stopScanBtn")?.addEventListener("click", () => {
     html5QrCode.stop().then(() => {
-      document.getElementById("barcodeScanner").style.display = "none";
+      scannerBox.style.display = "none";
     }).catch(err => {
       alert("Kapatılamadı: " + err);
     });
-  };
+  });
 });
+
 
 
 // Sayfa Yüklendiğinde
