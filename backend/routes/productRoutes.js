@@ -12,11 +12,12 @@ const { protect } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
+// Daha spesifik yollar önce tanımlanmalı
 router.get("/", protect, getProducts);
 router.post("/", protect, addProduct);
+router.post("/:id/sell", protect, sellProduct);         // <-- önce bu
+router.get("/sales-report", protect, salesReport);      // <-- sonra bu
 router.put("/:id", protect, updateProduct);
 router.delete("/:id", protect, deleteProduct);
-router.post("/:id/sell", protect, sellProduct);
-router.get("/sales-report", protect, salesReport);
 
 module.exports = router;

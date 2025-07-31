@@ -32,19 +32,30 @@ exports.deleteProduct = async (req, res) => {
 };
 
 exports.sellProduct = async (req, res) => {
-  const { quantity, price } = req.body;
+  let { quantity, price } = req.body;
+  
+  quantity = parseInt(quantity);
+  price = parseFloat(price);
+  
   const product = await Product.findById(req.params.id);
   if (!product) return res.status(404).json({ message: "Ürün bulunamadı" });
 
-  if (product.quantity < quantity)
+  if (isNaN(quantity) || isNaN(price)) {
+    return res.status(400).json({ message: "Geçersiz satış verisi" });
+  }
+
+  if (product.quantity < quantity) {
     return res.status(400).json({ message: "Yetersiz stok" });
+  }
 
   product.quantity -= quantity;
   product.sales.push({ quantity, price, date: new Date() });
   await product.save();
+
   res.json(product);
-  req.app.get("io").emit("update");
+  req.app.get("io")?.emit("update");
 };
+
 
 exports.salesReport = async (req, res) => {
   const { from, to } = req.query;
