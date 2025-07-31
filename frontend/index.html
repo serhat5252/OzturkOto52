@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ÖZTÜRK OTOMOBİL OTO ELEKTRİK</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/html5-qrcode@2.3.7/html5-qrcode.min.js"></script>
 </head>
 <body>
 
@@ -345,6 +346,11 @@
               <div class="filter-buttons">
                 <button id="filterBtn">Ara</button>
                 <button id="clearBtn">Temizle</button>
+              </div>
+              <button id="scanBtn">Barkod Tara</button>
+              <div id="barcodeScanner" style="display: none; margin-top: 1rem;">
+              <div id="reader" style="width: 100%; max-width: 400px;"></div>
+              <button id="stopScanBtn">Durdur</button>
               </div>
             </div>
           </div>

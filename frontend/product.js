@@ -202,7 +202,7 @@ function applyFilters() {
   const type = document.getElementById("filterType").value;
 
   const filtered = products.filter(p => {
-    const nameMatch = !key || p.name.toLowerCase().includes(key) || p.description?.toLowerCase().includes(key) || p.codes?.some(c => c.toLowerCase().includes(key));
+    const nameMatch = !key || p.name.toLowerCase().includes(key) || p.description?.toLowerCase().includes(key) ||     p.codes?.some(c => c.toLowerCase().includes(key));
     const categoryMatch = !category || p.category === category;
     const brandMatch = !brand || p.brand === brand;
     const typeMatch = !type || p.type === type;
@@ -225,13 +225,52 @@ function applyFilters() {
 
   // Seçenekleri dolduran yardımcı fonksiyon
   const fill = (select, items) => {
-    select.innerHTML = `<option value="">Tümü</option>` + items.map(i => `<option>${i}</option>`).join("");
+  select.innerHTML = `<option value="">Tümü</option>` + items.map(i => `<option>${i}</option>`).join("");
   };
 
   fill(catSel, categories);
   fill(brandSel, brands);
   fill(typeSel, types);
 } -->
+
+// Barkod Tara
+document.getElementById("scanBtn")?.addEventListener("click", () => {
+  document.getElementById("barcodeScanner").style.display = "block";
+
+  const html5QrCode = new Html5Qrcode("reader");
+
+  Html5Qrcode.getCameras().then(devices => {
+    if (devices && devices.length) {
+      const cameraId = devices[0].id;
+
+      html5QrCode.start(
+        cameraId,
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        decodedText => {
+          html5QrCode.stop();
+          document.getElementById("barcodeScanner").style.display = "none";
+          document.getElementById("filterKeyword").value = decodedText;
+          applyFilters(); // arama yap
+        },
+        errorMsg => {
+          // Konsola hataları yazmak istersen
+          // console.warn("Hata:", errorMsg);
+        }
+      );
+    }
+  }).catch(err => {
+    alert("Kamera açılamadı: " + err);
+  });
+
+  // Durdur Butonu
+  document.getElementById("stopScanBtn").onclick = () => {
+    html5QrCode.stop().then(() => {
+      document.getElementById("barcodeScanner").style.display = "none";
+    }).catch(err => {
+      alert("Kapatılamadı: " + err);
+    });
+  };
+});
 
 
 // Sayfa Yüklendiğinde
