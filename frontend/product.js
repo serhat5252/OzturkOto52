@@ -176,6 +176,7 @@ ${salesList}
 
 
 // Filtreleme / Arama
+document.getElementById("filterBtn")?.addEventListener("click", applyFilters);
 document.getElementById("clearBtn")?.addEventListener("click", () => {
   document.getElementById("filterKeyword").value = "";
   document.getElementById("filterCategory").value = "";
