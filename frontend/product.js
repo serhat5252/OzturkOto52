@@ -218,12 +218,12 @@ function populateFilterOptions() {
   const brandSel = document.getElementById("filterBrand");
   const typeSel = document.getElementById("filterType");
 
-  if (!catSel || !brandSel || !typeSel) return;
-
+  // Benzersiz verileri filtrele
   const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
   const brands = [...new Set(products.map(p => p.brand).filter(Boolean))];
   const types = [...new Set(products.map(p => p.type).filter(Boolean))];
 
+  // Seçenekleri dolduran yardımcı fonksiyon
   const fill = (select, items) => {
     select.innerHTML = `<option value="">Tümü</option>` + items.map(i => `<option>${i}</option>`).join("");
   };
@@ -232,6 +232,7 @@ function populateFilterOptions() {
   fill(brandSel, brands);
   fill(typeSel, types);
 }
+
 
 // Sayfa Yüklendiğinde
 document.addEventListener("DOMContentLoaded", async () => {
