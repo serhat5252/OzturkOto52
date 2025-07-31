@@ -181,7 +181,11 @@ document.getElementById("filterBtn")?.addEventListener("click", async () => {
   applyFilters();         // Sonra filtrele
 });
 document.getElementById("clearBtn")?.addEventListener("click", () => {
-  document.getElementById("filterKeyword").value = "";
+  document.getElementById("filterKeyword")?.addEventListener("keydown", async (e) => {
+  if (e.key === "Enter") {
+    await fetchProducts();
+    applyFilters();
+  }
   document.getElementById("filterCategory").value = "";
   document.getElementById("filterBrand").value = "";
   document.getElementById("filterType").value = "";
