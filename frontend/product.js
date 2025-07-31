@@ -4,7 +4,6 @@ const form = document.getElementById("productForm");
 const ul = document.getElementById("productsUl");
 let products = [];
 
-// Ürün Formu Gönderme
 form?.addEventListener("submit", async e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(form));
@@ -43,29 +42,25 @@ form?.addEventListener("submit", async e => {
     }
 
     resetForm();
-    renderList(products);
     alert("✅ Başarılı!");
   } catch (err) {
     alert("❌ " + err.message);
   }
 });
 
-// Ürünleri Getir
 async function fetchProducts() {
   try {
     const res = await fetch(API, {
       headers: { "Authorization": "Bearer " + token() }
     });
     if (!res.ok) throw new Error("Yetki veya bağlantı hatası");
+
     products = await res.json();
-    // populateFilterOptions();
-    renderList(products);
   } catch (err) {
     alert("Ürünler alınamadı: " + err.message);
   }
 }
 
-// Listele
 function renderList(list) {
   if (!ul) return;
   ul.innerHTML = "";
@@ -78,8 +73,8 @@ function renderList(list) {
     const li = document.createElement("li");
     li.innerHTML = `
       <div>
-        <strong>${p.name}</strong> (${p.quantity} adet)
-        <br><small>${p.category || ""} | ${p.brand || ""} | ${p.type || ""}</small>
+        <strong>${p.name}</strong> (${p.quantity} adet)<br/>
+        <small>${p.category || ""} | ${p.brand || ""} | ${p.type || ""}</small>
       </div>
       <div>
         <button onclick="sell('${p._id}')">Sat</button>
@@ -93,29 +88,6 @@ function renderList(list) {
   });
 }
 
-// Formu Temizle
-function resetForm() {
-  form.reset();
-  form.elements.id.value = "";
-}
-
-// Sil
-window.del = async id => {
-  if (!confirm("Silmek istediğinize emin misiniz?")) return;
-  try {
-    const res = await fetch(`${API}/${id}`, {
-      method: "DELETE",
-      headers: { "Authorization": "Bearer " + token() }
-    });
-    if (!res.ok) throw new Error("Silinemedi");
-    products = products.filter(p => p._id !== id);
-    renderList(products);
-  } catch (err) {
-    alert("❌ " + err.message);
-  }
-};
-
-// Düzenle
 window.edit = id => {
   const p = products.find(x => x._id === id);
   Object.entries(p).forEach(([k, v]) => {
@@ -125,14 +97,38 @@ window.edit = id => {
   form.elements.id.value = p._id;
 };
 
-// Sat
+window.del = async id => {
+  if (!confirm("Silmek istediğinize emin misiniz?")) return;
+  try {
+    const res = await fetch(API + "/" + id, {
+      method: "DELETE",
+      headers: { "Authorization": "Bearer " + token() }
+    });
+    if (!res.ok) throw new Error("Silinemedi");
+
+    products = products.filter(p => p._id !== id);
+    renderList(products);
+  } catch (err) {
+    alert("❌ " + err.message);
+  }
+};
+
+function resetForm() {
+  form.reset();
+  form.elements.id.value = "";
+  renderList(products);
+}
+
+document.getElementById("clearFormBtn")?.addEventListener("click", resetForm);
+
+// SAT
 window.sell = async id => {
-  const quantity = parseInt(prompt("Kaç adet satıldı?"));
-  const price = parseFloat(prompt("Toplam satış fiyatı?"));
+  const quantity = prompt("Kaç adet satıldı?");
+  const price = prompt("Toplam satış fiyatı?");
   if (!quantity || !price) return;
 
   try {
-    const res = await fetch(`${API}/${id}/sell`, {
+    const res = await fetch(API + `/${id}/sell`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -142,20 +138,16 @@ window.sell = async id => {
     });
     const result = await res.json();
     if (!res.ok) throw new Error(result.message || "Satış başarısız");
-
-    fetchProducts();
+    fetchProducts().then(() => renderList(products));
   } catch (err) {
     alert("❌ " + err.message);
   }
 };
 
-// Detay
+// DETAY
 window.details = id => {
   const p = products.find(x => x._id === id);
-  const salesList = p.sales?.map(s => 
-    `🗓️ ${new Date(s.date).toLocaleDateString()} - 💰 ${s.price} TL - 📦 ${s.quantity} adet`
-  ).join("\n") || "Yok";
-
+  const salesList = p.sales.map(s => `- ${s.quantity} adet ₺${s.price} (${new Date(s.date).toLocaleDateString()})`).join("\n") || "Yok";
   alert(`🧾 Ürün Detayları:
 Ad: ${p.name}
 Kategori: ${p.category}
@@ -169,114 +161,69 @@ Satış: ${p.sellPrice}
 Kodlar: ${p.codes?.join(", ")}
 Açıklama: ${p.description}
 Eklenme: ${new Date(p.createdAt).toLocaleDateString()}
-📈 Satışlar:
-${salesList}
-`);
+Satışlar:
+${salesList}`);
 };
 
+// FİLTRELEME
+document.getElementById("filterBtn")?.addEventListener("click", () => {
+  const key = document.getElementById("filterKeyword").value.trim().toLowerCase();
+  const cat = document.getElementById("filterCategory").value;
+  const brand = document.getElementById("filterBrand").value;
+  const type = document.getElementById("filterType").value;
 
-// Filtreleme / Arama
-document.getElementById("filterBtn")?.addEventListener("click", async () => {
-  await fetchProducts();  // Ürünleri güncel olarak al
-  applyFilters();         // Sonra filtrele
+  const filtered = products.filter(p => {
+    const matches = [
+      !key || p.name.toLowerCase().includes(key) || p.description?.toLowerCase().includes(key) || p.codes?.some(c => c.toLowerCase().includes(key)),
+      !cat || p.category === cat,
+      !brand || p.brand === brand,
+      !type || p.type === type
+    ];
+    return matches.every(Boolean);
+  });
+
+  renderList(filtered);
 });
+
 document.getElementById("clearBtn")?.addEventListener("click", () => {
   document.getElementById("filterKeyword").value = "";
   document.getElementById("filterCategory").value = "";
   document.getElementById("filterBrand").value = "";
   document.getElementById("filterType").value = "";
-  document.getElementById("filterFrom").value = "";
-  document.getElementById("filterTo").value = "";
-  document.getElementById("filterSaleFrom").value = "";
-  document.getElementById("filterSaleTo").value = "";
   document.getElementById("onlyCriticalStock").checked = false;
-
-  renderList([]);           // Arama kutusunu temizleyince boş liste göster
-  // populateFilterOptions();  // Seçenekleri güncelle
+  renderList(products);
 });
 
-function applyFilters() {
-  const key = document.getElementById("filterKeyword").value.trim().toLowerCase();
-  const category = document.getElementById("filterCategory").value;
-  const brand = document.getElementById("filterBrand").value;
-  const type = document.getElementById("filterType").value;
-
-  const filtered = products.filter(p => {
-    const nameMatch = !key || p.name.toLowerCase().includes(key) || p.description?.toLowerCase().includes(key) ||     p.codes?.some(c => c.toLowerCase().includes(key));
-    const categoryMatch = !category || p.category === category;
-    const brandMatch = !brand || p.brand === brand;
-    const typeMatch = !type || p.type === type;
-    return nameMatch && categoryMatch && brandMatch && typeMatch;
+// Satış Raporu
+document.getElementById("reportBtn")?.addEventListener("click", async () => {
+  const from = document.getElementById("reportFrom").value;
+  const to = document.getElementById("reportTo").value;
+  const res = await fetch(`/api/products/sales-report?from=${from}&to=${to}`, {
+    headers: { "Authorization": "Bearer " + token() }
   });
-
-  renderList(filtered);
-}
-
-// Filtre dropdownlarını doldur
-<!-- function populateFilterOptions() {
-  const catSel = document.getElementById("filterCategory");
-  const brandSel = document.getElementById("filterBrand");
-  const typeSel = document.getElementById("filterType");
-
-  // Benzersiz verileri filtrele
-  const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
-  const brands = [...new Set(products.map(p => p.brand).filter(Boolean))];
-  const types = [...new Set(products.map(p => p.type).filter(Boolean))];
-
-  // Seçenekleri dolduran yardımcı fonksiyon
-  const fill = (select, items) => {
-  select.innerHTML = `<option value="">Tümü</option>` + items.map(i => `<option>${i}</option>`).join("");
-  };
-
-  fill(catSel, categories);
-  fill(brandSel, brands);
-  fill(typeSel, types);
-} -->
-
-// Barkod Tara
-document.getElementById("scanBtn")?.addEventListener("click", () => {
-  const scannerBox = document.getElementById("barcodeScanner");
-  scannerBox.style.display = "flex";
-
-  const html5QrCode = new Html5Qrcode("reader");
-
-  Html5Qrcode.getCameras().then(devices => {
-    if (devices && devices.length) {
-      const cameraId = devices[0].id;
-
-      html5QrCode.start(
-        cameraId,
-        { fps: 10, qrbox: 250 },
-        decodedText => {
-          html5QrCode.stop();
-          scannerBox.style.display = "none";
-          document.getElementById("filterKeyword").value = decodedText;
-          applyFilters();
-        },
-        errorMsg => {
-          // hata mesajı yazmak istersen buraya
-        }
-      );
-    }
-  }).catch(err => {
-    alert("Kamera bulunamadı veya izin verilmedi: " + err);
-  });
-
-  document.getElementById("stopScanBtn")?.addEventListener("click", () => {
-    html5QrCode.stop().then(() => {
-      scannerBox.style.display = "none";
-    }).catch(err => {
-      alert("Kapatılamadı: " + err);
-    });
-  });
+  const json = await res.json();
+  document.getElementById("reportResult").innerText = JSON.stringify(json, null, 2);
 });
 
+document.getElementById("clearReportBtn")?.addEventListener("click", () => {
+  document.getElementById("reportFrom").value = "";
+  document.getElementById("reportTo").value = "";
+  document.getElementById("reportResult").innerText = "";
+});
 
-
-// Sayfa Yüklendiğinde
+// Sayfa yüklendiğinde
 document.addEventListener("DOMContentLoaded", async () => {
-  await fetchProducts();          // Ürünleri al
-  renderList([]);                // Sayfa açıldığında boş liste göster
-  // populateFilterOptions();       // Filtreleri doldur
+  await fetchProducts();
+  renderList(products);
 });
 
+// BARKOD DESTEKLİ (Mobil Kamera ile)
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    const barcode = document.getElementById("filterKeyword")?.value.trim();
+    if (!barcode) return;
+    const match = products.find(p => p.codes?.includes(barcode));
+    if (match) renderList([match]);
+    else alert("Barkod bulunamadı");
+  }
+});
