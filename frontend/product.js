@@ -180,11 +180,6 @@ document.getElementById("filterBtn")?.addEventListener("click", async () => {
   await fetchProducts();  // Ürünleri güncel olarak al
   applyFilters();         // Sonra filtrele
 });
-document.getElementById("filterKeyword")?.addEventListener("keydown", async (e) => {
-  if (e.key === "Enter") {
-    await fetchProducts();
-    applyFilters();
-  }
 document.getElementById("clearBtn")?.addEventListener("click", () => {
   document.getElementById("filterKeyword").value = "";
   document.getElementById("filterCategory").value = "";
