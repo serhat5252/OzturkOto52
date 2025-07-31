@@ -215,7 +215,19 @@ document.getElementById("clearReportBtn")?.addEventListener("click", () => {
 document.addEventListener("DOMContentLoaded", async () => {
   await fetchProducts();
   renderList(products);
+
+  // 🔁 Enter ile barkod arama
+  document.getElementById("filterKeyword")?.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const barcode = e.target.value.trim();
+      const match = products.find(p => p.codes?.includes(barcode));
+      if (match) renderList([match]);
+      else renderList([]); // veya alert("Barkod bulunamadı");
+    }
+  });
 });
+
 
 // BARKOD DESTEKLİ (Mobil Kamera ile)
 document.addEventListener("keydown", e => {
